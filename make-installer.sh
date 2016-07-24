@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Working dir should stay in feeds/keendev-3x
+# Working dir should stay in feeds/keendev
 SCRIPT_DIR=$(dirname $0)
 ROOT_DIR=$SCRIPT_DIR/installer_root
 BUILD_DIR=$SCRIPT_DIR/../../build_dir/target-mipsel_mips32r2_glibc-*
