@@ -1,8 +1,9 @@
 #!/opt/bin/sh
 
 # Это временно. Переменную timezone должна определить ndms (прошивка)
-timezone="Europe/Moscow""
+timezone="Europe/Moscow"
 TZ=":/usr/share/zoneinfo/posix/$timezone"
+export TZ
 export PATH=/opt/sbin:/opt/bin:$PATH
 export LANG='ru_RU.UTF-8'
 export LC_ALL='ru_RU.UTF-8'
@@ -54,10 +55,6 @@ fi
 
 ldconfig > /dev/null 2>&1
 
-#logger '[3/5] Настройка сценария запуска для прошивки NDMS...'
-#ndmq -p 'opkg initrc /opt/etc/init.d/rc.unslung'
-#ndmq -p 'system configuration save'
-
 logger '[3/4] Генерация SSH-ключей...'
 dbkey () {
 # $1 is a key type [rsa|ecdsa]
@@ -68,13 +65,13 @@ dbkey () {
 	echo -n '.'
     done
     logger "Info: ключ $1 создан"
-
 }
 dbkey rsa
 dbkey ecdsa
 
 logger '[4/4] Установка Entware-Keenetic завершена! Сохранение временной зоны и запуск dropbear...'
 
+timezone=`ndmq -p "show running-config" -P message | awk '/timezone/{print $3}'`
 ln -sf /opt/share/zoneinfo/$timezone  /opt/etc/localtime
 dropbear -p 22 -a
 
