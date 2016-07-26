@@ -13,6 +13,10 @@ mkdir $ROOT_DIR
 cp -r $BUILD_DIR/toolchain/ipkg-mipsel-3x/libc/opt $ROOT_DIR
 cp -r $BUILD_DIR/toolchain/ipkg-mipsel-3x/libgcc/opt $ROOT_DIR
 
+# Adding locales
+cp -r $BUILD_DIR/toolchain/ipkg-mipsel-3x/locales/opt $ROOT_DIR
+cp -r $SCRIPT_DIR/locale-archive.2.23 $ROOT_DIR/opt/usr/lib/locale/locale-archive
+
 # Adding busybox
 cp -r $BUILD_DIR/busybox-*/ipkg-install/opt $ROOT_DIR
 
@@ -36,7 +40,7 @@ cp -fr $BUILD_DIR/busybox-*/ipkg-mipsel-3x/busybox/opt $ROOT_DIR
 
 # Packing installer
 [ -f $INSTALLER ] && rm $INSTALLER
-tar -czf $INSTALLER -C $ROOT_DIR/opt --owner=root --group=root bin etc lib sbin
+tar -czf $INSTALLER -C $ROOT_DIR/opt --owner=root --group=root bin etc lib sbin usr
 
 # Removing temp folder
-rm -fr $ROOT_DIR
+#rm -fr $ROOT_DIR

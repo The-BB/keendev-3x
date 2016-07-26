@@ -1,10 +1,11 @@
 #!/opt/bin/sh
 
-export PATH=/opt/sbin:/opt/bin:$PATH
-export LANG='ru_RU.UTF-8'
-export LC_ALL='ru_RU.UTF-8'
-unset LD_LIBRARY_PATH
-unset LD_PRELOAD
+export TZ=`cat /etc/TZ | tail -n 1`
+#export PATH=/opt/sbin:/opt/bin:$PATH
+#export LANG='ru_RU.UTF-8'
+#export LC_ALL='ru_RU.UTF-8'
+#unset LD_LIBRARY_PATH
+#unset LD_PRELOAD
 
 case $(mount | grep 'on /opt' | cut -d ' ' -f 5) in
     ext2|ext3)
@@ -27,7 +28,7 @@ esac
 logger '[1/4] Начало развёртывания системы Entware-Keenetic...'
 
 # This is for opkg only. The other folders will be created from opt-ndmsv2 package
-# Только для opkg. Остальные папки будут созданы пакетом opt-ndmsv1/2
+# Только для opkg. Остальные папки будут созданы пакетом opt-ndmsv2
 logger 'Info: Создание папок...'
 
 for folder in lib/opkg tmp var/lock; do
