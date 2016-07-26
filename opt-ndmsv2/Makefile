@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=opt-ndmsv2
 PKG_VERSION:=1.0
-PKG_RELEASE:=5a
+PKG_RELEASE:=5b
 PKG_FLAGS:=essential
 
 include $(INCLUDE_DIR)/package.mk
@@ -17,8 +17,9 @@ include $(INCLUDE_DIR)/package.mk
 define Package/opt-ndmsv2
 	SECTION:=libs
 	CATEGORY:=keendev
-	DEPENDS:=+libc +libgcc +libstdcpp +libpthread +librt \
-		+ldconfig +findutils +terminfo +USE_GLIBC:locales
+	DEPENDS:=+libc +libgcc +libstdcpp +libpthread \
+		+librt +ldconfig +findutils +terminfo \
+		+zoneinfo-asia +zoneinfo-europe +USE_GLIBC:locales
 	TITLE:=provides basic toolchain libraries (dummy)
 	MAINTAINER:=Entware team, http://entware.net
 endef
@@ -64,8 +65,6 @@ endef
 
 define Package/opt-ndmsv2/postinst
 #!/bin/sh
-
-sed -i 's!^export TZ!#export TZ!g' /opt/root/.profile
 
 echo -n "Updating /opt/etc/ld.so.cache... "
 /opt/bin/ldconfig > /dev/null 2>&1
