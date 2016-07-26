@@ -43,4 +43,4 @@ cp -fr $BUILD_DIR/busybox-*/ipkg-mipsel-3x/busybox/opt $ROOT_DIR
 tar -czf $INSTALLER -C $ROOT_DIR/opt --owner=root --group=root bin etc lib sbin usr
 
 # Removing temp folder
-#rm -fr $ROOT_DIR
+rm -fr $ROOT_DIR
