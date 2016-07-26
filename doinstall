@@ -1,11 +1,13 @@
 #!/opt/bin/sh
 
-export TZ=`cat /etc/TZ | tail -n 1`
-#export PATH=/opt/sbin:/opt/bin:$PATH
-#export LANG='ru_RU.UTF-8'
-#export LC_ALL='ru_RU.UTF-8'
-#unset LD_LIBRARY_PATH
-#unset LD_PRELOAD
+# Это временно. Переменную timezone должна определить ndms (прошивка)
+timezone="Europe/Moscow""
+TZ=":/usr/share/zoneinfo/posix/$timezone"
+export PATH=/opt/sbin:/opt/bin:$PATH
+export LANG='ru_RU.UTF-8'
+export LC_ALL='ru_RU.UTF-8'
+unset LD_LIBRARY_PATH
+unset LD_PRELOAD
 
 case $(mount | grep 'on /opt' | cut -d ' ' -f 5) in
     ext2|ext3)
@@ -71,7 +73,9 @@ dbkey () {
 dbkey rsa
 dbkey ecdsa
 
-logger '[4/4] Установка Entware-Keenetic завершена! Запуск dropbear...'
+logger '[4/4] Установка Entware-Keenetic завершена! Сохранение временной зоны и запуск dropbear...'
+
+ln -sf /opt/share/zoneinfo/$timezone  /opt/etc/localtime
 dropbear -p 22 -a
 
 logger 'Готово!!!'
