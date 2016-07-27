@@ -18,11 +18,12 @@ PKG_SOURCE_VERSION:=$(PKG_VERSION)
 include $(INCLUDE_DIR)/package.mk
 
 define Package/ndmq
-  SECTION:=utils
-  CATEGORY:=keendev
-  TITLE:=NDM Query utility
-  URL:=$(PKG_SOURCE_URL)
-  DEPENDS:=+libndm
+	SECTION:=utils
+	CATEGORY:=keendev
+	TITLE:=NDM Query utility
+	URL:=$(PKG_SOURCE_URL)
+	DEPENDS:=+libndm
+	PKGARCH:=keenle-3x
 endef
 
 EXTRA_CFLAGS := \
