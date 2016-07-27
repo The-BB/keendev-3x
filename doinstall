@@ -10,7 +10,7 @@ unset LD_LIBRARY_PATH
 unset LD_PRELOAD
 
 case $(mount | grep 'on /opt' | cut -d ' ' -f 5) in
-    ext2|ext3)
+    ext2|ext3|ext4)
 	logger 'Info: Раздел пригоден для установки.'
     ;;
     *ntfs*)
