@@ -22,11 +22,12 @@ define Package/opt-ndmsv2
 		+zoneinfo-asia +zoneinfo-europe +USE_GLIBC:locales
 	TITLE:=provides basic toolchain libraries (dummy)
 	MAINTAINER:=Entware team, http://entware.net
+	PKGARCH:=keenle-3x
 endef
 
 define Package/opt-ndmsv2/description
- opt-ndmsv2 is a metapackage to install Entware-ng basic libraries and scripts
- on ZyXEL Keenetic routers with NDMS v2.
+	opt-ndmsv2 is a metapackage to install Entware-ng basic libraries
+	and scripts on ZyXEL Keenetic routers with NDMS v2.07+
 endef
 
 define Build/Prepare
