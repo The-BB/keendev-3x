@@ -2,8 +2,7 @@
 
 # Это временно. Переменную timezone должна определить ndms (прошивка)
 timezone="Europe/Moscow"
-TZ=":/usr/share/zoneinfo/posix/$timezone"
-export TZ
+export TZ=":/usr/share/zoneinfo/posix/$timezone"
 export PATH=/opt/sbin:/opt/bin:$PATH
 export LANG='ru_RU.UTF-8'
 export LC_ALL='ru_RU.UTF-8'
