@@ -18,11 +18,12 @@ define Package/music-center
 	CATEGORY:=keendev
 	DEPENDS:=+alsa-utils +mpd-full +mpg123 +ympd
 	TITLE:=configs and scripts files for music-center
+	PKGARCH:=keenle-3x
 endef
 
 define Package/music-center/description
- It`s a metapackage to install config and scripts files
- on ZyXEL Keenetic routers with NDMS v2
+	It`s a metapackage to install config and scripts files
+	on ZyXEL Keenetic routers with NDMS v2
 endef
 
 define Build/Prepare
