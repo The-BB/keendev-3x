@@ -19,11 +19,12 @@ PKG_SOURCE_PROTO:=git
 include $(INCLUDE_DIR)/package.mk
 
 define Package/libndm
-  SECTION:=libs
-  CATEGORY:=keendev
-  TITLE:=NDM common library
-  URL:=
-  DEPENDS:=+librt
+	SECTION:=libs
+	CATEGORY:=keendev
+	TITLE:=NDM common library
+	URL:=
+	DEPENDS:=+librt
+	PKGARCH:=keenle-3x
 endef
 
 EXTRA_CFLAGS :=\
