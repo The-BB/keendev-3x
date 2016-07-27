@@ -19,10 +19,11 @@ define Package/opt-ndmsv2
 	CATEGORY:=keendev
 	DEPENDS:=+libc +libgcc +libstdcpp +libpthread \
 		+librt +ldconfig +findutils +terminfo \
-		+zoneinfo-asia +zoneinfo-europe +USE_GLIBC:locales
+		+zoneinfo-asia +zoneinfo-europe +locales
 	TITLE:=provides basic toolchain libraries (dummy)
 	MAINTAINER:=Entware team, http://entware.net
 	PKGARCH:=keenle-3x
+	CONFLICTS:=entware-opt
 endef
 
 define Package/opt-ndmsv2/description
