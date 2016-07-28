@@ -18,7 +18,7 @@ define Package/opt-ndmsv2
 	SECTION:=libs
 	CATEGORY:=keendev
 	DEPENDS:=+libc +libgcc +libstdcpp +libpthread \
-		+librt +ldconfig +findutils +terminfo \
+		+librt +findutils +terminfo \
 		+zoneinfo-asia +zoneinfo-europe +locales
 	TITLE:=provides basic toolchain libraries (dummy)
 	MAINTAINER:=Entware team, http://entware.net
@@ -63,14 +63,6 @@ define Package/opt-ndmsv2/install
 	$(INSTALL_DIR) $(1)/opt/{bin,sbin,share,tmp,usr} \
 	    $(1)/opt/var/{log,lock,run} \
 	    $(1)/opt/etc/ndm/{button,fs,netfilter,schedule,time,usb,user,wan}.d
-endef
-
-define Package/opt-ndmsv2/postinst
-#!/bin/sh
-
-echo -n "Updating /opt/etc/ld.so.cache... "
-/opt/bin/ldconfig > /dev/null 2>&1
-echo "done."
 endef
 
 $(eval $(call BuildPackage,opt-ndmsv2))
