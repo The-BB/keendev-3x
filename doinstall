@@ -52,8 +52,6 @@ if [ $? -eq 0 ] ; then
     exit 1
 fi
 
-ldconfig > /dev/null 2>&1
-
 logger '[3/4] Генерация SSH-ключей...'
 dbkey () {
 # $1 is a key type [rsa|ecdsa]
