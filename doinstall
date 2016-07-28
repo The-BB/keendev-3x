@@ -27,7 +27,7 @@ case $(mount | grep 'on /opt' | cut -d ' ' -f 5) in
     ;;
 esac
 
-logger '[1/4] Начало развёртывания системы Entware-Keenetic...'
+logger '[1/5] Начало развёртывания системы Entware-Keenetic...'
 
 # This is for opkg only. The other folders will be created from opt-ndmsv2 package
 # Только для opkg. Остальные папки будут созданы пакетом opt-ndmsv2
@@ -40,7 +40,7 @@ done
 # Fix for multiuser environment
 chmod 777 /opt/tmp
 
-logger '[2/4] Загрузка и установка базовых пакетов...'
+logger '[2/5] Загрузка и установка базовых пакетов...'
 opkg update
 opkg install opt-ndmsv2 dropbear ndmq
 
@@ -52,7 +52,11 @@ if [ $? -eq 0 ] ; then
     exit 1
 fi
 
-logger '[3/4] Генерация SSH-ключей...'
+logger '[3/5] Настройка сценария запуска для прошивки NDMS...'
+ndmq -p 'opkg initrc /opt/etc/init.d/rc.unslung'
+ndmq -p 'system configuration save'
+
+logger '[4/5] Генерация SSH-ключей...'
 dbkey () {
 # $1 is a key type [rsa|ecdsa]
     rm /opt/etc/dropbear/dropbear_${1}_host_key
@@ -66,7 +70,7 @@ dbkey () {
 dbkey rsa
 dbkey ecdsa
 
-logger '[4/4] Установка Entware-Keenetic завершена! Сохранение временной зоны и запуск dropbear...'
+logger '[5/5] Установка Entware-Keenetic завершена! Сохранение временной зоны и запуск dropbear...'
 
 timezone=`ndmq -p "show running-config" -P message | awk '/timezone/{print $3}'`
 ln -sf /opt/share/zoneinfo/$timezone  /opt/etc/localtime
