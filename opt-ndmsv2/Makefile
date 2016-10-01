@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=opt-ndmsv2
 PKG_VERSION:=1.0
-PKG_RELEASE:=5b
+PKG_RELEASE:=5c
 PKG_FLAGS:=essential
 
 include $(INCLUDE_DIR)/package.mk
@@ -22,7 +22,12 @@ define Package/opt-ndmsv2
 		+zoneinfo-asia +zoneinfo-europe +locales
 	TITLE:=provides basic toolchain libraries (dummy)
 	MAINTAINER:=Entware team, http://entware.net
+
+   ifeq ($(ARCH),mips)
+	PKGARCH:=keenbe-3x
+      else
 	PKGARCH:=keenle-3x
+   endif
 	CONFLICTS:=entware-opt
 endef
 

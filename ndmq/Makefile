@@ -7,7 +7,7 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=ndmq
 PKG_VERSION:=1.0.2
 PKG_REV:=b01ddf37de358e761e8db81dc147208d25ee5a51
-PKG_RELEASE:=1
+PKG_RELEASE:=1a
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
@@ -23,7 +23,11 @@ define Package/ndmq
 	TITLE:=NDM Query utility
 	URL:=$(PKG_SOURCE_URL)
 	DEPENDS:=+libndm
+   ifeq ($(ARCH),mips)
+	PKGARCH:=keenbe-3x
+      else
 	PKGARCH:=keenle-3x
+   endif
 endef
 
 EXTRA_CFLAGS := \

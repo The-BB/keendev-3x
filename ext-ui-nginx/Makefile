@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ext-ui-nginx
 PKG_VERSION:=0.1
-PKG_RELEASE:=4
+PKG_RELEASE:=4a
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -22,7 +22,11 @@ define Package/ext-ui-nginx
 		+php5-mod-xml +php5-mod-xmlreader +php5-mod-xmlwriter \
 		+php5-mod-zip +vnstat +shellinabox
 	TITLE:=Easy installation script for extended web UI
+   ifeq ($(ARCH),mips)
+	PKGARCH:=keenbe-3x
+      else
 	PKGARCH:=keenle-3x
+   endif
 endef
 
 define Package/ext-ui-nginx/description

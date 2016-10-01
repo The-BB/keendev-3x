@@ -7,7 +7,7 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=libndm
 PKG_VERSION:=1.1.0
 PKG_MD5SUM:=ac4f08b43a13bb84f63cf2f164d9f31a
-PKG_RELEASE:=1
+PKG_RELEASE:=1a
 PKG_LICENSE:=NDM
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
@@ -24,7 +24,11 @@ define Package/libndm
 	TITLE:=NDM common library
 	URL:=
 	DEPENDS:=+librt
+   ifeq ($(ARCH),mips)
+	PKGARCH:=keenbe-3x
+      else
 	PKGARCH:=keenle-3x
+   endif
 endef
 
 EXTRA_CFLAGS :=\

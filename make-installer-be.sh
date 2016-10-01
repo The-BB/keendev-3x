@@ -1,17 +1,17 @@
 #!/bin/sh
 
-# Working dir should stay in feeds/keendev
+# Working dir should stay in feeds/keendev3x
 SCRIPT_DIR=$(dirname $0)
 ROOT_DIR=$SCRIPT_DIR/installer_root
-BUILD_DIR=$SCRIPT_DIR/../../build_dir/target-mipsel_mips32r2_glibc-*
-INSTALLER=$SCRIPT_DIR/installer-3x.tar.gz
+BUILD_DIR=$SCRIPT_DIR/../../build_dir/target-mips_mips32r2_glibc-*
+INSTALLER=$SCRIPT_DIR/mips-installer-3x.tar.gz
 
 [ -d $ROOT_DIR ] && rm -fr $ROOT_DIR
 mkdir $ROOT_DIR
 
 # Adding toolchain libraries
-cp -r $BUILD_DIR/toolchain/ipkg-mipsel-3x/libc/opt $ROOT_DIR
-cp -r $BUILD_DIR/toolchain/ipkg-mipsel-3x/libgcc/opt $ROOT_DIR
+cp -r $BUILD_DIR/toolchain/ipkg-mips-3x/libc/opt $ROOT_DIR
+cp -r $BUILD_DIR/toolchain/ipkg-mips-3x/libgcc/opt $ROOT_DIR
 
 # Adding locales
 mkdir -p $ROOT_DIR/opt/usr/lib/locale
@@ -27,16 +27,16 @@ touch $ROOT_DIR/opt/etc/dropbear/dropbear_rsa_host_key
 
 # Adding install script
 mkdir -p $ROOT_DIR/opt/etc/init.d
-cp $SCRIPT_DIR/doinstall $ROOT_DIR/opt/etc/init.d/doinstall
+cp $SCRIPT_DIR/doinstall-be $ROOT_DIR/opt/etc/init.d/doinstall
 chmod +x $ROOT_DIR/opt/etc/init.d/doinstall
 
 # Adding opkg&opkg.conf
-cp -r $BUILD_DIR/opkg-*/opkg-*/ipkg-mipsel-3x/opkg/opt $ROOT_DIR
-cp -r $SCRIPT_DIR/opkg.conf $ROOT_DIR/opt/etc/opkg.conf
+cp -r $BUILD_DIR/opkg-*/opkg-*/ipkg-mips-3x/opkg/opt $ROOT_DIR
+cp -r $SCRIPT_DIR/opkg-be.conf $ROOT_DIR/opt/etc/opkg.conf
 chmod 644 $ROOT_DIR/opt/etc/opkg.conf
 
 # copy strip version
-cp -fr $BUILD_DIR/busybox-*/ipkg-mipsel-3x/busybox/opt $ROOT_DIR
+cp -fr $BUILD_DIR/busybox-*/ipkg-mips-3x/busybox/opt $ROOT_DIR
 
 # Packing installer
 [ -f $INSTALLER ] && rm $INSTALLER
