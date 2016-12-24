@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=opt-ndmsv2
 PKG_VERSION:=1.0
-PKG_RELEASE:=6
+PKG_RELEASE:=6a
 PKG_FLAGS:=essential
 
 include $(INCLUDE_DIR)/package.mk
@@ -18,7 +18,7 @@ define Package/opt-ndmsv2
 	SECTION:=libs
 	CATEGORY:=keendev
 	DEPENDS:=+libc +libgcc +libstdcpp +libpthread \
-		+librt +findutils +terminfo \
+		+librt +findutils +terminfo +ldconfig \
 		+zoneinfo-asia +zoneinfo-europe +locales
 	TITLE:=provides basic toolchain libraries (dummy)
 	MAINTAINER:=Entware team, http://entware.net
@@ -68,6 +68,14 @@ define Package/opt-ndmsv2/install
 	$(INSTALL_DIR) $(1)/opt/{bin,sbin,share,tmp,usr} \
 	    $(1)/opt/var/{log,lock,run} \
 	    $(1)/opt/etc/ndm/{button,fs,netfilter,schedule,time,usb,user,wan}.d
+endef
+
+define Package/opt-ndmsv2/postinst
+#!/bin/sh
+
+echo -n "Updating /opt/etc/ld.so.cache... "
+/opt/bin/ldconfig > /dev/null 2>&1
+echo "done."
 endef
 
 $(eval $(call BuildPackage,opt-ndmsv2))
