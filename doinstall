@@ -52,6 +52,8 @@ if [ $? -eq 0 ] ; then
     exit 1
 fi
 
+ldconfig > /dev/null 2>&1
+
 logger '[3/5] Настройка сценария запуска для прошивки NDMS...'
 ndmq -p 'opkg initrc /opt/etc/init.d/rc.unslung'
 ndmq -p 'system configuration save'
