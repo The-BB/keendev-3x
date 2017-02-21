@@ -12,10 +12,11 @@ mkdir $ROOT_DIR
 # Adding toolchain libraries
 cp -r $BUILD_DIR/toolchain/ipkg-mips-3x/libc/opt $ROOT_DIR
 cp -r $BUILD_DIR/toolchain/ipkg-mips-3x/libgcc/opt $ROOT_DIR
+cp -r $BUILD_DIR/toolchain/ipkg-mips-3x/libpthread/opt $ROOT_DIR
 
 # Adding locales
 mkdir -p $ROOT_DIR/opt/usr/lib/locale
-cp -r $SCRIPT_DIR/locale-archive.2.23-be $ROOT_DIR/opt/usr/lib/locale/locale-archive
+cp -r $SCRIPT_DIR/locale-archive.2.25-be $ROOT_DIR/opt/usr/lib/locale/locale-archive
 
 # Adding busybox
 cp -r $BUILD_DIR/busybox-*/ipkg-install/opt $ROOT_DIR
