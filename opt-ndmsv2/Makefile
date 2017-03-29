@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=opt-ndmsv2
 PKG_VERSION:=1.0
-PKG_RELEASE:=6a
+PKG_RELEASE:=6b
 PKG_FLAGS:=essential
 
 include $(INCLUDE_DIR)/package.mk
