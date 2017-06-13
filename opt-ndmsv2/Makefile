@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=opt-ndmsv2
 PKG_VERSION:=1.0
-PKG_RELEASE:=6b
+PKG_RELEASE:=7
 PKG_FLAGS:=essential
 
 include $(INCLUDE_DIR)/package.mk
@@ -17,9 +17,9 @@ include $(INCLUDE_DIR)/package.mk
 define Package/opt-ndmsv2
 	SECTION:=libs
 	CATEGORY:=keendev
-	DEPENDS:=+libc +libgcc +libstdcpp +libpthread \
-		+librt +findutils +terminfo +ldconfig \
-		+zoneinfo-asia +zoneinfo-europe +locales
+	DEPENDS:=+libc +libgcc +libstdcpp +libpthread +librt \
+		+ldconfig +findutils +terminfo +ndmq +locales \
+		+zoneinfo-asia +zoneinfo-europe
 	TITLE:=provides basic toolchain libraries (dummy)
 	MAINTAINER:=Entware team, http://entware.net
 
@@ -32,8 +32,8 @@ define Package/opt-ndmsv2
 endef
 
 define Package/opt-ndmsv2/description
-	opt-ndmsv2 is a metapackage to install Entware-ng basic libraries
-	and scripts on ZyXEL Keenetic routers with NDMS v2.07+
+ opt-ndmsv2 is a metapackage to install Entware-ng basic libraries and scripts
+ on ZyXEL Keenetic routers with NDMS v2.07 and up.
 endef
 
 define Build/Prepare
@@ -55,19 +55,18 @@ endef
 
 define Package/opt-ndmsv2/install
 	$(INSTALL_DIR) $(1)/opt/etc/init.d
-	$(INSTALL_BIN) ./files/rc.unslung $(1)/opt/etc/init.d
-	$(INSTALL_BIN) ./files/profile $(1)/opt/etc
-	$(INSTALL_DATA) ./files/rc.func $(1)/opt/etc/init.d
+	$(INSTALL_BIN) files/rc.unslung $(1)/opt/etc/init.d
+	$(INSTALL_BIN) files/profile $(1)/opt/etc
+	$(INSTALL_DATA) files/rc.func $(1)/opt/etc/init.d
 	touch $(1)/opt/etc/ld.so.conf
-	$(INSTALL_DATA) ./files/{group,passwd,shells,screenrc} $(1)/opt/etc
+	$(INSTALL_DATA) files/{group,passwd,shells,screenrc} $(1)/opt/etc
 	$(INSTALL_DIR) $(1)/opt/home $(1)/opt/root $(1)/opt/etc/skel
-	$(INSTALL_DATA) ./files/.profile $(1)/opt/etc/skel
-	$(INSTALL_DATA) ./files/.profile $(1)/opt/root
-	$(INSTALL_DATA) ./files/.inputrc $(1)/opt/etc/skel
-	$(INSTALL_DATA) ./files/.inputrc $(1)/opt/root
+	$(INSTALL_DATA) files/{.profile,.inputrc} $(1)/opt/root
+	$(INSTALL_DATA) files/{.profile,.inputrc} $(1)/opt/etc/skel
 	$(INSTALL_DIR) $(1)/opt/{bin,sbin,share,tmp,usr} \
 	    $(1)/opt/var/{log,lock,run} \
 	    $(1)/opt/etc/ndm/{button,fs,netfilter,schedule,time,usb,user,wan}.d
+	$(INSTALL_BIN) files/reboot.sh $(1)/opt/sbin
 endef
 
 define Package/opt-ndmsv2/postinst
