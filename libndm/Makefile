@@ -1,19 +1,18 @@
 #
-# Copyright (C) 2011-2016 NDM Systems, Inc. http://www.ndmsystems.com/
+# Copyright (C) 2011-2017 NDM Systems, Inc. http://www.ndmsystems.com/
 #
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libndm
-PKG_VERSION:=1.1.0
-PKG_MD5SUM:=337a0c964a21af373020ce06c360da53928878b4
-PKG_RELEASE:=1a
+PKG_VERSION:=1.5.0
+PKG_RELEASE:=1
 PKG_LICENSE:=NDM
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://github.com/ndmsystems/$(PKG_NAME)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=$(PKG_VERSION)
+PKG_SOURCE_VERSION:=2ad232c934217f7296a4757a829aaca0ccc44919
 PKG_SOURCE_PROTO:=git
 
 include $(INCLUDE_DIR)/package.mk
@@ -33,8 +32,8 @@ endef
 
 EXTRA_CFLAGS :=\
 	-fPIC -std=c99 \
-	-D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 \
-	-D_POSIX_C_SOURCE=200112L -DNDEBUG \
+	-D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE \
+	-D_FILE_OFFSET_BITS=64 -DNDEBUG \
 	-ffunction-sections -fdata-sections \
 	-Wall -Winit-self -Wswitch-enum -Wundef  \
 	-Wmissing-field-initializers -Wnormalized=nfkc \
