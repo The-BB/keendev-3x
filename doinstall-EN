@@ -1,0 +1,81 @@
+#!/opt/bin/sh
+
+timezone="Europe/London"
+export TZ=":/usr/share/zoneinfo/posix/$timezone"
+export PATH=/opt/sbin:/opt/bin:$PATH
+export LANG='en_US.UTF-8'
+export LC_ALL='en_US.UTF-8'
+unset LD_LIBRARY_PATH
+unset LD_PRELOAD
+
+case $(mount | grep 'on /opt' | cut -d ' ' -f 5) in
+    ext*)
+	echo 'Partition is OK.'
+    ;;
+    *ntfs*)
+	echo 'NTFS partition! owner:group attributes may not be supported.'
+	echo 'Please, use ext2/ext3/ext4 if something goes wrong.'
+    ;;
+    *hfs*)
+	echo 'HFS partition is not tested.'
+	echo 'Please, use ext2/ext3/ext4 if something goes wrong.'
+    ;;
+    *)
+        echo 'Please use ext2/ext3/ext4 formatted storage. Aborting...'
+	exit 1
+    ;;
+esac
+
+logger -t installer '[1/5] Starting Entware-ng-3x deployment...'
+
+# This is for opkg only. The other folders will be created from opt-ndmsv2 package
+for folder in lib/opkg tmp var/lock; do
+    mkdir -p /opt/$folder
+done
+
+logger -t installer '[2/5] Basic packages installation...'
+opkg update
+opkg install opt-ndmsv2 dropbear ndmq
+
+opkg install busybox > /dev/null 2>&1
+
+if [ $? -eq 0 ] ; then
+    sleep 5s && logger -t installer 'Info: Packages installed...'
+  else
+    logger -t installer 'Critical errors. Exit...'
+    exit 1
+fi
+
+ldconfig > /dev/null 2>&1
+
+# Fix for multiuser environment
+chmod 777 /opt/tmp
+
+logger -t installer '[3/5] Generating SSH keys...'
+
+    rm /opt/etc/dropbear/dropbear_ecdsa_host_key
+    dropbearkey -t ecdsa -f /opt/etc/dropbear/dropbear_ecdsa_host_key > /dev/null &
+    while [ ! -z "$(pidof dropbearkey)" ] ; do
+	sleep 2
+	echo -n '.'
+    done
+
+    rm /opt/etc/dropbear/dropbear_rsa_host_key
+    dropbearkey -t rsa -f /opt/etc/dropbear/dropbear_rsa_host_key -s 1024 > /dev/null &
+    while [ ! -z "$(pidof dropbearkey)" ] ; do
+	sleep 2
+	echo -n '.'
+    done
+
+logger -t installer '[4/5] Setting timezone, script initrc and starting dropbear...'
+
+timezone=`ndmq -p "show running-config" -P message | awk '/timezone/{print $3}'`
+ln -sf /opt/share/zoneinfo/$timezone  /opt/etc/localtime
+dropbear -p 22 -a
+
+ndmq -p 'opkg initrc /opt/etc/init.d/rc.unslung'
+ndmq -p 'system configuration save'
+
+logger -t installer '[5/5] Entware-ng-3x installed!'
+logger -t installer 'Log on at root:keenetic@my.keenetic.net to start new SSH session.'
+rm $0
