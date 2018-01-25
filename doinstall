@@ -88,5 +88,5 @@ ndmq -p 'opkg initrc /opt/etc/init.d/rc.unslung'
 ndmq -p 'system configuration save'
 
 logger -t installer 'Готово!!!'
-logger -t installer 'Можно открыть SSH-сессию для соединения с устройством (логин:пароль -> root:zyxel).'
+logger -t installer 'Можно открыть SSH-сессию для соединения с устройством (логин:пароль -> root:keenetic).'
 rm $0
