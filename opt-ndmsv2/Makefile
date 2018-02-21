@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2011-2016 Entware
+# Copyright (C) 2011-2018 Entware
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=opt-ndmsv2
 PKG_VERSION:=1.0
-PKG_RELEASE:=9
+PKG_RELEASE:=9a
 PKG_FLAGS:=essential
 
 include $(INCLUDE_DIR)/package.mk
@@ -19,7 +19,7 @@ define Package/opt-ndmsv2
 	CATEGORY:=keendev
 	DEPENDS:=+libc +libgcc +libstdcpp +libpthread +librt \
 		+ldconfig +findutils +terminfo +ndmq +locales \
-		+zoneinfo-asia +zoneinfo-europe
+		+zoneinfo-asia +zoneinfo-europe +entware-release
 	TITLE:=provides basic toolchain libraries (dummy)
 	MAINTAINER:=Entware team, http://entware.net
 
@@ -28,7 +28,7 @@ define Package/opt-ndmsv2
       else
 	PKGARCH:=keenle-3x
    endif
-	CONFLICTS:=entware-opt
+#	CONFLICTS:=entware-opt
 endef
 
 define Package/opt-ndmsv2/description
@@ -59,12 +59,12 @@ define Package/opt-ndmsv2/install
 	$(INSTALL_BIN) files/profile $(1)/opt/etc
 	$(INSTALL_DATA) files/rc.func $(1)/opt/etc/init.d
 	touch $(1)/opt/etc/ld.so.conf
-	$(INSTALL_DATA) files/{group,passwd,shells,screenrc} $(1)/opt/etc
-	$(INSTALL_DIR) $(1)/opt/home $(1)/opt/root $(1)/opt/etc/skel
-	$(INSTALL_DATA) files/{.profile,.inputrc} $(1)/opt/root
-	$(INSTALL_DATA) files/{.profile,.inputrc} $(1)/opt/etc/skel
+	$(INSTALL_DATA) files/{group,passwd,screenrc,shells} $(1)/opt/etc
+	$(INSTALL_DIR) $(1)/opt/{etc/skel,home,root}
+	$(INSTALL_DATA) files/{.inputrc,.profile} $(1)/opt/root
+	$(INSTALL_DATA) files/{.inputrc,.profile} $(1)/opt/etc/skel
 	$(INSTALL_DIR) $(1)/opt/{bin,sbin,share,tmp,usr} \
-	    $(1)/opt/var/{log,lock,run} \
+	    $(1)/opt/var/{lock,log,run} \
 	    $(1)/opt/etc/ndm/{button,fs,netfilter,schedule,time,usb,user,wan}.d \
 	    $(1)/opt/etc/ndm/openvpn-{client-{connect,disconnect},down,ipchange,learn-address,route-up,tls-verify,up}.d \
 	    $(1)/opt/etc/ndm/{ifcreated,ifdestroyed,ifipchanged,ifstatechanged}.d
