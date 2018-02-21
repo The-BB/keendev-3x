@@ -3,7 +3,7 @@
 # Working dir should stay in feeds/keendev3x
 SCRIPT_DIR=$(dirname $0)
 ROOT_DIR=$SCRIPT_DIR/installer_root
-BUILD_DIR=$SCRIPT_DIR/../../build_dir/target-mipsel_mips32r2_glibc-*
+BUILD_DIR=$SCRIPT_DIR/../../build_dir/target-mipsel_mips32r2_glibc-2.27*
 INSTALLER=$SCRIPT_DIR/EN_mipsel-installer-3x.tar.gz
 
 [ -d $ROOT_DIR ] && rm -fr $ROOT_DIR
@@ -16,7 +16,7 @@ cp -r $BUILD_DIR/toolchain/ipkg-mipsel-3x/libpthread/opt $ROOT_DIR
 
 # Adding locales
 mkdir -p $ROOT_DIR/opt/usr/lib/locale
-cp -r $SCRIPT_DIR/locale-archive.2.25-le $ROOT_DIR/opt/usr/lib/locale/locale-archive
+cp -r $SCRIPT_DIR/locale-archive.2.27-le $ROOT_DIR/opt/usr/lib/locale/locale-archive
 
 # Adding busybox
 cp -r $BUILD_DIR/busybox-*/ipkg-install/opt $ROOT_DIR
