@@ -26,7 +26,7 @@ alias mc="mc -c"
 #export LC_TELEPHONE='ru_RU.UTF-8'
 #export LC_MEASUREMENT='ru_RU.UTF-8'
 #export LC_IDENTIFICATION='ru_RU.UTF-8'
-#export LC_ALL=''
+#export LC_ALL=
 
 export LANG='en_US.UTF-8'
-export LC_ALL='en_US.UTF-8'
+export LC_ALL=
