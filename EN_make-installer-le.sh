@@ -4,7 +4,7 @@
 SCRIPT_DIR=$(dirname $0)
 ROOT_DIR=$SCRIPT_DIR/installer_root
 BUILD_DIR=$SCRIPT_DIR/../../build_dir/target-mipsel_mips32r2_glibc-2.27*
-INSTALLER=$SCRIPT_DIR/EN_mipsel-installer-3x.tar.gz
+INSTALLER=$SCRIPT_DIR/EN_mipsel-installer.tar.gz
 
 [ -d $ROOT_DIR ] && rm -fr $ROOT_DIR
 mkdir $ROOT_DIR
@@ -16,7 +16,7 @@ cp -r $BUILD_DIR/toolchain/ipkg-mipsel-3x/libpthread/opt $ROOT_DIR
 
 # Adding locales
 mkdir -p $ROOT_DIR/opt/usr/lib/locale
-cp -r $SCRIPT_DIR/locale-archive.2.27-le $ROOT_DIR/opt/usr/lib/locale/locale-archive
+cp -r $SCRIPT_DIR/EN_locale-archive.2.27-le $ROOT_DIR/opt/usr/lib/locale/locale-archive
 
 # Adding busybox
 cp -r $BUILD_DIR/busybox-*/ipkg-install/opt $ROOT_DIR
@@ -28,7 +28,7 @@ touch $ROOT_DIR/opt/etc/dropbear/dropbear_rsa_host_key
 
 # Adding install script
 mkdir -p $ROOT_DIR/opt/etc/init.d
-cp $SCRIPT_DIR/doinstall-EN $ROOT_DIR/opt/etc/init.d/doinstall
+cp $SCRIPT_DIR/EN_doinstall $ROOT_DIR/opt/etc/init.d/doinstall
 chmod +x $ROOT_DIR/opt/etc/init.d/doinstall
 
 # Adding opkg&opkg.conf
