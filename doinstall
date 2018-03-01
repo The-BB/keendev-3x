@@ -4,13 +4,13 @@
 timezone="Europe/Moscow"
 export TZ=":/usr/share/zoneinfo/posix/$timezone"
 export PATH=/opt/sbin:/opt/bin:$PATH
-export LANG='ru_RU.UTF-8'
-export LC_ALL='ru_RU.UTF-8'
+#export LANG='ru_RU.UTF-8'
+#export LC_ALL='ru_RU.UTF-8'
 unset LD_LIBRARY_PATH
 unset LD_PRELOAD
 
 case $(mount | grep 'on /opt' | cut -d ' ' -f 5) in
-    ext2|ext3|ext4)
+    ext*)
 	logger -t installer 'Info: Раздел пригоден для установки.'
     ;;
     *ntfs*)
@@ -41,10 +41,9 @@ logger -t installer '[2/5] Загрузка и установка базовых
 opkg update
 opkg install opt-ndmsv2 dropbear ndmq
 
-# дабы варнингами не пугать
+# Busybox reinstall
 opkg install busybox > /dev/null 2>&1
 
-# слип, чтоб инфо не затерялось
 if [ $? -eq 0 ] ; then
     sleep 5s && logger -t installer 'Info: Установка пакетов прошла успешно! Продолжаем...'
   else
@@ -55,7 +54,7 @@ fi
 
 ldconfig > /dev/null 2>&1
 
-# теперь выставляет права
+# Установка прав для многопользовательской среды
 # Fix for multiuser environment
 chmod 777 /opt/tmp
 
@@ -81,12 +80,32 @@ logger -t installer '[4/5] Установка Entware-3x завершена! С�
 
 timezone=`ndmq -p "show running-config" -P message | awk '/timezone/{print $3}'`
 ln -sf /opt/share/zoneinfo/$timezone  /opt/etc/localtime
-dropbear -p 22 -a
+
+#logger -t installer 'SSH: to be or not to be that is the question...'
+
+if [ -f /usr/sbin/dropbear ]; then
+    echo "/bin/sh" >> /opt/etc/shells
+    sed -i 's/PORT=22/PORT=222/' /opt/etc/init.d/S51dropbear
+    dropbear -p 222 -a
+  else
+    dropbear -p 22 -a
+fi
 
 logger -t installer '[5/5] Настройка сценария запуска для прошивки NDMS...'
 ndmq -p 'opkg initrc /opt/etc/init.d/rc.unslung'
 ndmq -p 'system configuration save'
 
-logger -t installer 'Готово!!!'
-logger -t installer 'Можно открыть SSH-сессию для соединения с устройством (логин:пароль -> root:keenetic).'
+if grep -q "222" /opt/etc/init.d/S51dropbear; then
+    logger -t installer 'Можно открыть SSH-сессию для соединения с устройством (root:keenetic@my.keenetic.net -p 222).'
+  else
+    logger -t installer 'Можно открыть SSH-сессию для соединения с устройством (root:keenetic@my.keenetic.net).'
+fi
+
+#logger -t installer 'Готово!'
+logger -t installer ''
+logger -t installer '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'
+logger -t installer '@@@ Не забудьте сменить пароль и номер порта! @@@'
+logger -t installer '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'
+logger -t installer ''
+
 rm $0
