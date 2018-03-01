@@ -4,7 +4,7 @@
 SCRIPT_DIR=$(dirname $0)
 ROOT_DIR=$SCRIPT_DIR/installer_root
 BUILD_DIR=$SCRIPT_DIR/../../build_dir/target-mips_mips32r2_glibc-2.27*
-INSTALLER=$SCRIPT_DIR/mips-installer-3x.tar.gz
+INSTALLER=$SCRIPT_DIR/mips-installer.tar.gz
 
 [ -d $ROOT_DIR ] && rm -fr $ROOT_DIR
 mkdir $ROOT_DIR
