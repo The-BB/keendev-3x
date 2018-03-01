@@ -96,16 +96,16 @@ ndmq -p 'opkg initrc /opt/etc/init.d/rc.unslung'
 ndmq -p 'system configuration save'
 
 if grep -q "222" /opt/etc/init.d/S51dropbear; then
-    logger -t installer 'Можно открыть SSH-сессию для соединения с устройством (root:keenetic@my.keenetic.net -p 222).'
+    logger -t installer 'Можно открыть SSH-сессию для соединения с устройством (ssh root:keenetic@my.keenetic.net -p 222).'
   else
-    logger -t installer 'Можно открыть SSH-сессию для соединения с устройством (root:keenetic@my.keenetic.net).'
+    logger -t installer 'Можно открыть SSH-сессию для соединения с устройством (ssh root:keenetic@my.keenetic.net).'
 fi
 
 #logger -t installer 'Готово!'
 logger -t installer ''
-logger -t installer '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'
-logger -t installer '@@@ Не забудьте сменить пароль и номер порта! @@@'
-logger -t installer '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'
+logger -t installer '@@@@@@@@@@@@@@@@@@@@@@@'
+logger -t installer ' Не забудьте сменить пароль и номер порта!'
+logger -t installer '@@@@@@@@@@@@@@@@@@@@@@@'
 logger -t installer ''
 
 rm $0
