@@ -3,8 +3,8 @@
 timezone="Europe/London"
 export TZ=":/usr/share/zoneinfo/posix/$timezone"
 export PATH=/opt/sbin:/opt/bin:$PATH
-export LANG='en_US.UTF-8'
-export LC_ALL='en_US.UTF-8'
+#export LANG='en_US.UTF-8'
+#export LC_ALL='en_US.UTF-8'
 unset LD_LIBRARY_PATH
 unset LD_PRELOAD
 
@@ -71,11 +71,26 @@ logger -t installer '[4/5] Setting timezone, script initrc and starting dropbear
 
 timezone=`ndmq -p "show running-config" -P message | awk '/timezone/{print $3}'`
 ln -sf /opt/share/zoneinfo/$timezone  /opt/etc/localtime
-dropbear -p 22 -a
+
+#logger -t installer 'SSH: to be or not to be that is the question...'
+
+if [ -f /usr/sbin/dropbear ]; then
+    echo "/bin/sh" >> /opt/etc/shells
+    sed -i 's/PORT=22/PORT=222/' /opt/etc/init.d/S51dropbear
+    dropbear -p 222 -a
+  else
+    dropbear -p 22 -a
+fi
 
 ndmq -p 'opkg initrc /opt/etc/init.d/rc.unslung'
 ndmq -p 'system configuration save'
 
 logger -t installer '[5/5] Entware-ng-3x installed!'
-logger -t installer 'Log on at root:keenetic@my.keenetic.net to start new SSH session.'
+
+if grep -q "222" /opt/etc/init.d/S51dropbear; then
+    logger -t installer 'Log on at root:keenetic@my.keenetic.net -p 222 to start new SSH session.'
+  else
+    logger -t installer 'Log on at root:keenetic@my.keenetic.net to start new SSH session.'
+fi
+
 rm $0
