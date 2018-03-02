@@ -19,7 +19,7 @@ define Package/music-center
 	DEPENDS:=+alsa-utils +mpd-full +mpg123 +ympd
 	TITLE:=configs and scripts files for music-center
    ifneq (,$(filter mips mipsel,$(ARCH)))
-	PKGARCH:=keen
+	PKGARCH:=$(BOARD)_kn
    endif
 endef
 
