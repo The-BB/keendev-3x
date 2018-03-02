@@ -24,7 +24,7 @@ define Package/libndm
 	URL:=
 	DEPENDS:=+librt
    ifneq (,$(filter mips mipsel,$(ARCH)))
-	PKGARCH:=keen
+	PKGARCH:=$(BOARD)_kn
    endif
 endef
 
