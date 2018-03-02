@@ -24,7 +24,7 @@ define Package/ndmq
 	URL:=$(PKG_SOURCE_URL)
 	DEPENDS:=+libndm
    ifneq (,$(filter mips mipsel,$(ARCH)))
-	PKGARCH:=keen
+	PKGARCH:=$(BOARD)_kn
    endif
 endef
 
