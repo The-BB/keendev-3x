@@ -6,7 +6,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libndm
 PKG_VERSION:=1.5.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_LICENSE:=NDM
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
@@ -23,10 +23,8 @@ define Package/libndm
 	TITLE:=NDM common library
 	URL:=
 	DEPENDS:=+librt
-   ifeq ($(ARCH),mips)
-	PKGARCH:=keenbe-3x
-      else
-	PKGARCH:=keenle-3x
+   ifneq (,$(filter mips mipsel,$(ARCH)))
+	PKGARCH:=keen
    endif
 endef
 
