@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ext-ui-lighttpd-7
 PKG_VERSION:=0.2
-PKG_RELEASE:=2a
+PKG_RELEASE:=3
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -23,16 +23,14 @@ define Package/ext-ui-lighttpd-7
 		+php7-mod-exif +php7-mod-gd +php7-mod-json +php7-mod-mbstring \
 		+php7-mod-session +php7-mod-simplexml +php7-mod-xml +php7-mod-xmlreader \
 		+php7-mod-xmlwriter +php7-mod-zip +vnstat +shellinabox
-	TITLE:=Easy installation script for extended web UI (php7*)
-   ifeq ($(ARCH),mips)
-	PKGARCH:=keenbe-3x
-      else
-	PKGARCH:=keenle-3x
+	TITLE:=Easy installation script for extended web UI (php v7.x)
+   ifneq (,$(filter mips mipsel,$(ARCH)))
+	PKGARCH:=keen
    endif
 endef
 
 define Package/ext-ui-lighttpd-7/description
-	PHP (v.7*) version extended web user interface (ext-UI) for keenetic routers with NDMSv2
+	PHP (v7.x) version extended web user interface (ext-UI) for keenetic routers with NDMSv2
 endef
 
 define Build/Prepare
