@@ -23,7 +23,7 @@ define Package/opt-ndmsv2
 	TITLE:=provides basic toolchain libraries (dummy)
 	MAINTAINER:=Entware team, http://entware.net
    ifneq (,$(filter mips mipsel,$(ARCH)))
-	PKGARCH:=keen
+	PKGARCH:=$(BOARD)_kn
    endif
 endef
 
