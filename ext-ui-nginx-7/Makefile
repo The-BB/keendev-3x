@@ -23,7 +23,7 @@ define Package/ext-ui-nginx-7
 		+php7-mod-xmlwriter +php7-mod-zip +vnstat +shellinabox
 	TITLE:=Easy installation script for extended web UI (php v7.x)
    ifneq (,$(filter mips mipsel,$(ARCH)))
-	PKGARCH:=keen
+	PKGARCH:=$(BOARD)_kn
    endif
 endef
 
