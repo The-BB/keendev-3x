@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=music-center
 PKG_VERSION:=0.1
-PKG_RELEASE:=2c
+PKG_RELEASE:=3
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -18,10 +18,8 @@ define Package/music-center
 	CATEGORY:=keendev
 	DEPENDS:=+alsa-utils +mpd-full +mpg123 +ympd
 	TITLE:=configs and scripts files for music-center
-   ifeq ($(ARCH),mips)
-	PKGARCH:=keenbe-3x
-      else
-	PKGARCH:=keenle-3x
+   ifneq (,$(filter mips mipsel,$(ARCH)))
+	PKGARCH:=keen
    endif
 endef
 
