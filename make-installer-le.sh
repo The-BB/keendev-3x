@@ -10,9 +10,9 @@ INSTALLER=$SCRIPT_DIR/mipsel-installer.tar.gz
 mkdir $ROOT_DIR
 
 # Adding toolchain libraries
-cp -r $BUILD_DIR/toolchain/ipkg-mipsel-3x/libc/opt $ROOT_DIR
-cp -r $BUILD_DIR/toolchain/ipkg-mipsel-3x/libgcc/opt $ROOT_DIR
-cp -r $BUILD_DIR/toolchain/ipkg-mipsel-3x/libpthread/opt $ROOT_DIR
+cp -r $BUILD_DIR/toolchain/ipkg-mipsel-3.4/libc/opt $ROOT_DIR
+cp -r $BUILD_DIR/toolchain/ipkg-mipsel-3.4/libgcc/opt $ROOT_DIR
+cp -r $BUILD_DIR/toolchain/ipkg-mipsel-3.4/libpthread/opt $ROOT_DIR
 
 # Adding locales
 mkdir -p $ROOT_DIR/opt/usr/lib/locale
@@ -32,7 +32,7 @@ cp $SCRIPT_DIR/doinstall $ROOT_DIR/opt/etc/init.d/
 chmod +x $ROOT_DIR/opt/etc/init.d/doinstall
 
 # Adding opkg&opkg.conf
-cp -r $BUILD_DIR/linux-mipsel-3x/opkg-*/ipkg-mipsel-3x/opkg/opt $ROOT_DIR
+cp -r $BUILD_DIR/linux-mipsel-3.4/opkg-*/ipkg-mipsel-3.4/opkg/opt $ROOT_DIR
 cp -r $SCRIPT_DIR/opkg-le.conf $ROOT_DIR/opt/etc/opkg.conf
 chmod 644 $ROOT_DIR/opt/etc/opkg.conf
 
