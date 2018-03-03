@@ -10,9 +10,9 @@ INSTALLER=$SCRIPT_DIR/mips-installer.tar.gz
 mkdir $ROOT_DIR
 
 # Adding toolchain libraries
-cp -r $BUILD_DIR/toolchain/ipkg-mips-3x/libc/opt $ROOT_DIR
-cp -r $BUILD_DIR/toolchain/ipkg-mips-3x/libgcc/opt $ROOT_DIR
-cp -r $BUILD_DIR/toolchain/ipkg-mips-3x/libpthread/opt $ROOT_DIR
+cp -r $BUILD_DIR/toolchain/ipkg-mips-3.4/libc/opt $ROOT_DIR
+cp -r $BUILD_DIR/toolchain/ipkg-mips-3.4/libgcc/opt $ROOT_DIR
+cp -r $BUILD_DIR/toolchain/ipkg-mips-3.4/libpthread/opt $ROOT_DIR
 
 # Adding locales
 mkdir -p $ROOT_DIR/opt/usr/lib/locale
@@ -32,7 +32,7 @@ cp $SCRIPT_DIR/doinstall $ROOT_DIR/opt/etc/init.d/
 chmod +x $ROOT_DIR/opt/etc/init.d/doinstall
 
 # Adding opkg&opkg.conf
-cp -r $BUILD_DIR/linux-mips-3x/opkg-*/ipkg-mips-3x/opkg/opt $ROOT_DIR
+cp -r $BUILD_DIR/linux-mips-3.4/opkg-*/ipkg-mips-3.4/opkg/opt $ROOT_DIR
 cp -r $SCRIPT_DIR/opkg-be.conf $ROOT_DIR/opt/etc/opkg.conf
 chmod 644 $ROOT_DIR/opt/etc/opkg.conf
 
