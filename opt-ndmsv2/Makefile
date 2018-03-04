@@ -19,7 +19,8 @@ define Package/opt-ndmsv2
 	CATEGORY:=keendev
 	DEPENDS:=+libc +libgcc +libstdcpp +libpthread +librt \
 		+ldconfig +findutils +terminfo +ndmq +locales \
-		+zoneinfo-asia +zoneinfo-europe +entware-release
+		+zoneinfo-asia +zoneinfo-europe +entware-release \
+		+opkg
 	TITLE:=provides basic toolchain libraries (dummy)
 	MAINTAINER:=Entware team, http://entware.net
    ifneq (,$(filter mips mipsel,$(ARCH)))
@@ -67,25 +68,8 @@ define Package/opt-ndmsv2/install
 	$(INSTALL_BIN) files/reboot.sh $(1)/opt/sbin
 endef
 
-ifeq ($(CONFIG_TARGET_mips_3_4),y)
-NEWURL=http://bin.entware.net/mipssf-k3.4/keen/opkg.conf
-endif
-
-ifeq ($(CONFIG_TARGET_mipsel_3_4),y)
-NEWURL=http://bin.entware.net/mipselsf-k3.4/keen/opkg.conf
-endif
-
 define Package/opt-ndmsv2/postinst
 #!/bin/sh
-
-if grep -q "$(BOARD)" /opt/etc/opkg.conf; then
-   echo "Your file opkg.conf already updated"
-else
-   echo "Downloading new opkg.conf... "
-   wget ${NEWURL} -O /opt/etc/opkg.conf
-   echo "Updating packages list... "
-   opkg update
-fi
 
 echo -n "Updating /opt/etc/ld.so.cache... "
 /opt/bin/ldconfig > /dev/null 2>&1
