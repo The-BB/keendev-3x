@@ -37,7 +37,7 @@ cp -r $SCRIPT_DIR/opkg-be.conf $ROOT_DIR/opt/etc/opkg.conf
 chmod 644 $ROOT_DIR/opt/etc/opkg.conf
 
 # copy strip version
-cp -fr $BUILD_DIR/busybox-*/ipkg-mips-3x/busybox/opt $ROOT_DIR
+cp -fr $BUILD_DIR/busybox-*/ipkg-mips-3.4/busybox/opt $ROOT_DIR
 
 # Packing installer
 [ -f $INSTALLER ] && rm $INSTALLER
