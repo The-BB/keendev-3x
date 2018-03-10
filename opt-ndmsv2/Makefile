@@ -71,6 +71,10 @@ endef
 define Package/opt-ndmsv2/postinst
 #!/bin/sh
 
+if grep -q "keen3x" /opt/etc/opkg.conf; then
+   sed -i -e 1d /opt/etc/opkg.conf
+fi
+
 echo -n "Updating /opt/etc/ld.so.cache... "
 /opt/bin/ldconfig > /dev/null 2>&1
 echo "done."
