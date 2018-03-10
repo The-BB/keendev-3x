@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=opt-ndmsv2
 PKG_VERSION:=1.0
-PKG_RELEASE:=10
+PKG_RELEASE:=10a
 PKG_FLAGS:=essential
 
 include $(INCLUDE_DIR)/package.mk
@@ -56,7 +56,7 @@ define Package/opt-ndmsv2/install
 	$(INSTALL_BIN) files/profile $(1)/opt/etc
 	$(INSTALL_DATA) files/rc.func $(1)/opt/etc/init.d
 	touch $(1)/opt/etc/ld.so.conf
-	$(INSTALL_DATA) files/{group,passwd,screenrc,shells} $(1)/opt/etc
+	$(INSTALL_DATA) files/{group,passwd,shells} $(1)/opt/etc
 	$(INSTALL_DIR) $(1)/opt/{etc/skel,home,root}
 	$(INSTALL_DATA) files/{.inputrc,.profile} $(1)/opt/root
 	$(INSTALL_DATA) files/{.inputrc,.profile} $(1)/opt/etc/skel
