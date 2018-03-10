@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ext-ui-nginx-7
 PKG_VERSION:=0.2
-PKG_RELEASE:=3
+PKG_RELEASE:=3a
 
 include $(INCLUDE_DIR)/package.mk
 
