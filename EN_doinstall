@@ -26,7 +26,7 @@ case $(mount | grep 'on /opt' | cut -d ' ' -f 5) in
     ;;
 esac
 
-logger -t installer '[1/5] Starting Entware-ng-3x deployment...'
+logger -t installer '[1/5] Starting Entware deployment...'
 
 # This is for opkg only. The other folders will be created from opt-ndmsv2 package
 for folder in lib/opkg tmp var/lock; do
@@ -85,7 +85,7 @@ fi
 ndmq -p 'opkg initrc /opt/etc/init.d/rc.unslung'
 ndmq -p 'system configuration save'
 
-logger -t installer '[5/5] Entware-ng-3x installed!'
+logger -t installer '[5/5] Entware installed!'
 
 if grep -q "222" /opt/etc/init.d/S51dropbear; then
     logger -t installer 'Log on at root:keenetic@my.keenetic.net -p 222 to start new SSH session.'
