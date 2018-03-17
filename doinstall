@@ -27,7 +27,7 @@ case $(mount | grep 'on /opt' | cut -d ' ' -f 5) in
     ;;
 esac
 
-logger -t installer '[1/5] Начало развёртывания системы Entware-3x...'
+logger -t installer '[1/5] Начало развёртывания системы Entware...'
 
 # This is for opkg only. The other folders will be created from opt-ndmsv2 package
 # Только для opkg. Остальные папки будут созданы пакетом opt-ndmsv2
@@ -76,7 +76,7 @@ logger -t installer '[3/5] Генерация SSH-ключей...'
     done
     logger -t installer "Info: Ключ rsa создан"
 
-logger -t installer '[4/5] Установка Entware-3x завершена! Сохранение временной зоны и запуск dropbear...'
+logger -t installer '[4/5] Установка Entware завершена! Сохранение временной зоны и запуск dropbear...'
 
 timezone=`ndmq -p "show running-config" -P message | awk '/timezone/{print $3}'`
 ln -sf /opt/share/zoneinfo/$timezone  /opt/etc/localtime
