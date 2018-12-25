@@ -76,7 +76,7 @@ ln -sf /opt/share/zoneinfo/$timezone  /opt/etc/localtime
 
 if [ -f /usr/sbin/dropbear ]; then
     echo "/bin/sh" >> /opt/etc/shells
-    sed -i 's/PORT=22/PORT=222/' /opt/etc/init.d/S51dropbear
+    sed -i 's/PORT=22/PORT=222/' /opt/etc/config/dropbear.conf
     dropbear -p 222 -a
   else
     dropbear -p 22 -a
@@ -87,7 +87,7 @@ ndmq -p 'system configuration save'
 
 logger -t installer '[5/5] Entware installed!'
 
-if grep -q "222" /opt/etc/init.d/S51dropbear; then
+if grep -q "222" /opt/etc/config/dropbear.conf; then
     logger -t installer 'Log on at root:keenetic@my.keenetic.net -p 222 to start new SSH session.'
   else
     logger -t installer 'Log on at root:keenetic@my.keenetic.net to start new SSH session.'
