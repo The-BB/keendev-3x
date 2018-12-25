@@ -85,7 +85,7 @@ ln -sf /opt/share/zoneinfo/$timezone  /opt/etc/localtime
 
 if [ -f /usr/sbin/dropbear ]; then
     echo "/bin/sh" >> /opt/etc/shells
-    sed -i 's/PORT=22/PORT=222/' /opt/etc/init.d/S51dropbear
+    sed -i 's/PORT=22/PORT=222/' /opt/etc/config/dropbear.conf
     dropbear -p 222 -a
   else
     dropbear -p 22 -a
@@ -95,7 +95,7 @@ logger -t installer '[5/5] Настройка сценария запуска д
 ndmq -p 'opkg initrc /opt/etc/init.d/rc.unslung'
 ndmq -p 'system configuration save'
 
-if grep -q "222" /opt/etc/init.d/S51dropbear; then
+if grep -q "222" /opt/etc/config/dropbear.conf; then
     logger -t installer 'Можно открыть SSH-сессию для соединения с устройством (ssh root:keenetic@my.keenetic.net -p 222).'
   else
     logger -t installer 'Можно открыть SSH-сессию для соединения с устройством (ssh root:keenetic@my.keenetic.net).'
