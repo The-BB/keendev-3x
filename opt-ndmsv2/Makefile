@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=opt-ndmsv2
 PKG_VERSION:=1.0
-PKG_RELEASE:=10a
+PKG_RELEASE:=10b
 PKG_FLAGS:=essential
 
 include $(INCLUDE_DIR)/package.mk
@@ -62,7 +62,7 @@ define Package/opt-ndmsv2/install
 	$(INSTALL_DATA) files/{.inputrc,.profile} $(1)/opt/etc/skel
 	$(INSTALL_DIR) $(1)/opt/{bin,sbin,share,tmp,usr} \
 	    $(1)/opt/var/{lock,log,run} \
-	    $(1)/opt/etc/ndm/{button,fs,netfilter,schedule,time,usb,user,wan}.d \
+	    $(1)/opt/etc/ndm/{button,fs,neighbour,netfilter,schedule,time,usb,user,wan}.d \
 	    $(1)/opt/etc/ndm/openvpn-{client-{connect,disconnect},down,ipchange,learn-address,route-up,tls-verify,up}.d \
 	    $(1)/opt/etc/ndm/{ifcreated,ifdestroyed,ifipchanged,ifstatechanged}.d
 	$(INSTALL_BIN) files/reboot.sh $(1)/opt/sbin
