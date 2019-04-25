@@ -1,11 +1,16 @@
 #!/opt/bin/sh
 
 # Это временно. Переменную timezone должна определить ndms (прошивка)
-timezone="Europe/Moscow"
-export TZ=":/usr/share/zoneinfo/posix/$timezone"
-export PATH=/opt/sbin:/opt/bin:$PATH
-#export LANG='ru_RU.UTF-8'
-#export LC_ALL='ru_RU.UTF-8'
+# since NDMS 3.0 used `/usr/share/zoneinfo/posix/rules.txt`
+if [ -e "/usr/share/zoneinfo/posix/rules.txt" ]; then
+	timezone1=`grep "Moscow" /usr/share/zoneinfo/posix/rules.txt | cut -d ';' -f 2`
+	export TZ="$timezone1"
+else
+	timezone2="Europe/Moscow"
+	export TZ=":/usr/share/zoneinfo/posix/$timezone2"
+fi
+
+export PATH=$PATH
 unset LD_LIBRARY_PATH
 unset LD_PRELOAD
 
@@ -27,6 +32,21 @@ case $(mount | grep 'on /opt' | cut -d ' ' -f 5) in
     ;;
 esac
 
+### ndnproxy
+#timer_func() {
+#while sleep 1; do echo "." >&2; done
+#}
+
+#timer_func &
+#timer_func_pid=$!
+
+#while [ ! -e "/var/ndnproxymain.pid" ]; do
+#    sleep 1
+#done
+
+#kill $timer_func_pid
+### ndnproxy
+
 logger -t installer '[1/5] Начало развёртывания системы Entware...'
 
 # This is for opkg only. The other folders will be created from opt-ndmsv2 package
@@ -39,13 +59,20 @@ done
 
 logger -t installer '[2/5] Загрузка и установка базовых пакетов...'
 opkg update
-opkg install opt-ndmsv2 dropbear ndmq
+
+# for fix `SIGBUS`
+opkg install libc
+
+# starting flood
+dots.sh &
+
+opkg install opt-ndmsv2 dropbear
 
 # Busybox reinstall
 opkg install busybox > /dev/null 2>&1
 
 if [ $? -eq 0 ] ; then
-    sleep 5s && logger -t installer 'Info: Установка пакетов прошла успешно! Продолжаем...'
+    sleep 5 && logger -t installer 'Info: Установка пакетов прошла успешно! Продолжаем...'
   else
     logger -t installer 'Critical error: Ошибка загрузки? Нет соединения с интернетом? Сервер не отвечает?'
     logger -t installer 'Выход из установки...'
@@ -81,10 +108,8 @@ logger -t installer '[4/5] Установка Entware завершена! Сох
 timezone=`ndmq -p "show running-config" -P message | awk '/timezone/{print $3}'`
 ln -sf /opt/share/zoneinfo/$timezone  /opt/etc/localtime
 
-#logger -t installer 'SSH: to be or not to be that is the question...'
-
 if [ -f /usr/sbin/dropbear ]; then
-    echo "/bin/sh" >> /opt/etc/shells
+#    echo "/bin/sh" >> /opt/etc/shells
     sed -i 's/PORT=22/PORT=222/' /opt/etc/config/dropbear.conf
     dropbear -p 222 -a
   else
@@ -101,7 +126,8 @@ if grep -q "222" /opt/etc/config/dropbear.conf; then
     logger -t installer 'Можно открыть SSH-сессию для соединения с устройством (ssh root:keenetic@my.keenetic.net).'
 fi
 
-#logger -t installer 'Готово!'
+#rm -rf /opt/usr/bin /opt/usr/sbin
+
 logger -t installer ''
 logger -t installer '@@@@@@@@@@@@@@@@@@@@@@@'
 logger -t installer ' Не забудьте сменить пароль и номер порта!'
