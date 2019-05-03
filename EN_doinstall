@@ -1,10 +1,15 @@
 #!/opt/bin/sh
 
-timezone="Europe/London"
-export TZ=":/usr/share/zoneinfo/posix/$timezone"
-export PATH=/opt/sbin:/opt/bin:$PATH
-#export LANG='en_US.UTF-8'
-#export LC_ALL='en_US.UTF-8'
+# since NDMS 3.0 uses `/usr/share/zoneinfo/posix/rules.txt`
+if [ -e "/usr/share/zoneinfo/posix/rules.txt" ]; then
+	timezone1=`grep "London" /usr/share/zoneinfo/posix/rules.txt | cut -d ';' -f 2`
+	export TZ="$timezone1"
+else
+	timezone2="Europe/London"
+	export TZ=":/usr/share/zoneinfo/posix/$timezone2"
+fi
+
+export PATH=$PATH
 unset LD_LIBRARY_PATH
 unset LD_PRELOAD
 
@@ -35,12 +40,20 @@ done
 
 logger -t installer '[2/5] Basic packages installation...'
 opkg update
-opkg install opt-ndmsv2 dropbear ndmq
 
+# for fix `SIGBUS`
+opkg install libc
+
+# starting flood
+dots.sh &
+
+opkg install opt-ndmsv2 dropbear
+
+# Busybox reinstall
 opkg install busybox > /dev/null 2>&1
 
 if [ $? -eq 0 ] ; then
-    sleep 5s && logger -t installer 'Info: Packages installed...'
+    sleep 5 && logger -t installer 'Info: Packages installed...'
   else
     logger -t installer 'Critical errors. Exit...'
     exit 1
@@ -72,10 +85,7 @@ logger -t installer '[4/5] Setting timezone, script initrc and starting dropbear
 timezone=`ndmq -p "show running-config" -P message | awk '/timezone/{print $3}'`
 ln -sf /opt/share/zoneinfo/$timezone  /opt/etc/localtime
 
-#logger -t installer 'SSH: to be or not to be that is the question...'
-
 if [ -f /usr/sbin/dropbear ]; then
-    echo "/bin/sh" >> /opt/etc/shells
     sed -i 's/PORT=22/PORT=222/' /opt/etc/config/dropbear.conf
     dropbear -p 222 -a
   else
