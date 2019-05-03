@@ -1,7 +1,7 @@
 #!/opt/bin/sh
 
 # Это временно. Переменную timezone должна определить ndms (прошивка)
-# since NDMS 3.0 used `/usr/share/zoneinfo/posix/rules.txt`
+# since NDMS 3.0 uses `/usr/share/zoneinfo/posix/rules.txt`
 if [ -e "/usr/share/zoneinfo/posix/rules.txt" ]; then
 	timezone1=`grep "Moscow" /usr/share/zoneinfo/posix/rules.txt | cut -d ';' -f 2`
 	export TZ="$timezone1"
@@ -31,21 +31,6 @@ case $(mount | grep 'on /opt' | cut -d ' ' -f 5) in
 	exit 1
     ;;
 esac
-
-### ndnproxy
-#timer_func() {
-#while sleep 1; do echo "." >&2; done
-#}
-
-#timer_func &
-#timer_func_pid=$!
-
-#while [ ! -e "/var/ndnproxymain.pid" ]; do
-#    sleep 1
-#done
-
-#kill $timer_func_pid
-### ndnproxy
 
 logger -t installer '[1/5] Начало развёртывания системы Entware...'
 
@@ -109,7 +94,6 @@ timezone=`ndmq -p "show running-config" -P message | awk '/timezone/{print $3}'`
 ln -sf /opt/share/zoneinfo/$timezone  /opt/etc/localtime
 
 if [ -f /usr/sbin/dropbear ]; then
-#    echo "/bin/sh" >> /opt/etc/shells
     sed -i 's/PORT=22/PORT=222/' /opt/etc/config/dropbear.conf
     dropbear -p 222 -a
   else
@@ -125,8 +109,6 @@ if grep -q "222" /opt/etc/config/dropbear.conf; then
   else
     logger -t installer 'Можно открыть SSH-сессию для соединения с устройством (ssh root:keenetic@my.keenetic.net).'
 fi
-
-#rm -rf /opt/usr/bin /opt/usr/sbin
 
 logger -t installer ''
 logger -t installer '@@@@@@@@@@@@@@@@@@@@@@@'
