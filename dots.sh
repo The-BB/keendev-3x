@@ -1,14 +1,14 @@
-#!/opt/bin/busybox sh
+#!/opt/bin/sh
 
 seconds=180
-timer=$((`/opt/bin/busybox date +%s` + $seconds))
+timer=$((`date +%s` + $seconds))
 
-while [ "$timer" -ge `/opt/bin/busybox date +%s` ]; do
-    if [ -e "/opt/var/run/dropbear.pid" ]; then
+while [ "$timer" -ge `date +%s` ]; do
+    if [ -f "/opt/etc/init.d/S51dropbear" ]; then
         break
     fi
-    /opt/bin/busybox sleep 1
-    /opt/bin/busybox echo '.'
+    sleep 1
+    echo '.'
 done
 
-/opt/bin/busybox rm $0
+rm $0
