@@ -27,6 +27,9 @@ cp -r $BUILD_DIR/busybox-*/ipkg-install/opt $ROOT_DIR
 cp $SCRIPT_DIR/dots.sh $ROOT_DIR/opt/bin
 chmod +x $ROOT_DIR/opt/bin/dots.sh
 
+cp $SCRIPT_DIR/dots-n.sh $ROOT_DIR/opt/bin
+chmod +x $ROOT_DIR/opt/bin/dots-n.sh
+
 # Adding dummie SSH keys to avoid dropbear post-install timeout
 mkdir -p $ROOT_DIR/opt/etc/dropbear
 touch $ROOT_DIR/opt/etc/dropbear/dropbear_ecdsa_host_key
