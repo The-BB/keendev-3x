@@ -56,6 +56,11 @@ opkg install opt-ndmsv2 dropbear
 # Busybox reinstall
 opkg install busybox > /dev/null 2>&1
 
+# starting next flood
+if [ $? -eq 0 ] ; then
+    dots-n.sh &
+fi
+
 if [ $? -eq 0 ] ; then
     sleep 5 && logger -t installer 'Info: Установка пакетов прошла успешно! Продолжаем...'
   else
