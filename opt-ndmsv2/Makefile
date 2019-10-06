@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2011-2018 Entware
+# Copyright (C) 2011-2019 Entware
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,38 +9,37 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=opt-ndmsv2
 PKG_VERSION:=1.0
-PKG_RELEASE:=11
+PKG_RELEASE:=12
+
 PKG_FLAGS:=essential
 
 include $(INCLUDE_DIR)/package.mk
 
 define Package/opt-ndmsv2
-	SECTION:=libs
-	CATEGORY:=keendev
-	DEPENDS:=+libc +libgcc +libstdcpp +libpthread +librt \
-		+ldconfig +findutils +terminfo +ndmq +locales \
-		+zoneinfo-asia +zoneinfo-europe +entware-release \
-		+opkg
-	TITLE:=provides basic toolchain libraries (dummy)
-	MAINTAINER:=Entware team, http://entware.net
-   ifneq (,$(filter mips mipsel,$(ARCH)))
+  SECTION:=libs
+  CATEGORY:=keendev
+  DEPENDS:=+libc +libgcc +libstdcpp +libpthread +librt +ldconfig \
+	+findutils +terminfo +ndmq +opkg +entware-release \
+	+USE_GLIBC:locales \
+	+USE_GLIBC:zoneinfo-asia \
+	+USE_GLIBC:zoneinfo-europe
+  TITLE:=provides basic toolchain libraries (dummy)
+  MAINTAINER:=Entware team, http://entware.net
+  ifneq (,$(filter mips mipsel,$(ARCH)))
 	PKGARCH:=$(BOARD)_kn
-   endif
+  endif
 endef
 
 define Package/opt-ndmsv2/description
- opt-ndmsv2 is a metapackage to install Entware-ng basic libraries and scripts
- on ZyXEL Keenetic routers with NDMS v2.07 and up.
+  opt-ndmsv2 is a metapackage to install Entware basic libraries and scripts
+  on Keenetic routers with NDMS v2.07 and up.
 endef
 
-define Build/Prepare
-endef
+Build/Prepare:=:
 
-define Build/Configure
-endef
+Build/Configure:=:
 
-define Build/Compile
-endef
+Build/Compile:=:
 
 define Package/opt-ndmsv2/conffiles
 /opt/etc/group
