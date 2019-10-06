@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2015 NDM Systems, Inc. http://www.ndmsystems.com/
+# Copyright (C) 2015-2017 NDM Systems, Inc. http://www.ndmsystems.com/
 #
 
 include $(TOPDIR)/rules.mk
@@ -7,7 +7,7 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=ndmq
 PKG_VERSION:=1.0.2
 PKG_REV:=726cd1776fee51093268d3b837116836db6436b2
-PKG_RELEASE:=5
+PKG_RELEASE:=5a
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
@@ -15,17 +15,22 @@ PKG_SOURCE_URL:=https://github.com/ndmsystems/$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 
+PKG_LICENSE:=MIT
+PKG_LICENSE_FILE:=COPYING
+
+PKG_CHECK_FORMAT_SECURITY:=0
+
 include $(INCLUDE_DIR)/package.mk
 
 define Package/ndmq
-	SECTION:=utils
-	CATEGORY:=keendev
-	TITLE:=NDM Query utility
-	URL:=$(PKG_SOURCE_URL)
-	DEPENDS:=+libndm
-   ifneq (,$(filter mips mipsel,$(ARCH)))
+  SECTION:=utils
+  CATEGORY:=keendev
+  TITLE:=NDM Query utility
+  URL:=$(PKG_SOURCE_URL)
+  DEPENDS:=+libndm
+  ifneq (,$(filter mips mipsel,$(ARCH)))
 	PKGARCH:=$(BOARD)_kn
-   endif
+  endif
 endef
 
 EXTRA_CFLAGS := \
