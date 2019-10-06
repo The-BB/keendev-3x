@@ -51,7 +51,8 @@ opkg install libc
 # starting flood
 dots.sh &
 
-opkg install opt-ndmsv2 dropbear
+# install base packages
+opkg install opt-ndmsv2 dropbear poorbox
 
 # Busybox reinstall
 opkg install busybox > /dev/null 2>&1
