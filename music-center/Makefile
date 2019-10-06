@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2016 Entware
+# Copyright (C) 2016-2019 Entware
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,33 +9,35 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=music-center
 PKG_VERSION:=0.1
-PKG_RELEASE:=4
+PKG_RELEASE:=5
 
 include $(INCLUDE_DIR)/package.mk
 
 define Package/music-center
-	SECTION:=sound
-	CATEGORY:=keendev
-	DEPENDS:=+alsa-utils +mpd-full +mpg123 +ympd
-	TITLE:=configs and scripts files for music-center
-   ifneq (,$(filter mips mipsel,$(ARCH)))
+  SECTION:=sound
+  CATEGORY:=keendev
+  DEPENDS:=+alsa-utils +mpd-full +mpg123 +ympd
+  TITLE:=configs and scripts files for music-center
+  ifneq (,$(filter mips mipsel,$(ARCH)))
 	PKGARCH:=$(BOARD)_kn
-   endif
+  endif
 endef
 
 define Package/music-center/description
-	It`s a metapackage to install config and scripts files
-	on ZyXEL Keenetic routers with NDMS v2
+  It`s a metapackage to install config and scripts files
+  on ZyXEL Keenetic routers with NDMS v2
 endef
 
-define Build/Prepare
+define Package/music-center/conffiles
+/opt/etc/asound.conf
+/opt/etc/mpd.conf
 endef
 
-define Build/Configure
-endef
+Build/Prepare:=:
 
-define Build/Compile
-endef
+Build/Configure:=:
+
+Build/Compile:=:
 
 define Package/music-center/install
 	$(INSTALL_DIR) $(1)/opt/etc/default/usb_services/sound
@@ -46,6 +48,7 @@ endef
 
 define Package/music-center/postinst
 #!/bin/sh
+
 ln -sfn /opt/etc/init.d/S04alsactl /opt/etc/default/usb_services/sound/S04alsactl
 ln -sfn /opt/etc/init.d/S89mpd /opt/etc/default/usb_services/sound/S89mpd
 ln -sfn /opt/etc/init.d/S90ympd /opt/etc/default/usb_services/sound/S90ympd
