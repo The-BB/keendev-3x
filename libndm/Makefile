@@ -1,13 +1,12 @@
 #
-# Copyright (C) 2011-2017 NDM Systems, Inc. http://www.ndmsystems.com/
+# Copyright (C) 2011-2019 NDM Systems, Inc. http://www.ndmsystems.com/
 #
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libndm
 PKG_VERSION:=1.1.10
-PKG_RELEASE:=1
-PKG_LICENSE:=NDM
+PKG_RELEASE:=1a
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://github.com/ndmsystems/$(PKG_NAME)
@@ -15,17 +14,20 @@ PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_VERSION:=d93ba1ecea081aaac649bfa34deaf00959155109
 PKG_SOURCE_PROTO:=git
 
+PKG_LICENSE:=MIT
+PKG_LICENSE_FILE:=COPYING
+
 include $(INCLUDE_DIR)/package.mk
 
 define Package/libndm
-	SECTION:=libs
-	CATEGORY:=keendev
-	TITLE:=NDM common library
-	URL:=
-	DEPENDS:=+librt
-   ifneq (,$(filter mips mipsel,$(ARCH)))
+  SECTION:=libs
+  CATEGORY:=keendev
+  TITLE:=NDM common library
+  URL:=$(PKG_SOURCE_URL)
+  DEPENDS:=+librt
+  ifneq (,$(filter mips mipsel,$(ARCH)))
 	PKGARCH:=$(BOARD)_kn
-   endif
+  endif
 endef
 
 EXTRA_CFLAGS :=\
