@@ -14,31 +14,28 @@ PKG_RELEASE:=3a
 include $(INCLUDE_DIR)/package.mk
 
 define Package/ext-ui-nginx-7
-	SECTION:=UI
-	CATEGORY:=keendev
-	DEPENDS:=+curl +nginx +php7-cli +php7-fastcgi \
-		+php7-mod-curl +php7-mod-dom +php7-mod-exif +php7-mod-gd \
-		+php7-mod-json +php7-mod-mbstring +php7-mod-session \
-		+php7-mod-simplexml +php7-mod-xml +php7-mod-xmlreader \
-		+php7-mod-xmlwriter +php7-mod-zip +vnstat +shellinabox
-	TITLE:=Easy installation script for extended web UI (php v7.x)
-   ifneq (,$(filter mips mipsel,$(ARCH)))
+  SECTION:=UI
+  CATEGORY:=keendev
+  DEPENDS:=+curl +nginx +php7-cli +php7-fastcgi \
+	+php7-mod-curl +php7-mod-dom +php7-mod-exif +php7-mod-gd \
+	+php7-mod-json +php7-mod-mbstring +php7-mod-session \
+	+php7-mod-simplexml +php7-mod-xml +php7-mod-xmlreader \
+	+php7-mod-xmlwriter +php7-mod-zip +vnstat +shellinabox
+  TITLE:=Easy installation script for extended web UI (php v7.x)
+  ifneq (,$(filter mips mipsel,$(ARCH)))
 	PKGARCH:=$(BOARD)_kn
-   endif
+  endif
 endef
 
 define Package/ext-ui-nginx-7/description
-	PHP (v7.x) version extended web user interface (ext-UI) for keenetic routers with NDMSv2
+  PHP (v7.x) version extended web user interface (ext-UI) for keenetic routers with NDMSv2
 endef
 
-define Build/Prepare
-endef
+Build/Prepare:=:
 
-define Build/Configure
-endef
+Build/Configure:=:
 
-define Build/Compile
-endef
+Build/Compile:=:
 
 define Package/ext-ui-nginx-7/install
 	$(INSTALL_DIR) $(1)/opt/root
