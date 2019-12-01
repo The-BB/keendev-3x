@@ -1,22 +1,52 @@
 #!/opt/bin/sh
 
-# Это временно. Переменную timezone должна определить ndms (прошивка)
-# since NDMS 3.0 uses `/usr/share/zoneinfo/posix/rules.txt`
-if [ -e "/usr/share/zoneinfo/posix/rules.txt" ]; then
-	timezone1=`grep "Moscow" /usr/share/zoneinfo/posix/rules.txt | cut -d ';' -f 2`
-	export TZ="$timezone1"
-else
-	timezone2="Europe/Moscow"
-	export TZ=":/usr/share/zoneinfo/posix/$timezone2"
-fi
+#set -x
 
 export PATH=$PATH
+
+# Это временно. Переменную timezone должна определить ndms (прошивка)
+if [ "$(uname -r | cut -d'.' -f1,2)" = "2.6" ]; then
+	ln -sf /etc/TZ /opt/etc/TZ
+  else
+	timezone="$(ndmq -p "show clock date" -P tz/rule)"
+	export TZ="$timezone"
+fi
+
+unset LD_BIND_NOW
 unset LD_LIBRARY_PATH
 unset LD_PRELOAD
 
-case $(mount | grep 'on /opt' | cut -d ' ' -f 5) in
-    ext*)
+if [ "$(uname -r | cut -d'.' -f1,2)" = "2.6" ]; then
+	unset TZ
+fi
+
+# checking opkg timezone
+if [ "$(ndmq -p "show running-config" -P message | grep "opkg timezone" | cut -d' ' -f1,2)" = "opkg timezone" ]
+  then
+	logger -t installer 'Info: Have you activated "opkg timezone" in CLI/web?'
+	ndmq -p "opkg timezone $timezone"
+fi
+
+# checking opkg chroot
+if [ "$(ndmq -p "show running-config" -P message | grep "opkg chroot")" = "opkg chroot" ]; then
+	logger -t installer 'Info: Have you activated "opkg chroot" in CLI/web?'
+#	logger -t installer 'Wow, OK!'
+	for files in group passwd profile shell; do rm -f /opt/etc/$files; done
+	for files in hosts resolv.conf; do cp /tmp/$files /opt/etc/; done
+# checking opt fs
+	check_fs_opt="$(mount | grep 'on / ' | cut -d' ' -f5)"
+  else
+	check_fs_opt="$(mount | grep 'on /opt ' | cut -d' ' -f5)"
+fi
+
+case "$check_fs_opt" in
+    ext2|ext3)
 	logger -t installer 'Info: Раздел пригоден для установки.'
+    ;;
+    ext4)
+	if [ ! "$(uname -r | cut -d'.' -f1,2)" = "2.6" ]; then
+	    logger -t installer 'Info: Раздел пригоден для установки.'
+	fi
     ;;
     *ntfs*)
 	logger -t installer 'Info: Раздел NTFS! атрибуты "пользователь:группа" могут не поддерживаться.'
@@ -28,98 +58,110 @@ case $(mount | grep 'on /opt' | cut -d ' ' -f 5) in
     ;;
     *)
         logger -t installer 'Critical error: Используйте накопитель с файловой системой ext2/ext3/ext4. Отменяем...'
+	logger -t installer 'Выход из установки.'
 	exit 1
     ;;
 esac
 
-logger -t installer '[1/5] Начало развёртывания системы Entware...'
+# checking network
+if ! ping -c 5 google.com > /dev/null 2>&1
+  then
+	logger -t installer 'Critical error: Проверьте настройки сети.'
+	logger -t installer 'Выход из установки.'
+	exit 1
+  else
+	logger -t installer 'Info: ping google.com ..... OK'
+fi
+
+logger -t installer '[1/5] Начало установки системы Entware...'
 
 # This is for opkg only. The other folders will be created from opt-ndmsv2 package
-# Только для opkg. Остальные папки будут созданы пакетом opt-ndmsv2
-logger -t installer 'Info: Создание папок...'
+# Только для opkg. Остальные каталоги будут созданы пакетом opt-ndmsv1/2
+logger -t installer 'Info: Создание каталогов...'
 
 for folder in lib/opkg tmp var/lock; do
-    mkdir -p /opt/$folder
+	mkdir -p /opt/$folder
 done
 
 logger -t installer '[2/5] Загрузка и установка базовых пакетов...'
-opkg update
-
-# for fix `SIGBUS`
-opkg install libc
-
-# starting flood
-dots.sh &
+if ! opkg update > /dev/null 2>&1
+  then
+	logger -t installer 'Critical error: Во время обновления списка пакетов возникла ошибка.'
+	logger -t installer 'Выход из установки.'
+	exit 1
+fi
 
 # install base packages
-opkg install opt-ndmsv2 dropbear poorbox
+for ipk in libc opt-ndmsv2 grep poorbox dropbear busybox; do
+  if ! opkg install $ipk > /dev/null 2>&1
+    then
+	logger -t installer "Critical error: Во время установки пакета $ipk возникла ошибка."
+	logger -t installer 'Выход из установки.'
+	exit 1
+    else
+	logger -t installer "Info: Пакет $ipk установлен"
+      if [ "$ipk" = "libc" ]; then
+	dots.sh &
+      fi
+  fi
+done
 
-# Busybox reinstall
-opkg install busybox > /dev/null 2>&1
+logger -t installer 'Info: Установка пакетов прошла успешно!'
 
-# starting next flood
-if [ $? -eq 0 ] ; then
-    dots-n.sh &
-fi
-
-if [ $? -eq 0 ] ; then
-    sleep 5 && logger -t installer 'Info: Установка пакетов прошла успешно! Продолжаем...'
-  else
-    logger -t installer 'Critical error: Ошибка загрузки? Нет соединения с интернетом? Сервер не отвечает?'
-    logger -t installer 'Выход из установки...'
-    exit 1
-fi
-
+dots-n.sh &
 ldconfig > /dev/null 2>&1
 
 # Установка прав для многопользовательской среды
 # Fix for multiuser environment
 chmod 777 /opt/tmp
 
+# keygen
 logger -t installer '[3/5] Генерация SSH-ключей...'
 
-    rm /opt/etc/dropbear/dropbear_ecdsa_host_key
-    dropbearkey -t ecdsa -f /opt/etc/dropbear/dropbear_ecdsa_host_key > /dev/null &
-    while [ ! -z "$(pidof dropbearkey)" ] ; do
-	sleep 2
-	echo -n '.'
-    done
-    logger -t installer "Info: Ключ ecdsa создан"
-
-    rm /opt/etc/dropbear/dropbear_rsa_host_key
-    dropbearkey -t rsa -f /opt/etc/dropbear/dropbear_rsa_host_key -s 1024 > /dev/null &
-    while [ ! -z "$(pidof dropbearkey)" ] ; do
-	sleep 2
-	echo -n '.'
-    done
-    logger -t installer "Info: Ключ rsa создан"
-
-logger -t installer '[4/5] Установка Entware завершена! Сохранение временной зоны и запуск dropbear...'
-
-timezone=`ndmq -p "show running-config" -P message | awk '/timezone/{print $3}'`
-ln -sf /opt/share/zoneinfo/$timezone  /opt/etc/localtime
-
-if [ -f /usr/sbin/dropbear ]; then
-    sed -i 's/PORT=22/PORT=222/' /opt/etc/config/dropbear.conf
-    dropbear -p 222 -a
+dbkey()
+{
+# $1 is a key type [ecdsa|rsa]
+rm /opt/etc/dropbear/dropbear_"$1"_host_key
+  if [ "$1" = "ecdsa" ]; then
+	BITS="256"
   else
-    dropbear -p 22 -a
+	BITS="1024"
+  fi
+dropbearkey -t "$1" -f /opt/etc/dropbear/dropbear_"$1"_host_key -s "$BITS" > /dev/null &
+  while [ -n "$(pidof dropbearkey)" ]; do
+	echo "."
+	sleep 2
+  done
+	logger -t installer "Info: Ключ $1 создан"
+}
+
+dbkey ecdsa
+dbkey rsa
+
+logger -t installer '[4/5] Настройка сценария запуска, установка часового пояса и запуск dropbear...'
+
+# TZ
+if [ ! "$(uname -r | cut -d'.' -f1,2)" = "2.6" ]; then
+	timezone="$(ndmq -p "show clock date" -P tz/locality)"
+	ln -sf /opt/share/zoneinfo/"$timezone"  /opt/etc/localtime
 fi
 
-logger -t installer '[5/5] Настройка сценария запуска для прошивки NDMS...'
-ndmq -p 'opkg initrc /opt/etc/init.d/rc.unslung'
-ndmq -p 'system configuration save'
+# SSH
+if [ -f "/usr/sbin/dropbear" ] || [ -n "$(pidof dropbear)" ]; then
+	sed -i 's,PORT=22,PORT=222,' /opt/etc/config/dropbear.conf
+fi
+
+/opt/etc/init.d/S51dropbear start
+
+ndmq -p "opkg initrc /opt/etc/init.d/rc.unslung"
+ndmq -p "system configuration save"
 
 if grep -q "222" /opt/etc/config/dropbear.conf; then
-    logger -t installer 'Можно открыть SSH-сессию для соединения с устройством (ssh root:keenetic@my.keenetic.net -p 222).'
+	logger -t installer 'Можно открыть SSH-сессию для соединения с устройством (ssh root:keenetic@my.keenetic.net -p 222).'
   else
-    logger -t installer 'Можно открыть SSH-сессию для соединения с устройством (ssh root:keenetic@my.keenetic.net).'
+	logger -t installer 'Можно открыть SSH-сессию для соединения с устройством (ssh root:keenetic@my.keenetic.net).'
 fi
 
-logger -t installer ''
-logger -t installer '@@@@@@@@@@@@@@@@@@@@@@@'
-logger -t installer ' Не забудьте сменить пароль и номер порта!'
-logger -t installer '@@@@@@@@@@@@@@@@@@@@@@@'
-logger -t installer ''
+logger -t installer '[5/5] Установка Entware завершена! Не забудьте сменить пароль и номер порта!'
 
-rm $0
+rm "$0"
