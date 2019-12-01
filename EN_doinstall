@@ -1,107 +1,140 @@
 #!/opt/bin/sh
 
-# since NDMS 3.0 uses `/usr/share/zoneinfo/posix/rules.txt`
-if [ -e "/usr/share/zoneinfo/posix/rules.txt" ]; then
-	timezone1=`grep "London" /usr/share/zoneinfo/posix/rules.txt | cut -d ';' -f 2`
-	export TZ="$timezone1"
-else
-	timezone2="Europe/London"
-	export TZ=":/usr/share/zoneinfo/posix/$timezone2"
-fi
+#set -x
 
 export PATH=$PATH
+
+timezone="$(ndmq -p "show clock date" -P tz/rule)"
+export TZ="$timezone"
+
+unset LD_BIND_NOW
 unset LD_LIBRARY_PATH
 unset LD_PRELOAD
 
-case $(mount | grep 'on /opt' | cut -d ' ' -f 5) in
+# checking opkg timezone
+if [ "$(ndmq -p "show running-config" -P message | grep "opkg timezone" | cut -d' ' -f1,2)" = "opkg timezone" ]
+  then
+	logger -t installer 'Info: Have you activated "opkg timezone" in CLI/web?'
+	ndmq -p "opkg timezone $timezone"
+fi
+
+# checking opkg chroot
+if [ "$(ndmq -p "show running-config" -P message | grep "opkg chroot")" = "opkg chroot" ]; then
+	logger -t installer 'Info: Have you activated "opkg chroot" in CLI/web?'
+#	logger -t installer 'Wow, OK!'
+	for files in group passwd profile shell; do rm -f /opt/etc/$files; done
+	for files in hosts resolv.conf; do cp /tmp/$files /opt/etc/; done
+# checking opt fs
+	check_fs_opt="$(mount | grep 'on / ' | cut -d' ' -f5)"
+  else
+	check_fs_opt="$(mount | grep 'on /opt ' | cut -d' ' -f5)"
+fi
+
+case "$check_fs_opt" in
     ext*)
-	echo 'Partition is OK.'
+	logger -t installer 'Partition is OK.'
     ;;
     *ntfs*)
-	echo 'NTFS partition! owner:group attributes may not be supported.'
-	echo 'Please, use ext2/ext3/ext4 if something goes wrong.'
+	logger -t installer 'NTFS partition! owner:group attributes may not be supported.'
+	logger -t installer 'Please, use ext2/ext3/ext4 if something goes wrong.'
     ;;
     *hfs*)
-	echo 'HFS partition is not tested.'
-	echo 'Please, use ext2/ext3/ext4 if something goes wrong.'
+	logger -t installer 'HFS partition is not tested.'
+	logger -t installer 'Please, use ext2/ext3/ext4 if something goes wrong.'
     ;;
     *)
-        echo 'Please use ext2/ext3/ext4 formatted storage. Aborting...'
+        logger -t installer 'Please use ext2/ext3/ext4 formatted storage. Aborting...'
+	logger -t installer 'Exit.'
 	exit 1
     ;;
 esac
+
+# checking network
+if ! ping -c 5 google.com > /dev/null 2>&1
+  then
+	logger -t installer 'Critical error: Check your network settings.'
+	logger -t installer 'Exit.'
+	exit 1
+  else
+	logger -t installer 'Info: ping google.com ..... OK'
+fi
 
 logger -t installer '[1/5] Starting Entware deployment...'
 
 # This is for opkg only. The other folders will be created from opt-ndmsv2 package
 for folder in lib/opkg tmp var/lock; do
-    mkdir -p /opt/$folder
+	mkdir -p /opt/$folder
 done
 
 logger -t installer '[2/5] Basic packages installation...'
-opkg update
-
-# for fix `SIGBUS`
-opkg install libc
-
-# starting flood
-dots.sh &
+if ! opkg update > /dev/null 2>&1
+  then
+	logger -t installer 'Critical error: An error occurred while updating the package list.'
+	logger -t installer 'Exit.'
+	exit 1
+fi
 
 # install base packages
-opkg install opt-ndmsv2 dropbear poorbox
+for ipk in libc opt-ndmsv2 grep poorbox dropbear busybox; do
+  if ! opkg install $ipk > /dev/null 2>&1
+    then
+	logger -t installer "Critical error: An error occurred while installing the $ipk package."
+	logger -t installer 'Exit.'
+	exit 1
+    else
+	logger -t installer "Info: The $ipk package has been installed"
+      if [ "$ipk" = "libc" ]; then
+	dots.sh &
+      fi
+  fi
+done
 
-# Busybox reinstall
-opkg install busybox > /dev/null 2>&1
+logger -t installer 'Info: All basic packages are installed...'
 
-# starting next flood
-if [ $? -eq 0 ] ; then
-    dots-n.sh &
-fi
-
-if [ $? -eq 0 ] ; then
-    sleep 5 && logger -t installer 'Info: Packages installed...'
-  else
-    logger -t installer 'Critical errors. Exit...'
-    exit 1
-fi
-
+dots-n.sh &
 ldconfig > /dev/null 2>&1
 
 # Fix for multiuser environment
 chmod 777 /opt/tmp
 
+# keygen
 logger -t installer '[3/5] Generating SSH keys...'
 
-    rm /opt/etc/dropbear/dropbear_ecdsa_host_key
-    dropbearkey -t ecdsa -f /opt/etc/dropbear/dropbear_ecdsa_host_key > /dev/null &
-    while [ ! -z "$(pidof dropbearkey)" ] ; do
+dbkey()
+{
+# $1 is a key type [ecdsa|rsa]
+rm /opt/etc/dropbear/dropbear_"$1"_host_key
+  if [ "$1" = "ecdsa" ]; then
+	BITS="256"
+  else
+	BITS="1024"
+  fi
+dropbearkey -t "$1" -f /opt/etc/dropbear/dropbear_"$1"_host_key -s "$BITS" > /dev/null &
+  while [ -n "$(pidof dropbearkey)" ]; do
+	echo "."
 	sleep 2
-	echo -n '.'
-    done
+  done
+	logger -t installer "Info: $1 key was created"
+}
 
-    rm /opt/etc/dropbear/dropbear_rsa_host_key
-    dropbearkey -t rsa -f /opt/etc/dropbear/dropbear_rsa_host_key -s 1024 > /dev/null &
-    while [ ! -z "$(pidof dropbearkey)" ] ; do
-	sleep 2
-	echo -n '.'
-    done
+dbkey ecdsa
+dbkey rsa
 
 logger -t installer '[4/5] Setting timezone, script initrc and starting dropbear...'
 
-timezone=`ndmq -p "show running-config" -P message | awk '/timezone/{print $3}'`
-ln -sf /opt/share/zoneinfo/$timezone  /opt/etc/localtime
+# TZ
+timezone="$(ndmq -p "show clock date" -P tz/locality)"
+ln -sf /opt/share/zoneinfo/"$timezone"  /opt/etc/localtime
 
-if [ -f /usr/sbin/dropbear ]; then
-    sed -i 's/PORT=22/PORT=222/' /opt/etc/config/dropbear.conf
-    dropbear -p 222 -a
-  else
-    dropbear -p 22 -a
+# SSH
+if [ -f "/usr/sbin/dropbear" ] || [ -n "$(pidof dropbear)" ]; then
+	sed -i 's,PORT=22,PORT=222,' /opt/etc/config/dropbear.conf
 fi
 
-ndmq -p 'opkg initrc /opt/etc/init.d/rc.unslung'
-ndmq -p 'system configuration save'
+/opt/etc/init.d/S51dropbear start
 
-logger -t installer '[5/5] Entware installed!'
+ndmq -p "opkg initrc /opt/etc/init.d/rc.unslung"
+ndmq -p "system configuration save"
 
 if grep -q "222" /opt/etc/config/dropbear.conf; then
     logger -t installer 'Log on at root:keenetic@my.keenetic.net -p 222 to start new SSH session.'
@@ -109,4 +142,6 @@ if grep -q "222" /opt/etc/config/dropbear.conf; then
     logger -t installer 'Log on at root:keenetic@my.keenetic.net to start new SSH session.'
 fi
 
-rm $0
+logger -t installer '[5/5] Entware installed!'
+
+rm "$0"
