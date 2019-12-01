@@ -1,14 +1,18 @@
 #!/opt/bin/sh
 
-seconds=180
-timer=$((`date +%s` + $seconds))
+#set -x
 
-while [ "$timer" -ge `date +%s` ]; do
-    if [ -e "/opt/var/run/dropbear.pid" ]; then
-        break
-    fi
-    sleep 1
-    echo '.'
+PATH=/opt/bin:/opt/sbin:$PATH
+
+seconds=120
+timer=$(($(date +%s) + seconds))
+
+while [ "$timer" -ge "$(date +%s)" ]; do
+  if [ -e "/opt/var/run/dropbear.pid" ]; then
+	break
+  fi
+	echo "."
+	sleep 2
 done
 
-rm $0
+rm "$0"
