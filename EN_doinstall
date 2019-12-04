@@ -56,10 +56,10 @@ if ! ping -c 5 google.com > /dev/null 2>&1
 	logger -t installer 'Exit.'
 	exit 1
   else
-	logger -t installer 'Info: ping google.com ..... OK'
+	logger -t installer 'Info: "ping google.com" ..... OK'
 fi
 
-logger -t installer '[1/5] Starting Entware deployment...'
+logger -t installer '[1/5] Starting "Entware" deployment...'
 
 # This is for opkg only. The other folders will be created from opt-ndmsv2 package
 for folder in lib/opkg tmp var/lock; do
@@ -76,13 +76,15 @@ fi
 
 # install base packages
 for ipk in libc opt-ndmsv2 grep poorbox dropbear busybox; do
+	logger -t installer "Info: Installing \"$ipk\" package..."
   if ! opkg install $ipk > /dev/null 2>&1
     then
-	logger -t installer "Critical error: An error occurred while installing the $ipk package."
+	logger -t installer "Critical error: An error occurred while installing the \"$ipk\" package."
 	logger -t installer 'Exit.'
 	exit 1
     else
-	logger -t installer "Info: The $ipk package has been installed"
+	logger -t installer "Info: The \"$ipk\" package has been installed."
+	sleep 2
       if [ "$ipk" = "libc" ]; then
 	dots.sh &
       fi
@@ -100,31 +102,25 @@ chmod 777 /opt/tmp
 # keygen
 logger -t installer '[3/5] Generating SSH keys...'
 
-dbkey()
-{
-# $1 is a key type [ecdsa|rsa]
-rm /opt/etc/dropbear/dropbear_"$1"_host_key
-  if [ "$1" = "ecdsa" ]; then
-	BITS="256"
-  else
-	BITS="1024"
-  fi
-dropbearkey -t "$1" -f /opt/etc/dropbear/dropbear_"$1"_host_key -s "$BITS" > /dev/null &
-  while [ -n "$(pidof dropbearkey)" ]; do
-	echo "."
+for key in rsa ecdsa; do
+  rm /opt/etc/dropbear/dropbear_${key}_host_key
+	logger -t installer "Info: Generating \"$key\" key..."
+  if ! dropbearkey -t $key -f /opt/etc/dropbear/dropbear_${key}_host_key > /dev/null 2>&1
+    then
+	logger -t installer "Critical error: An error occurred while generating \"$key\" key."
+	logger -t installer 'Exit.'
+	exit 1
+    else
+	logger -t installer "Info: \"$key\" key was created."
 	sleep 2
-  done
-	logger -t installer "Info: $1 key was created"
-}
-
-dbkey ecdsa
-dbkey rsa
+  fi
+done
 
 logger -t installer '[4/5] Setting timezone, script initrc and starting dropbear...'
 
 # TZ
 timezone="$(ndmq -p "show clock date" -P tz/locality)"
-ln -sf /opt/share/zoneinfo/"$timezone"  /opt/etc/localtime
+ln -sf /opt/share/zoneinfo/"$timezone" /opt/etc/localtime
 
 # SSH
 if [ -f "/usr/sbin/dropbear" ] || [ -n "$(pidof dropbear)" ]; then
@@ -137,11 +133,11 @@ ndmq -p "opkg initrc /opt/etc/init.d/rc.unslung"
 ndmq -p "system configuration save"
 
 if grep -q "222" /opt/etc/config/dropbear.conf; then
-    logger -t installer 'Log on at root:keenetic@my.keenetic.net -p 222 to start new SSH session.'
+	logger -t installer 'Log on at "root:keenetic@my.keenetic.net -p 222" to start new SSH session.'
   else
-    logger -t installer 'Log on at root:keenetic@my.keenetic.net to start new SSH session.'
+	logger -t installer 'Log on at "root:keenetic@my.keenetic.net" to start new SSH session.'
 fi
 
-logger -t installer '[5/5] Entware installed!'
+logger -t installer '[5/5] "Entware" installed!'
 
 rm "$0"
