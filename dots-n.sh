@@ -2,9 +2,9 @@
 
 #set -x
 
-PATH=/opt/bin:/opt/sbin:$PATH
+PATH=$PATH
 
-seconds=120
+seconds=90
 timer=$(($(date +%s) + seconds))
 
 while [ "$timer" -ge "$(date +%s)" ]; do
@@ -12,7 +12,7 @@ while [ "$timer" -ge "$(date +%s)" ]; do
 	break
   fi
 	echo "."
-	sleep 2
+	sleep 1
 done
 
 rm "$0"
