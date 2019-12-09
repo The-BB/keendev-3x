@@ -11,8 +11,7 @@ while [ "$timer" -ge "$(date +%s)" ]; do
   if [ -e "/opt/var/run/dropbear.pid" ]; then
 	break
   fi
-	echo "."
-	sleep 1
+	echo " in progress..." && sleep 1
 done
 
 rm "$0"
