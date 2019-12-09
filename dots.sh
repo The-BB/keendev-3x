@@ -4,15 +4,14 @@
 
 PATH=$PATH
 
-seconds=180
+seconds=120
 timer=$(($(date +%s) + seconds))
 
 while [ "$timer" -ge "$(date +%s)" ]; do
-  if [ -f "/opt/etc/init.d/S51dropbear" ]; then
+  if [ -e "/opt/etc/init.d/S51dropbear" ]; then
 	break
   fi
-	echo "."
-	sleep 1
+	echo " in progress..." && sleep 1
 done
 
 rm "$0"
