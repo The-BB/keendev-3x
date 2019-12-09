@@ -52,11 +52,22 @@ esac
 # checking network
 if ! ping -c 5 google.com > /dev/null 2>&1
   then
-	logger -t installer 'Critical error: Check your network settings.'
+	logger -t installer 'Critical error: The resource is not available. Check your network settings.'
 	logger -t installer 'Exit.'
 	exit 1
   else
 	logger -t installer 'Info: "ping google.com" ..... OK'
+	sleep 1
+fi
+
+if ! ping -c 5 bin.entware.net > /dev/null 2>&1
+  then
+	logger -t installer 'Critical error: The resource is not available. Please try again later.'
+	logger -t installer 'Exit.'
+	exit 1
+  else
+	logger -t installer 'Info: "ping bin.entware.net" ..... OK'
+	sleep 1
 fi
 
 logger -t installer '[1/5] Starting "Entware" deployment...'
@@ -75,7 +86,7 @@ if ! opkg update > /dev/null 2>&1
 fi
 
 # install base packages
-for ipk in libc opt-ndmsv2 grep poorbox dropbear busybox; do
+for ipk in libgcc libc libpthread librt entware-release findutils grep ldconfig locales ndmq opkg zoneinfo-asia zoneinfo-europe opt-ndmsv2 dropbear poorbox busybox; do
 	logger -t installer "Info: Installing \"$ipk\" package..."
   if ! opkg install $ipk > /dev/null 2>&1
     then
@@ -84,11 +95,11 @@ for ipk in libc opt-ndmsv2 grep poorbox dropbear busybox; do
 	exit 1
     else
 	logger -t installer "Info: The \"$ipk\" package has been installed."
-	sleep 2
-      if [ "$ipk" = "libc" ]; then
-	dots.sh &
-      fi
+	sleep 1
   fi
+    if [ "$ipk" = "libc" ]; then
+	dots.sh &
+    fi
 done
 
 logger -t installer 'Info: All basic packages are installed...'
@@ -112,11 +123,11 @@ for key in rsa ecdsa; do
 	exit 1
     else
 	logger -t installer "Info: \"$key\" key was created."
-	sleep 2
+	sleep 1
   fi
 done
 
-logger -t installer '[4/5] Setting timezone, script initrc and starting dropbear...'
+logger -t installer '[4/5] Setting timezone, script initrc and starting "dropbear"...'
 
 # TZ
 timezone="$(ndmq -p "show clock date" -P tz/locality)"
