@@ -1,0 +1,5 @@
+#!/opt/bin/sh
+
+export LINFO_NCURSES=1
+
+/opt/bin/php index.php "$@"
