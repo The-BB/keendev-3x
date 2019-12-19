@@ -36,9 +36,7 @@ define Package/opt-ndmsv2/description
 endef
 
 Build/Prepare:=:
-
 Build/Configure:=:
-
 Build/Compile:=:
 
 define Package/opt-ndmsv2/conffiles
