@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ext-ui
 PKG_VERSION:=0.4
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -21,10 +21,7 @@ define Package/ext-ui
 	+php7-mod-dom +php7-mod-exif +php7-mod-gd +php7-mod-json \
 	+php7-mod-mbstring +php7-mod-session +php7-mod-simplexml \
 	+php7-mod-xml +php7-mod-xmlreader +php7-mod-xmlwriter \
-	+php7-mod-zip +vnstat +shellinabox \
-	+LINUX_2_6_22:usbip_legacy \
-	+LINUX_3_4:usbip \
-	+LINUX_4_9:usbip
+	+php7-mod-zip +vnstat +shellinabox +usbip
   ifneq (,$(filter mips mipsel,$(ARCH)))
 	PKGARCH:=$(BOARD)_kn
   endif
