@@ -8,7 +8,7 @@ seconds=90
 timer=$(($(date +%s) + seconds))
 
 while [ "$timer" -ge "$(date +%s)" ]; do
-  if [ -e "/opt/var/run/dropbear.pid" ]; then
+  if [ -f "/opt/var/run/dropbear.pid" ]; then
 	break
   fi
 	echo " in progress..." && sleep 1
