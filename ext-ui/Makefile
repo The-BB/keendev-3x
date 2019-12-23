@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ext-ui
 PKG_VERSION:=0.4
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -157,7 +157,7 @@ if [ -f "/opt/etc/vnstat.conf" ]; then
   sed -i -e 's,eth0,br0,' /opt/etc/vnstat.conf
 fi
 
-for iface in $$(ifconfig -a | cut -d' ' -f1 | sort -u -r)
+for iface in $$(ls /sys/class/net/ | sort -r)
   do
     if [ ! -f "/opt/var/lib/vnstat/$$iface" ]; then
       echo -en "Do you wish to add monitoring an interface \"$$iface\"? [n]: "
@@ -274,7 +274,7 @@ if [ -f "/opt/etc/vnstat.conf" ]; then
   sed -i -e 's,eth0,br0,' /opt/etc/vnstat.conf
 fi
 
-for iface in $$(ifconfig -a | cut -d' ' -f1 | sort -u -r)
+for iface in $$(ls /sys/class/net/ | sort -r)
   do
     if [ ! -f "/opt/var/lib/vnstat/$$iface" ]; then
       echo -en "Do you wish to add monitoring an interface \"$$iface\"? [n]: "
