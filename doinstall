@@ -12,6 +12,8 @@ unset LD_BIND_NOW
 unset LD_LIBRARY_PATH
 unset LD_PRELOAD
 
+logger -t installer '[1/5] Начало установки системы пакетов "Entware"...'
+
 # checking opkg timezone
 if [ "$(ndmq -p "show running-config" -P message | grep "opkg timezone" | cut -d' ' -f1,2)" = "opkg timezone" ]
   then
@@ -51,7 +53,8 @@ case "$check_fs_opt" in
 esac
 
 # checking network
-if ! ping -c 5 google.com > /dev/null 2>&1
+logger -t installer 'Info: "ping google.com"...'
+if ! ping -c 3 google.com > /dev/null 2>&1
   then
 	logger -t installer 'Critical error: Ресурс недоступен. Проверьте настройки сети.'
 	logger -t installer 'Выход из установки.'
@@ -61,7 +64,8 @@ if ! ping -c 5 google.com > /dev/null 2>&1
 	sleep 1
 fi
 
-if ! ping -c 5 bin.entware.net > /dev/null 2>&1
+logger -t installer 'Info: "ping bin.entware.net"...'
+if ! ping -c 3 bin.entware.net > /dev/null 2>&1
   then
 	logger -t installer 'Critical error: Ресурс недоступен. Повторите попытку позже.'
 	logger -t installer 'Выход из установки.'
@@ -71,16 +75,13 @@ if ! ping -c 5 bin.entware.net > /dev/null 2>&1
 	sleep 1
 fi
 
-logger -t installer '[1/5] Начало установки системы пакетов "Entware"...'
-
-# This is for opkg only. The other folders will be created from opt-ndmsv2 package
 # Только для opkg. Остальные каталоги будут созданы пакетом opt-ndmsv2
 logger -t installer 'Info: Создание каталогов...'
-
 for folder in lib/opkg tmp var/lock; do
 	mkdir -p /opt/$folder
 done
 
+# opkg update
 logger -t installer '[2/5] Загрузка и установка основных пакетов...'
 if ! opkg update > /dev/null 2>&1
   then
@@ -112,7 +113,6 @@ dots-n.sh &
 ldconfig > /dev/null 2>&1
 
 # Установка прав для многопользовательской среды
-# Fix for multiuser environment
 chmod 777 /opt/tmp
 
 # keygen
@@ -140,7 +140,7 @@ ln -sf /opt/share/zoneinfo/"$timezone" /opt/etc/localtime
 
 # SSH
 if [ -f "/usr/sbin/dropbear" ] || [ -n "$(pidof dropbear)" ]; then
-	sed -i 's,PORT=22,PORT=222,' /opt/etc/config/dropbear.conf
+	sed -i "s,PORT=22\$,PORT=222," /opt/etc/config/dropbear.conf
 fi
 
 /opt/etc/init.d/S51dropbear start
