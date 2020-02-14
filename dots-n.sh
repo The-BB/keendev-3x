@@ -8,10 +8,10 @@ seconds=90
 timer=$(($(date +%s) + seconds))
 
 while [ "$timer" -ge "$(date +%s)" ]; do
-  if [ -f "/opt/var/run/dropbear.pid" ]; then
+  if [ -L "/opt/etc/localtime" ]; then
 	break
   fi
-	echo " in progress..." && sleep 1
+	echo "... in progress..." && sleep 1
 done
 
 rm "$0"
