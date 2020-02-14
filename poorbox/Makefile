@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2019 Entware
+# Copyright (C) 2019-2020 Entware
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -14,15 +14,17 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=poorbox
-PKG_VERSION:=1.31.0
+PKG_VERSION:=1.31.1
 PKG_RELEASE:=1
 
 PKG_SOURCE:=busybox-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=https://www.busybox.net/downloads \
 		http://sources.buildroot.net
-PKG_HASH:=0e4925392fd9f3743cc517e031b68b012b24a63b0cf6c1ff03cce7bb3846cc99
+PKG_HASH:=d0f940a72f648943c1f2211e0e3117387c31d765137d92bd8284a3fb9752a998
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
+PKG_BUILD_PARALLEL:=1
+PKG_CHECK_FORMAT_SECURITY:=0
 
 #Busybox use it's own PIE config flag and LDFLAGS are used with ld, not gcc.
 PKG_ASLR_PIE:=0
@@ -75,8 +77,10 @@ endef
 define Package/poorbox/install
 	$(INSTALL_DIR) $(1)/opt/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/busybox $(1)/opt/usr/bin
+	$(LN) busybox $(1)/opt/usr/bin/ash
 	$(LN) busybox $(1)/opt/usr/bin/gunzip
 	$(LN) busybox $(1)/opt/usr/bin/gzip
+	$(LN) busybox $(1)/opt/usr/bin/sh
 	$(LN) busybox $(1)/opt/usr/bin/tar
 	$(LN) busybox $(1)/opt/usr/bin/wget
 endef
