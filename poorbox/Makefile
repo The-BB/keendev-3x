@@ -8,14 +8,14 @@
 # Этот вариант busysbox с минимумом апплетов для систем, где busybox вообще нет.
 # 1. Можно понизить версию
 # 2. Для изменения конфигурации следует выполнить make package/poorbox/configure
-#    Зайти в папку poorbox, выполнить make menuconfig. Обновленный .config положить в files
+#    Зайти в папку poorbox, выполнить make menuconfig. Обновленный .config положить в src
 #
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=poorbox
 PKG_VERSION:=1.31.1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=busybox-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=https://www.busybox.net/downloads \
@@ -62,10 +62,6 @@ MAKE_FLAGS += \
 ifneq ($(findstring c,$(OPENWRT_VERBOSE)),)
   MAKE_FLAGS += V=1
 endif
-
-define Build/Configure
-	$(CP) ./files/.config $(PKG_BUILD_DIR)
-endef
 
 define Build/Compile
 	$(call Build/Compile/Default, \
