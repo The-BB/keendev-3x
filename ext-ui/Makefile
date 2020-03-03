@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ext-ui
 PKG_VERSION:=0.4
-PKG_RELEASE:=4
+PKG_RELEASE:=5a
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -150,21 +150,21 @@ fi
 
 # vnstat
 if [ -f "/opt/etc/init.d/S32vnstat" ]; then
-  sed -i -e 's,-u -i ppp0,-u,' /opt/etc/init.d/S32vnstat
+  sed -i -e 's,-u -i ppp0,-u,;s,"-d","-d --noadd",' /opt/etc/init.d/S32vnstat
 fi
 
 if [ -f "/opt/etc/vnstat.conf" ]; then
   sed -i -e 's,eth0,br0,' /opt/etc/vnstat.conf
 fi
 
-for iface in $$(ls /sys/class/net/ | sort -r)
+for iface in $$(ls -1 /sys/class/net | sort -r)
   do
     if [ ! -f "/opt/var/lib/vnstat/$$iface" ]; then
       echo -en "Do you wish to add monitoring an interface \"$$iface\"? [n]: "
       read -r wish_to_add
       [ -z "$$wish_to_add" ] && wish_to_add=n
 	if [ "$$wish_to_add" = "y" ]; then
-	  vnstat -u -i "$$iface" > /dev/null 2>&1
+	  vnstat --create -i "$$iface" >/dev/null 2>&1
 	    if ! grep -q "array(.*$$iface" /opt/share/www/ext-ui/addons/vnstat/config.php; then
 	      sed -i -e "s|('br0'|('br0','$$iface'|" /opt/share/www/ext-ui/addons/vnstat/config.php
 	    fi
@@ -211,7 +211,7 @@ if [ -f "/opt/etc/init.d/S79php-fcgi" ]; then
 fi
 
 if [ -f "/opt/etc/init.d/S80extui" ]; then
-  if [ -n "$$(ps | grep "nginx.*ext-ui" | grep -v grep | awk '{print $1}')" ]; then
+  if [ -n "$$(ps | grep "nginx.*ext-ui" | grep -v grep | awk '{print $$1}')" ]; then
     /opt/etc/init.d/S80extui stop
   fi
 fi
@@ -243,13 +243,13 @@ if [ -f "/opt/etc/init.d/S79php-fcgi" ]; then
 fi
 
 if [ -f "/opt/etc/init.d/S80extui" ]; then
-  if [ -n "$$(ps | grep "nginx.*ext-ui" | grep -v grep | awk '{print $1}')" ]; then
+  if [ -n "$$(ps | grep "nginx.*ext-ui" | grep -v grep | awk '{print $$1}')" ]; then
     /opt/etc/init.d/S80extui stop
   fi
 fi
 
 #if [ -f "/opt/etc/init.d/S80nginx" ]; then
-#  if [ -n "$$(ps | grep "nginx.* nginx" | grep -v grep | awk '{print $1}')" ]; then
+#  if [ -n "$$(ps | grep "nginx.* nginx" | grep -v grep | awk '{print $$1}')" ]; then
 #    /opt/etc/init.d/S80nginx stop
 #  fi
 #fi
@@ -267,21 +267,21 @@ fi
 
 # vnstat
 if [ -f "/opt/etc/init.d/S32vnstat" ]; then
-  sed -i -e 's,-u -i ppp0,-u,' /opt/etc/init.d/S32vnstat
+  sed -i -e 's,-u -i ppp0,-u,;s,"-d","-d --noadd",' /opt/etc/init.d/S32vnstat
 fi
 
 if [ -f "/opt/etc/vnstat.conf" ]; then
   sed -i -e 's,eth0,br0,' /opt/etc/vnstat.conf
 fi
 
-for iface in $$(ls /sys/class/net/ | sort -r)
+for iface in $$(ls -1 /sys/class/net | sort -r)
   do
     if [ ! -f "/opt/var/lib/vnstat/$$iface" ]; then
       echo -en "Do you wish to add monitoring an interface \"$$iface\"? [n]: "
       read -r wish_to_add
       [ -z "$$wish_to_add" ] && wish_to_add=n
 	if [ "$$wish_to_add" = "y" ]; then
-	  vnstat -u -i "$$iface" > /dev/null 2>&1
+	  vnstat --create -i "$$iface" >/dev/null 2>&1
 	    if ! grep -q "array(.*$$iface" /opt/share/www/ext-ui/addons/vnstat/config.php; then
 	      sed -i -e "s|('br0'|('br0','$$iface'|" /opt/share/www/ext-ui/addons/vnstat/config.php
 	    fi
