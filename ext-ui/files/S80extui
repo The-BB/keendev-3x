@@ -6,19 +6,19 @@ CONF="/opt/etc/nginx/ext-ui.conf"
 
 case $1 in
 	start)
-	nginx -c $CONF && echo 'Nginx started.'
+	nginx -c $CONF && echo 'Nginx ext-ui started.'
 	;;
 	stop)
-	nginx -c $CONF -s quit && echo 'Nginx gracefully stopped.'
+	nginx -c $CONF -s quit && echo 'Nginx ext-ui gracefully stopped.'
 	;;
 	restart)
-	nginx -c $CONF -s stop && nginx -c $CONF && echo 'Nginx restarted.'
+	nginx -c $CONF -s stop && nginx -c $CONF && echo 'Nginx ext-ui restarted.'
 	;;
 	reload)
-	nginx -c $CONF -s reload && echo 'Nginx configuration reload.'
+	nginx -c $CONF -s reload && echo 'Nginx ext-ui configuration reload.'
 	;;
 	reopen)
-	nginx -c $CONF -s reopen && echo 'Nginx log files reopened.'
+	nginx -c $CONF -s reopen && echo 'Nginx ext-ui log files reopened.'
 	;;
 	test)
 	nginx -c $CONF -t
