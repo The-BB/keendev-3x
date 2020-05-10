@@ -116,7 +116,7 @@ chmod 777 /opt/tmp
 # keygen
 echo '[3/5] Generating SSH keys...'
 
-for key in rsa ecdsa; do
+for key in rsa ecdsa ed25519; do
   rm /opt/etc/dropbear/dropbear_${key}_host_key
 	echo "Info: Generating \"$key\" key..."
   if ! dropbearkey -t $key -f /opt/etc/dropbear/dropbear_${key}_host_key >/dev/null 2>&1
