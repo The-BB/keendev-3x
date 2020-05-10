@@ -4,7 +4,7 @@
 
 PATH=$PATH
 
-seconds=90
+seconds=120
 timer=$(($(date +%s) + seconds))
 
 while [ "$timer" -ge "$(date +%s)" ]; do
