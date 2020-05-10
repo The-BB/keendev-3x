@@ -42,6 +42,7 @@ chmod +x $ROOT_DIR/opt/bin/dots-n.sh
 # Adding dummie SSH keys to avoid dropbear post-install timeout
 mkdir -p $ROOT_DIR/opt/etc/dropbear
 touch $ROOT_DIR/opt/etc/dropbear/dropbear_ecdsa_host_key
+touch $ROOT_DIR/opt/etc/dropbear/dropbear_ed25519_host_key
 touch $ROOT_DIR/opt/etc/dropbear/dropbear_rsa_host_key
 
 # Adding install script
