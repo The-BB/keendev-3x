@@ -15,7 +15,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=poorbox
 PKG_VERSION:=1.31.1
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE:=busybox-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=https://www.busybox.net/downloads \
@@ -50,12 +50,12 @@ define Package/poorbox/description
  It slices, it dices, it makes Julian Fries.
 endef
 
-LDLIBS:=m
+LDLIBS:=c gcc_pic m
 
 MAKE_VARS :=
 MAKE_FLAGS += \
 	EXTRA_CFLAGS="$(TARGET_CFLAGS) $(TARGET_CPPFLAGS)" \
-	EXTRA_LDFLAGS="$(TARGET_LDFLAGS)" \
+	EXTRA_LDFLAGS="-static -Wl,--gc-sections" \
 	LDLIBS="$(LDLIBS)" \
 	LD="$(TARGET_CC)" \
 	SKIP_STRIP=y
