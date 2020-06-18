@@ -43,6 +43,7 @@ define Package/poorbox
   TITLE:=A special version of BusyBox
   URL:=http://busybox.net/
   PKGARCH:=$(BOARD)_kn
+  PKG_DEFAULT_DEPENDS:=
 endef
 
 define Package/poorbox/description
