@@ -1,0 +1,24 @@
+--- a/Makefile
++++ b/Makefile
+@@ -1,6 +1,6 @@
+-GIT_VERSION := $(shell git describe --abbrev=4 --dirty --always --tags)
+-NATIVE_GOOS = $(shell unset GOOS; go env GOOS)
+-NATIVE_GOARCH = $(shell unset GOARCH; go env GOARCH)
++GIT_VERSION := $VERSION
++NATIVE_GOOS = linux
++NATIVE_GOARCH = $GOARCH
+ GOPATH := $(shell go env GOPATH)
+ JSFILES = $(shell find client -path client/node_modules -prune -o -type f -name '*.js')
+ STATIC = build/static/index.html
+@@ -24,9 +24,9 @@ $(STATIC): $(JSFILES) client/node_module
+ 	npm --prefix client run build-prod
+ 
+ $(TARGET): $(STATIC) *.go home/*.go dhcpd/*.go dnsfilter/*.go dnsforward/*.go
+-	GOOS=$(NATIVE_GOOS) GOARCH=$(NATIVE_GOARCH) GO111MODULE=off go get -v github.com/gobuffalo/packr/...
++	CC= GOOS=$(NATIVE_GOOS) GOARCH= GO111MODULE=off go get -v github.com/gobuffalo/packr/...
+ 	PATH=$(GOPATH)/bin:$(PATH) packr -z
+-	CGO_ENABLED=0 go build -ldflags="-s -w -X main.version=$(GIT_VERSION) -X main.channel=$(CHANNEL) -X main.goarm=$(GOARM)" -asmflags="-trimpath=$(PWD)" -gcflags="-trimpath=$(PWD)"
++	CGO_ENABLED=0 GOARCH=$(NATIVE_GOARCH) go build -ldflags="-s -w -X main.version=$(GIT_VERSION) -X main.channel=$(CHANNEL) -X main.goarm=$(GOARM)" -asmflags="-trimpath=$(PWD)" -gcflags="-trimpath=$(PWD)"
+ 	PATH=$(GOPATH)/bin:$(PATH) packr clean
+ 
+ docker:
