@@ -291,7 +291,7 @@ echo '
     if (!empty($settings['show']['cpu'])) {
     //    $cpus = [];
     // for Keenetic
-	$cpus = [shell_exec('grep -oE "(type|model).*" /proc/cpuinfo | cut -d: -f2')];
+	$cpus = [shell_exec('grep -E "(type|model).*" /proc/cpuinfo | cut -d: -f2 | sort -ru')];
 
         foreach ((array) $info['CPU'] as $cpu) {
             $cpu_html =

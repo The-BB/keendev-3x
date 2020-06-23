@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ext-ui
 PKG_VERSION:=0.4
-PKG_RELEASE:=5a
+PKG_RELEASE:=5b
 
 include $(INCLUDE_DIR)/package.mk
 
