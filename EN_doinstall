@@ -13,14 +13,14 @@ unset LD_PRELOAD
 
 echo '[1/5] Starting "Entware" deployment...'
 
-# checking opkg timezone
+# checking "opkg timezone"
 if [ "$(ndmq -p "show running-config" -P message | grep "opkg timezone" | cut -d' ' -f1,2)" = "opkg timezone" ]
   then
 	echo 'Info: Have you activated "opkg timezone" in CLI/web?'
 	ndmq -p "opkg timezone $timezone"
 fi
 
-# checking opkg chroot
+# checking "opkg chroot"
 if [ "$(ndmq -p "show running-config" -P message | grep "opkg chroot")" = "opkg chroot" ]; then
 	echo 'Info: Have you activated "opkg chroot" in CLI/web?'
 #	echo 'Wow, OK!'
@@ -76,9 +76,12 @@ fi
 
 # This is for opkg only. The other folders will be created from opt-ndmsv2 package
 for folder in lib/opkg tmp var/lock; do
-	mkdir -p /opt/$folder
+  if [ ! -d "/opt/$folder" ]; then
+    mkdir -p /opt/$folder
+  fi
 done
 
+# opkg update
 echo '[2/5] Basic packages installation...'
 if ! opkg update >/dev/null 2>&1
   then
@@ -87,7 +90,7 @@ if ! opkg update >/dev/null 2>&1
 	exit 1
 fi
 
-# install base packages
+# install basic packages
 for ipk in libgcc libc libpthread librt entware-release findutils grep ldconfig locales ndmq opkg zoneinfo-asia zoneinfo-europe opt-ndmsv2 dropbear poorbox busybox
  do
 	echo "Info: Installing \"$ipk\" package..."
@@ -107,11 +110,13 @@ done
 
 echo 'Info: All basic packages were installed...'
 
-dots-n.sh &
 ldconfig >/dev/null 2>&1
 
 # Fix for multiuser environment
 chmod 777 /opt/tmp
+
+# flooder
+dots-n.sh &
 
 # keygen
 echo '[3/5] Generating SSH keys...'
