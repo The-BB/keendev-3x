@@ -6,11 +6,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=adguardhome
-PKG_VERSION:=0.102.0
-PKG_RELEASE:=2
+PKG_VERSION:=0.103.3
+PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_VERSION:=dae275e6f9cf251d2573b4ff520cf852539c62c4
+PKG_SOURCE_VERSION:=ddb9a2e872799e814d0a5ca2c1e0c2924bfa0ec0
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_URL:=https://github.com/AdguardTeam/AdGuardHome
@@ -39,8 +39,6 @@ define Package/adguardhome/description
   becomes more and more important to be able to control your whole network.
 endef
 
-SHORT_GIT_VER:=$(shell echo $(PKG_SOURCE_VERSION) | cut -b -7)
-
 ifeq ($(ARCH),mips)
   NATIVE_GOARCH=mips
 endif
@@ -49,13 +47,18 @@ ifeq ($(ARCH),mipsel)
   NATIVE_GOARCH=mipsle
 endif
 
-MAKE_VARS += \
-	PATH=$(STAGING_DIR_HOST)/go/bin:$(STAGING_DIR_HOSTPKG)/bin:$(PATH)
+BIN_PATH=$(STAGING_DIR_HOST)/go/bin:$(STAGING_DIR_HOSTPKG)/bin:$(PATH)
 
 define Build/Prepare
 	$(Build/Prepare/Default)
-	$(SED) 's,$$$$VERSION,$(PKG_VERSION)~$(SHORT_GIT_VER),; \
-		s,$$$$GOARCH,$(NATIVE_GOARCH),' $(PKG_BUILD_DIR)/Makefile
+	$(SED) 's,$$$$PATH,$(BIN_PATH),; \
+		s,$$$$GO,$(STAGING_DIR_HOST)/go/bin/go,; \
+		s,$$$$NPM,$(STAGING_DIR_HOSTPKG)/bin/npm,' \
+			$(PKG_BUILD_DIR)/Makefile
+endef
+
+define Build/Compile
+	( cd $(PKG_BUILD_DIR); GOOS=linux GOARCH=$(NATIVE_GOARCH) make )
 endef
 
 define Package/adguardhome/install
