@@ -14,14 +14,22 @@ unset LD_PRELOAD
 
 logger -s -t installer '[1/5] Начало установки системы пакетов "Entware"...'
 
-# checking opkg timezone
+# checking "opkg dns-override"
+if [ "$(ndmq -p "show running-config" -P message | grep "opkg dns-override")" = "opkg dns-override" ]; then
+	logger -s -t installer 'Info: Have you activated "opkg dns-override" in CLI/web?'
+	logger -s -t installer 'Critical error: Продолжение установки невозможно!'
+	logger -s -t installer 'Выход из установки.'
+	exit 1
+fi
+
+# checking "opkg timezone"
 if [ "$(ndmq -p "show running-config" -P message | grep "opkg timezone" | cut -d' ' -f1,2)" = "opkg timezone" ]
   then
 	logger -s -t installer 'Info: Have you activated "opkg timezone" in CLI/web?'
 	ndmq -p "opkg timezone $timezone"
 fi
 
-# checking opkg chroot
+# checking "opkg chroot"
 if [ "$(ndmq -p "show running-config" -P message | grep "opkg chroot")" = "opkg chroot" ]; then
 	logger -s -t installer 'Info: Have you activated "opkg chroot" in CLI/web?'
 #	logger -s -t installer 'Wow, OK!'
@@ -46,7 +54,7 @@ case "$check_fs_opt" in
 	logger -s -t installer 'При возникновении проблем, используйте накопитель с файловой системой ext2/ext3/ext4.'
     ;;
     *)
-        logger -s -t installer 'Critical error: Используйте накопитель с файловой системой ext2/ext3/ext4. Отменяем...'
+        logger -s -t installer 'Critical error: Неизвестный тип ФС. Используйте накопитель с файловой системой ext2/ext3/ext4. Отменяем...'
 	logger -s -t installer 'Выход из установки.'
 	exit 1
     ;;
@@ -92,7 +100,7 @@ if ! opkg update >/dev/null 2>&1
 	exit 1
 fi
 
-# install base packages
+# install basic packages
 for ipk in libgcc libc libpthread librt entware-release findutils grep ldconfig locales ndmq opkg zoneinfo-asia zoneinfo-europe opt-ndmsv2 dropbear poorbox busybox
  do
 	logger -s -t installer "Info: Устанавливается пакет \"$ipk\"..."
@@ -105,18 +113,20 @@ for ipk in libgcc libc libpthread librt entware-release findutils grep ldconfig 
 	logger -s -t installer "Info: Пакет \"$ipk\" установлен."
 	sleep 2
   fi
-    if [ "$ipk" = "libc" ]; then
+    if [ "$ipk" = "libc" ] && [ -f /opt/bin/dots.sh ]; then
 	dots.sh &
     fi
 done
 
 logger -s -t installer 'Info: Установка пакетов прошла успешно!'
 
-dots-n.sh &
 ldconfig >/dev/null 2>&1
 
 # Установка прав для многопользовательской среды
 chmod 777 /opt/tmp
+
+# flooder
+dots-n.sh &
 
 # keygen
 logger -s -t installer '[3/5] Генерация SSH-ключей...'
