@@ -20,16 +20,43 @@ cp -r $BUILD_DIR/toolchain/ipkg-mips-3.4/libssp/opt $ROOT_DIR
 mkdir -p $ROOT_DIR/opt/usr/lib/locale
 cp -r $SCRIPT_DIR/EN_locale-archive.2.27-be $ROOT_DIR/opt/usr/lib/locale/locale-archive
 
+# Adding busybox
+cp -r $BUILD_DIR/busybox-*/ipkg-install/opt $ROOT_DIR
+
+# Copying (replace) busybox strip version
+cp -fr $BUILD_DIR/busybox-*/ipkg-mips-3.4/busybox/opt $ROOT_DIR
+
+# Removing some busybox symlinks
+[ -L "$ROOT_DIR/opt/bin/egrep" ] && rm -f "$ROOT_DIR/opt/bin/egrep"
+[ -L "$ROOT_DIR/opt/bin/fgrep" ] && rm -f "$ROOT_DIR/opt/bin/fgrep"
+[ -L "$ROOT_DIR/opt/bin/grep" ] && rm -f "$ROOT_DIR/opt/bin/grep"
+
+# Adding libpcre&grep
+cp -fr $BUILD_DIR/grep-*/ipkg-mips-3.4/grep/opt $ROOT_DIR
+cp -r $BUILD_DIR/pcre-*/ipkg-mips-3.4/libpcre/opt $ROOT_DIR
+
 # Adding libndm&ndmq
 cp -r $BUILD_DIR/ndmq-*/ipkg-mips-3.4_kn/ndmq/opt $ROOT_DIR
 cp -r $BUILD_DIR/libndm-*/ipkg-mips-3.4_kn/libndm/opt $ROOT_DIR
 
-# Adding libpcre&grep
-cp -r $BUILD_DIR/grep-*/ipkg-mips-3.4/grep/opt $ROOT_DIR
-cp -r $BUILD_DIR/pcre-*/ipkg-mips-3.4/libpcre/opt $ROOT_DIR
+# Adding opkg&opkg.conf
+cp -r $BUILD_DIR/linux-mips-3.4/opkg-*/ipkg-mips-3.4/opkg/opt $ROOT_DIR
+cp -r $SCRIPT_DIR/opkg-be.conf $ROOT_DIR/opt/etc/opkg.conf
+chmod 644 $ROOT_DIR/opt/etc/opkg.conf
 
-# Adding busybox
-cp -r $BUILD_DIR/busybox-*/ipkg-install/opt $ROOT_DIR
+# Adding dummie SSH keys to avoid dropbear post-install timeout
+mkdir -p $ROOT_DIR/opt/etc/dropbear
+touch $ROOT_DIR/opt/etc/dropbear/dropbear_ecdsa_host_key
+touch $ROOT_DIR/opt/etc/dropbear/dropbear_ed25519_host_key
+touch $ROOT_DIR/opt/etc/dropbear/dropbear_rsa_host_key
+
+# Removing starting scripts
+rm -f $ROOT_DIR/opt/etc/init.d/S*
+
+# Adding install script
+mkdir -p $ROOT_DIR/opt/etc/init.d
+cp $SCRIPT_DIR/EN_doinstall $ROOT_DIR/opt/etc/init.d/doinstall
+chmod +x $ROOT_DIR/opt/etc/init.d/doinstall
 
 # This script will seed some dots to terminal.
 # Otherwise, f\w will kill installation after 8 seconds of silence
@@ -38,28 +65,6 @@ chmod +x $ROOT_DIR/opt/bin/dots.sh
 
 cp $SCRIPT_DIR/dots-n.sh $ROOT_DIR/opt/bin
 chmod +x $ROOT_DIR/opt/bin/dots-n.sh
-
-# Adding dummie SSH keys to avoid dropbear post-install timeout
-mkdir -p $ROOT_DIR/opt/etc/dropbear
-touch $ROOT_DIR/opt/etc/dropbear/dropbear_ecdsa_host_key
-touch $ROOT_DIR/opt/etc/dropbear/dropbear_ed25519_host_key
-touch $ROOT_DIR/opt/etc/dropbear/dropbear_rsa_host_key
-
-# Adding install script
-mkdir -p $ROOT_DIR/opt/etc/init.d
-cp $SCRIPT_DIR/EN_doinstall $ROOT_DIR/opt/etc/init.d/doinstall
-chmod +x $ROOT_DIR/opt/etc/init.d/doinstall
-
-# Adding opkg&opkg.conf
-cp -r $BUILD_DIR/linux-mips-3.4/opkg-*/ipkg-mips-3.4/opkg/opt $ROOT_DIR
-cp -r $SCRIPT_DIR/opkg-be.conf $ROOT_DIR/opt/etc/opkg.conf
-chmod 644 $ROOT_DIR/opt/etc/opkg.conf
-
-# Copying the busybox strip version
-cp -fr $BUILD_DIR/busybox-*/ipkg-mips-3.4/busybox/opt $ROOT_DIR
-
-# Removing starting scripts
-rm -f $ROOT_DIR/opt/etc/init.d/S*
 
 # Packing installer
 [ -f $INSTALLER ] && rm $INSTALLER
