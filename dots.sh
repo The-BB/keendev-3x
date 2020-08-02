@@ -14,4 +14,4 @@ while [ "$timer" -ge "$(date +%s)" ]; do
 	echo "... in progress..." && sleep 1
 done
 
-rm "$0"
+#rm "$0"
