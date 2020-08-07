@@ -16,47 +16,47 @@ logger -s -t installer '[1/5] Начало установки системы п�
 
 # checking "opkg dns-override"
 if [ "$(ndmq -p "show running-config" -P message | grep "opkg dns-override")" = "opkg dns-override" ]; then
-	logger -s -t installer 'Info: Have you activated "opkg dns-override" in CLI/web?'
-	logger -s -t installer 'Critical error: Продолжение установки невозможно!'
-	logger -s -t installer 'Выход из установки.'
-	exit 1
+        logger -s -t installer 'Info: Have you activated "opkg dns-override" in CLI/web?'
+        logger -s -t installer 'Critical error: Продолжение установки невозможно!'
+        logger -s -t installer 'Выход из установки.'
+        exit 1
 fi
 
 # checking "opkg timezone"
 if [ "$(ndmq -p "show running-config" -P message | grep "opkg timezone" | cut -d' ' -f1,2)" = "opkg timezone" ]
   then
-	logger -s -t installer 'Info: Have you activated "opkg timezone" in CLI/web?'
-	ndmq -p "opkg timezone $timezone"
+        logger -s -t installer 'Info: Have you activated "opkg timezone" in CLI/web?'
+        ndmq -p "opkg timezone $timezone"
 fi
 
 # checking "opkg chroot"
 if [ "$(ndmq -p "show running-config" -P message | grep "opkg chroot")" = "opkg chroot" ]; then
-	logger -s -t installer 'Info: Have you activated "opkg chroot" in CLI/web?'
-#	logger -s -t installer 'Wow, OK!'
-	for files in group passwd profile shell; do rm -f /opt/etc/$files; done
-	for files in hosts resolv.conf; do cp /tmp/$files /opt/etc/; done
+        logger -s -t installer 'Info: Have you activated "opkg chroot" in CLI/web?'
+#        logger -s -t installer 'Wow, OK!'
+        for files in group passwd profile shell; do rm -f /opt/etc/$files; done
+        for files in hosts resolv.conf; do cp /tmp/$files /opt/etc/; done
 # checking opt fs
-	check_fs_opt="$(mount | grep 'on / ' | cut -d' ' -f5)"
+        check_fs_opt="$(mount | grep 'on / ' | cut -d' ' -f5)"
   else
-	check_fs_opt="$(mount | grep 'on /opt ' | cut -d' ' -f5)"
+        check_fs_opt="$(mount | grep 'on /opt ' | cut -d' ' -f5)"
 fi
 
 case "$check_fs_opt" in
     ext*)
-	logger -s -t installer 'Info: Раздел пригоден для установки.'
+        logger -s -t installer 'Info: Раздел пригоден для установки.'
     ;;
     *ntfs*)
-	logger -s -t installer 'Info: Раздел NTFS! атрибуты "user:group" могут не поддерживаться.'
-	logger -s -t installer 'При возникновении проблем, используйте накопитель с файловой системой ext2/ext3/ext4.'
+        logger -s -t installer 'Info: Раздел NTFS! атрибуты "user:group" могут не поддерживаться.'
+        logger -s -t installer 'При возникновении проблем, используйте накопитель с файловой системой ext2/ext3/ext4.'
     ;;
     *hfs*)
-	logger -s -t installer 'Info: Раздел с HFS! (!не тестировалось!).'
-	logger -s -t installer 'При возникновении проблем, используйте накопитель с файловой системой ext2/ext3/ext4.'
+        logger -s -t installer 'Info: Раздел с HFS! (!не тестировалось!).'
+        logger -s -t installer 'При возникновении проблем, используйте накопитель с файловой системой ext2/ext3/ext4.'
     ;;
     *)
         logger -s -t installer 'Critical error: Неизвестный тип ФС. Используйте накопитель с файловой системой ext2/ext3/ext4. Отменяем...'
-	logger -s -t installer 'Выход из установки.'
-	exit 1
+        logger -s -t installer 'Выход из установки.'
+        exit 1
     ;;
 esac
 
@@ -64,23 +64,23 @@ esac
 logger -s -t installer 'Info: "ping google.com"...'
 if ! ping -c 3 google.com >/dev/null 2>&1
   then
-	logger -s -t installer 'Critical error: Ресурс недоступен. Проверьте настройки сети.'
-	logger -s -t installer 'Выход из установки.'
-	exit 1
+        logger -s -t installer 'Critical error: Ресурс недоступен. Проверьте настройки сети.'
+        logger -s -t installer 'Выход из установки.'
+        exit 1
   else
-	logger -s -t installer 'Info: "ping google.com" ..... OK'
-	sleep 1
+        logger -s -t installer 'Info: "ping google.com" ..... OK'
+        sleep 1
 fi
 
 logger -s -t installer 'Info: "ping bin.entware.net"...'
 if ! ping -c 3 bin.entware.net >/dev/null 2>&1
   then
-	logger -s -t installer 'Critical error: Ресурс недоступен. Повторите попытку позже.'
-	logger -s -t installer 'Выход из установки.'
-	exit 1
+        logger -s -t installer 'Critical error: Ресурс недоступен. Повторите попытку позже.'
+        logger -s -t installer 'Выход из установки.'
+        exit 1
   else
-	logger -s -t installer 'Info: "ping bin.entware.net" ..... OK'
-	sleep 1
+        logger -s -t installer 'Info: "ping bin.entware.net" ..... OK'
+        sleep 1
 fi
 
 # Только для opkg. Остальные каталоги будут созданы пакетом opt-ndmsv2
@@ -95,26 +95,26 @@ done
 logger -s -t installer '[2/5] Загрузка и установка основных пакетов...'
 if ! opkg update >/dev/null 2>&1
   then
-	logger -s -t installer 'Critical error: Во время обновления списка пакетов произошла ошибка.'
-	logger -s -t installer 'Выход из установки.'
-	exit 1
+        logger -s -t installer 'Critical error: Во время обновления списка пакетов произошла ошибка.'
+        logger -s -t installer 'Выход из установки.'
+        exit 1
 fi
 
 # install basic packages
 for ipk in libgcc libc libpthread librt entware-release findutils grep ldconfig locales ndmq opkg zoneinfo-asia zoneinfo-europe opt-ndmsv2 dropbear poorbox busybox
  do
-	logger -s -t installer "Info: Устанавливается пакет \"$ipk\"..."
+        logger -s -t installer "Info: Устанавливается пакет \"$ipk\"..."
   if ! opkg install $ipk >/dev/null 2>&1
     then
-	logger -s -t installer "Critical error: Во время установки пакета \"$ipk\" произошла ошибка."
-	logger -s -t installer 'Выход из установки.'
-	exit 1
+        logger -s -t installer "Critical error: Во время установки пакета \"$ipk\" произошла ошибка."
+        logger -s -t installer 'Выход из установки.'
+        exit 1
     else
-	logger -s -t installer "Info: Пакет \"$ipk\" установлен."
-	sleep 2
+        logger -s -t installer "Info: Пакет \"$ipk\" установлен."
+        sleep 2
   fi
-    if [ "$ipk" = "libc" ] && [ -f /opt/bin/dots.sh ]; then
-	dots.sh &
+    if [ "$ipk" = "libc" ]; then
+        dots.sh &
     fi
 done
 
@@ -131,17 +131,17 @@ dots-n.sh &
 # keygen
 logger -s -t installer '[3/5] Генерация SSH-ключей...'
 
-for key in ed25519 ecdsa rsa; do
+for key in rsa ecdsa ed25519; do
   rm /opt/etc/dropbear/dropbear_${key}_host_key
-	logger -s -t installer "Info: Генерируется ключ \"$key\"..."
+        logger -s -t installer "Info: Генерируется ключ \"$key\"..."
   if ! dropbearkey -t $key -f /opt/etc/dropbear/dropbear_${key}_host_key >/dev/null 2>&1
     then
-	logger -s -t installer "Critical error: Во время генерации ключа \"$key\" произошла ошибка."
-	logger -s -t installer 'Выход из установки.'
-	exit 1
+        logger -s -t installer "Critical error: Во время генерации ключа \"$key\" произошла ошибка."
+        logger -s -t installer 'Выход из установки.'
+        exit 1
     else
-	logger -s -t installer "Info: Ключ \"$key\" создан."
-	sleep 1
+        logger -s -t installer "Info: Ключ \"$key\" создан."
+        sleep 1
   fi
 done
 
@@ -153,7 +153,7 @@ ln -sf /opt/share/zoneinfo/"$timezone" /opt/etc/localtime
 
 # SSH
 if [ -f "/usr/sbin/dropbear" ] || [ -n "$(pidof dropbear)" ]; then
-	sed -i "s,PORT=22\$,PORT=222," /opt/etc/config/dropbear.conf
+        sed -i "s,PORT=22\$,PORT=222," /opt/etc/config/dropbear.conf
 fi
 
 /opt/etc/init.d/S51dropbear start
@@ -162,13 +162,14 @@ ndmq -p "opkg initrc /opt/etc/init.d/rc.unslung"
 ndmq -p "system configuration save"
 
 if grep -q "222" /opt/etc/config/dropbear.conf; then
-	logger -s -t installer 'Можно открыть SSH-сессию для соединения с устройством (ssh root:keenetic@my.keenetic.net -p 222).'
+        logger -s -t installer 'Можно открыть SSH-сессию для соединения с устройством (ssh root:keenetic@my.keenetic.net -p 222).'
   else
-	logger -s -t installer 'Можно открыть SSH-сессию для соединения с устройством (ssh root:keenetic@my.keenetic.net).'
+        logger -s -t installer 'Можно открыть SSH-сессию для соединения с устройством (ssh root:keenetic@my.keenetic.net).'
 fi
 
 logger -s -t installer '[5/5] Установка системы пакетов "Entware" завершена! Не забудьте сменить пароль и номер порта!'
 
 rm /opt/bin/dots.sh
+rm /opt/bin/dots-n.sh
 
 rm "$0"
