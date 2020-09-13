@@ -21,10 +21,10 @@ mkdir -p $ROOT_DIR/opt/usr/lib/locale
 cp -r $SCRIPT_DIR/EN_locale-archive.2.27-be $ROOT_DIR/opt/usr/lib/locale/locale-archive
 
 # Adding busybox
-cp -r $BUILD_DIR/busybox-*/ipkg-install/opt $ROOT_DIR
+cp -r $BUILD_DIR/busybox-default/busybox-*/ipkg-install/opt $ROOT_DIR
 
 # Copying (replace) busybox strip version
-cp -fr $BUILD_DIR/busybox-*/ipkg-mips-3.4/busybox/opt $ROOT_DIR
+cp -fr $BUILD_DIR/busybox-default/busybox-*/ipkg-mips-3.4/busybox/opt $ROOT_DIR
 
 # Removing some busybox symlinks
 [ -L "$ROOT_DIR/opt/bin/egrep" ] && rm -f "$ROOT_DIR/opt/bin/egrep"
