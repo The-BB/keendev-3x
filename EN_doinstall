@@ -44,6 +44,10 @@ case "$check_fs_opt" in
         echo 'HFS partition is not tested.'
         echo 'Please, use ext2/ext3/ext4 if something goes wrong.'
     ;;
+    ubifs)
+        echo 'UBIFS partition is not tested.'
+        echo 'Please, use ext2/ext3/ext4 if something goes wrong.'
+    ;;
     *)
         echo 'Please use ext2/ext3/ext4 formatted storage. Aborting...'
         echo 'Exit.'
