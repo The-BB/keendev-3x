@@ -53,6 +53,10 @@ case "$check_fs_opt" in
         logger -s -t installer 'Info: Раздел с HFS! (!не тестировалось!).'
         logger -s -t installer 'При возникновении проблем, используйте накопитель с файловой системой ext2/ext3/ext4.'
     ;;
+    ubifs)
+        logger -s -t installer 'Info: Раздел с UBIFS! (!не тестировалось!).'
+        logger -s -t installer 'При возникновении проблем, используйте накопитель с файловой системой ext2/ext3/ext4.'
+    ;;
     *)
         logger -s -t installer 'Critical error: Неизвестный тип ФС. Используйте накопитель с файловой системой ext2/ext3/ext4. Отменяем...'
         logger -s -t installer 'Выход из установки.'
