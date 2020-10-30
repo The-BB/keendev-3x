@@ -6,11 +6,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=adguardhome
-PKG_VERSION:=0.103.3
+PKG_VERSION:=0.104.0
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_VERSION:=ddb9a2e872799e814d0a5ca2c1e0c2924bfa0ec0
+PKG_SOURCE_VERSION:=d1e55c31af13a7fd88516d1e498747ee2aa69209
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_URL:=https://github.com/AdguardTeam/AdGuardHome
@@ -53,12 +53,13 @@ define Build/Prepare
 	$(Build/Prepare/Default)
 	$(SED) 's,$$$$PATH,$(BIN_PATH),; \
 		s,$$$$GO,$(STAGING_DIR_HOST)/go/bin/go,; \
-		s,$$$$NPM,$(STAGING_DIR_HOSTPKG)/bin/npm,' \
+		s,$$$$NPM,$(STAGING_DIR_HOSTPKG)/bin/npm,; \
+		s,$$$$PKG_VERSION,$(PKG_VERSION),' \
 			$(PKG_BUILD_DIR)/Makefile
 endef
 
 define Build/Compile
-	( cd $(PKG_BUILD_DIR); GOOS=linux GOARCH=$(NATIVE_GOARCH) make )
+	( cd $(PKG_BUILD_DIR); GOOS=linux GOARCH=$(NATIVE_GOARCH) CHANNEL=release make )
 endef
 
 define Package/adguardhome/install
