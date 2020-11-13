@@ -72,15 +72,16 @@
  
  lint-go:
  	@echo Running go linter
-@@ -162,17 +151,17 @@ lint-go:
+@@ -163,18 +152,18 @@ lint-go:
+ test: test-js test-go
  
- test:
- 	@echo Running JS unit-tests
+ test-js:
 -	npm run test --prefix client
 +	$NPM run test --prefix client
- 	@echo Running Go unit-tests
--	go test $(TEST_FLAGS) -v -coverprofile=coverage.txt -covermode=atomic ./...
-+	$GO test $(TEST_FLAGS) -v -coverprofile=coverage.txt -covermode=atomic ./...
+ 
+ test-go:
+-	go test $(TEST_FLAGS) --coverprofile coverage.txt ./...
++	$GO test $(TEST_FLAGS) --coverprofile coverage.txt ./...
  
  ci: client_with_deps
 -	go mod download
@@ -95,7 +96,7 @@
  
  clean:
  	# make build output
-@@ -206,7 +195,7 @@ docker-multi-arch:
+@@ -208,7 +197,7 @@ docker-multi-arch:
  	@echo docker run --name "adguard-home" -p 53:53/tcp -p 53:53/udp -p 80:80/tcp -p 443:443/tcp -p 853:853/tcp -p 3000:3000/tcp $(DOCKER_IMAGE_NAME)
  
  release: client_with_deps

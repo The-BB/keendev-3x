@@ -1,5 +1,5 @@
---- a/dhcpd/network_utils.go
-+++ b/dhcpd/network_utils.go
+--- a/internal/dhcpd/network_utils.go
++++ b/internal/dhcpd/network_utils.go
 @@ -21,7 +21,7 @@ import (
  // Supports: Raspbian.
  func HasStaticIP(ifaceName string) (bool, error) {
@@ -9,7 +9,7 @@
  		if err != nil {
  			return false, err
  		}
-@@ -124,13 +124,13 @@ func setStaticIPDhcpdConf(ifaceName stri
+@@ -123,13 +123,13 @@ func setStaticIPDhcpdConf(ifaceName stri
  	gatewayIP := getGatewayIP(ifaceName)
  	add := updateStaticIPDhcpcdConf(ifaceName, ip, gatewayIP, ip4.String())
  
