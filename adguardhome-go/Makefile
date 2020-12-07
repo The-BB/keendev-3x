@@ -65,7 +65,7 @@ endef
 Package/adguardhome-go_nohf/description=$(Package/adguardhome-go/description)
 
 define Build/Compile
-        ( cd $(PKG_BUILD_DIR)/src/$(PKG_GOGET); \
+	( cd $(PKG_BUILD_DIR)/src/$(PKG_GOGET); \
 	\
 		pushd $(PKG_BUILD_DIR)/src/$(PKG_GOGET) ; \
 		npm --prefix client ci ; \
@@ -79,7 +79,7 @@ define Build/Compile
 		$(GOARM) \
 		$(GOROOT)/bin/go build \
 		-ldflags="-s -w -X main.version=$(PKG_VERSION) -X main.channel=release" ; \
-        )
+	)
 endef
 
 
