@@ -1,5 +1,5 @@
---- a/internal/dhcpd/network_utils.go
-+++ b/internal/dhcpd/network_utils.go
+--- a/src/github.com/AdguardTeam/AdGuardHome/internal/dhcpd/network_utils.go
++++ b/src/github.com/AdguardTeam/AdGuardHome/internal/dhcpd/network_utils.go
 @@ -21,7 +21,7 @@ import (
  // Supports: Raspbian.
  func HasStaticIP(ifaceName string) (bool, error) {
