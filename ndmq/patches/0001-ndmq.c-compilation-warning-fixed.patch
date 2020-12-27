@@ -1,0 +1,33 @@
+From 726cd1776fee51093268d3b837116836db6436b2 Mon Sep 17 00:00:00 2001
+From: Sergey Korolev <s.korolev@ndmsystems.com>
+Date: Mon, 15 May 2017 20:58:21 +0300
+Subject: [PATCH] ndmq.c: compilation warning fixed
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf8
+Content-Transfer-Encoding: 8bit
+
+ndmq.c: In function ‘main’:
+ndmq.c:347:45: warning: format not a string literal and no format
+arguments [-Wformat-security]
+    request_type, NDM_CORE_MODE_CACHE, NULL, parse)) == NULL)
+                                             ^
+---
+ ndmq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ndmq.c b/ndmq.c
+index 9cd1154..0c58ec5 100644
+--- a/ndmq.c
++++ b/ndmq.c
+@@ -344,7 +344,7 @@ int main(int argc, char *argv[])
+ 	struct ndm_core_response_t *resp = NULL;
+ 
+ 	if ((resp = ndm_core_request(core,
+-			request_type, NDM_CORE_MODE_CACHE, NULL, parse)) == NULL)
++			request_type, NDM_CORE_MODE_CACHE, NULL, "%s", parse)) == NULL)
+ 	{
+ 		exit(ndmq_print_err_("ndm request failed: %s", strerror(errno)));
+ 
+-- 
+2.20.1
+
