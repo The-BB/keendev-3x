@@ -1,0 +1,6 @@
+--- a/version.mk
++++ b/version.mk
+@@ -1,2 +1,2 @@
+ LIBNDM_MAJOR := 1
+-LIBNDM_MINOR := 1.9
++LIBNDM_MINOR := 1.15
