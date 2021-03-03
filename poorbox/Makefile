@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2019-2020 Entware
+# Copyright (C) 2019-2021 Entware
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -14,15 +14,16 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=poorbox
-PKG_VERSION:=1.31.1
-PKG_RELEASE:=3
+PKG_VERSION:=1.33.0
+PKG_RELEASE:=1
 
 PKG_SOURCE:=busybox-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=https://www.busybox.net/downloads \
 		http://sources.buildroot.net
-PKG_HASH:=d0f940a72f648943c1f2211e0e3117387c31d765137d92bd8284a3fb9752a998
+PKG_HASH:=d568681c91a85edc6710770cebc1e80e042ad74d305b5c2e6d57a5f3de3b8fbd
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
+
 PKG_BUILD_PARALLEL:=1
 PKG_CHECK_FORMAT_SECURITY:=0
 
