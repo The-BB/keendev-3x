@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2011-2019 Entware
+# Copyright (C) 2011-2021 Entware
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=opt-ndmsv2
 PKG_VERSION:=1.0
-PKG_RELEASE:=12a
+PKG_RELEASE:=13
 
 PKG_FLAGS:=essential
 
@@ -32,7 +32,7 @@ endef
 
 define Package/opt-ndmsv2/description
   opt-ndmsv2 is a metapackage to install Entware basic libraries and scripts
-  on Keenetic routers with NDMS v2.07 and up.
+  on Keenetic routers.
 endef
 
 Build/Prepare:=:

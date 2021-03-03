@@ -14,7 +14,7 @@ CALLER=$2
 LD_LIBRARY_PATH=""
 
 if [ $# -lt 1 ]; then
-    printf "Usage: $0 {start|stop|restart|reconfigure|check|kill}\n" >&2
+    printf "Usage: $0 {start|stop|restart|reconfigure|check|status|kill}\n" >&2
     exit 1
 fi
 

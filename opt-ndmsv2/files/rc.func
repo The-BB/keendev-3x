@@ -94,21 +94,21 @@ for PROC in $PROCS; do
         start)
             start
             ;;
-        stop | kill )
+        stop|kill)
             check && stop
             ;;
         restart)
             check > /dev/null && stop
             start
             ;;
-        check)
+        check|status)
             check
             ;;
         reconfigure)
             reconfigure
             ;;
         *)
-            echo -e "$ansi_white Usage: $0 (start|stop|restart|check|kill|reconfigure)$ansi_std"
+            echo -e "$ansi_white Usage: $0 (start|stop|restart|check|status|kill|reconfigure)$ansi_std"
             exit 1
             ;;
     esac
