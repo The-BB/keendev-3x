@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2016-2019 Entware
+# Copyright (C) 2016-2021 Entware
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -24,8 +24,7 @@ define Package/music-center
 endef
 
 define Package/music-center/description
-  It`s a metapackage to install config and scripts files
-  on ZyXEL Keenetic routers with NDMS v2
+  It`s a metapackage to install config and scripts files on Keenetic routers.
 endef
 
 define Package/music-center/conffiles
