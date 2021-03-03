@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2015-2017 NDM Systems, Inc. http://www.ndmsystems.com/
+# Copyright (C) 2015-2021 NDM Systems, Inc. http://www.ndmsystems.com/
 #
 
 include $(TOPDIR)/rules.mk
@@ -9,7 +9,7 @@ PKG_VERSION:=1.0.2
 PKG_RELEASE:=7
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://github.com/ndmsystems/ndmq/archive/$(PKG_VERSION)
+PKG_SOURCE_URL:=https://codeload.github.com/ndmsystems/ndmq/tar.gz/$(PKG_VERSION)?
 PKG_HASH:=db92ecc3490ed7002ebf57c963d47913af5d5533f3de543c00476552d65717c3
 
 PKG_LICENSE:=MIT
