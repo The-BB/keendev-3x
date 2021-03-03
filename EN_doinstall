@@ -16,42 +16,41 @@ echo '[1/5] Starting "Entware" deployment...'
 # checking "opkg timezone"
 if [ "$(ndmq -p "show running-config" -P message | grep "opkg timezone" | cut -d' ' -f1,2)" = "opkg timezone" ]
   then
-        echo 'Info: Have you activated "opkg timezone" in CLI/web?'
-        ndmq -p "opkg timezone $timezone"
+	echo 'Info: Have you activated "opkg timezone" in CLI/web?'
+	ndmq -p "opkg timezone $timezone"
 fi
 
 # checking "opkg chroot"
 if [ "$(ndmq -p "show running-config" -P message | grep "opkg chroot")" = "opkg chroot" ]; then
-        echo 'Info: Have you activated "opkg chroot" in CLI/web?'
-#        echo 'Wow, OK!'
-        for files in group passwd profile shell; do rm -f /opt/etc/$files; done
-        for files in hosts resolv.conf; do cp /tmp/$files /opt/etc/; done
+	echo 'Info: Have you activated "opkg chroot" in CLI/web?'
+	for files in group passwd profile shell; do rm -f /opt/etc/$files; done
+	for files in hosts resolv.conf; do cp /tmp/$files /opt/etc/; done
 # checking opt fs
-        check_fs_opt="$(mount | grep 'on / ' | cut -d' ' -f5)"
+	check_fs_opt="$(mount | grep 'on / ' | cut -d' ' -f5)"
   else
-        check_fs_opt="$(mount | grep 'on /opt ' | cut -d' ' -f5)"
+	check_fs_opt="$(mount | grep 'on /opt ' | cut -d' ' -f5)"
 fi
 
 case "$check_fs_opt" in
     ext*)
-        echo 'Partition is OK.'
+	echo 'Partition is OK.'
     ;;
     *ntfs*)
-        echo 'NTFS partition! owner:group attributes may not be supported.'
-        echo 'Please, use ext2/ext3/ext4 if something goes wrong.'
+	echo 'NTFS partition! owner:group attributes may not be supported.'
+	echo 'Please, use ext2/ext3/ext4 if something goes wrong.'
     ;;
     *hfs*)
-        echo 'HFS partition is not tested.'
-        echo 'Please, use ext2/ext3/ext4 if something goes wrong.'
+	echo 'HFS partition is not tested.'
+	echo 'Please, use ext2/ext3/ext4 if something goes wrong.'
     ;;
     ubifs)
-        echo 'UBIFS partition is not tested.'
-        echo 'Please, use ext2/ext3/ext4 if something goes wrong.'
+	echo 'UBIFS partition is not tested.'
+	echo 'Please, use ext2/ext3/ext4 if something goes wrong.'
     ;;
     *)
         echo 'Please use ext2/ext3/ext4 formatted storage. Aborting...'
-        echo 'Exit.'
-        exit 1
+	echo 'Exit.'
+	exit 1
     ;;
 esac
 
@@ -59,23 +58,23 @@ esac
 echo 'Info: "ping google.com"...'
 if ! ping -c 3 google.com >/dev/null 2>&1
   then
-        echo 'Critical error: The resource is not available. Check your network settings.'
-        echo 'Exit.'
-        exit 1
+	echo 'Critical error: The resource is not available. Check your network settings.'
+	echo 'Exit.'
+	exit 1
   else
-        echo 'Info: "ping google.com" ..... OK'
-        sleep 1
+	echo 'Info: "ping google.com" ..... OK'
+	sleep 1
 fi
 
 echo 'Info: "ping bin.entware.net"...'
 if ! ping -c 3 bin.entware.net >/dev/null 2>&1
   then
-        echo 'Critical error: The resource is not available. Please try again later.'
-        echo 'Exit.'
-        exit 1
+	echo 'Critical error: The resource is not available. Please try again later.'
+	echo 'Exit.'
+	exit 1
   else
-        echo 'Info: "ping bin.entware.net" ..... OK'
-        sleep 1
+	echo 'Info: "ping bin.entware.net" ..... OK'
+	sleep 1
 fi
 
 # This is for opkg only. The other folders will be created from opt-ndmsv2 package
@@ -89,26 +88,26 @@ done
 echo '[2/5] Basic packages installation...'
 if ! opkg update >/dev/null 2>&1
   then
-        echo 'Critical error: An error occurred while updating the package list.'
-        echo 'Exit.'
-        exit 1
+	echo 'Critical error: An error occurred while updating the package list.'
+	echo 'Exit.'
+	exit 1
 fi
 
 # install basic packages
 for ipk in libgcc libc libpthread librt entware-release findutils grep ldconfig locales ndmq opkg zoneinfo-asia zoneinfo-europe opt-ndmsv2 dropbear poorbox busybox
  do
-        echo "Info: Installing \"$ipk\" package..."
+	echo "Info: Installing \"$ipk\" package..."
   if ! opkg install $ipk >/dev/null 2>&1
     then
-        echo "Critical error: An error occurred while installing the \"$ipk\" package."
-        echo 'Exit.'
-        exit 1
+	echo "Critical error: An error occurred while installing the \"$ipk\" package."
+	echo 'Exit.'
+	exit 1
     else
-        echo "Info: The \"$ipk\" package has been installed."
-        sleep 2
+	echo "Info: The \"$ipk\" package has been installed."
+	sleep 2
   fi
     if [ "$ipk" = "libc" ]; then
-        dots.sh &
+	dots.sh &
     fi
 done
 
@@ -127,15 +126,15 @@ echo '[3/5] Generating SSH keys...'
 
 for key in rsa ecdsa ed25519; do
   rm /opt/etc/dropbear/dropbear_${key}_host_key
-        echo "Info: Generating \"$key\" key..."
+	echo "Info: Generating \"$key\" key..."
   if ! dropbearkey -t $key -f /opt/etc/dropbear/dropbear_${key}_host_key >/dev/null 2>&1
     then
-        echo "Critical error: An error occurred while generating \"$key\" key."
-        echo 'Exit.'
-        exit 1
+	echo "Critical error: An error occurred while generating \"$key\" key."
+	echo 'Exit.'
+	exit 1
     else
-        echo "Info: \"$key\" key was created."
-        sleep 1
+	echo "Info: \"$key\" key was created."
+	sleep 1
   fi
 done
 
@@ -147,7 +146,7 @@ ln -sf /opt/share/zoneinfo/"$timezone" /opt/etc/localtime
 
 # SSH
 if [ -f "/usr/sbin/dropbear" ] || [ -n "$(pidof dropbear)" ]; then
-        sed -i "s,PORT=22\$,PORT=222," /opt/etc/config/dropbear.conf
+	sed -i "s,PORT=22\$,PORT=222," /opt/etc/config/dropbear.conf
 fi
 
 /opt/etc/init.d/S51dropbear start
@@ -156,9 +155,9 @@ ndmq -p "opkg initrc /opt/etc/init.d/rc.unslung"
 ndmq -p "system configuration save"
 
 if grep -q "222" /opt/etc/config/dropbear.conf; then
-        echo 'Log on at "root:keenetic@my.keenetic.net -p 222" to start new SSH session.'
+	echo 'Log on to start an SSH session using login - root, password - keenetic, port - 222.'
   else
-        echo 'Log on at "root:keenetic@my.keenetic.net" to start new SSH session.'
+	echo 'Log on to start an SSH session using login - root, password - keenetic.'
 fi
 
 echo '[5/5] "Entware" installed!'
