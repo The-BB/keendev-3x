@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2011-2019 NDM Systems, Inc. http://www.ndmsystems.com/
+# Copyright (C) 2011-2021 NDM Systems, Inc. http://www.ndmsystems.com/
 #
 
 include $(TOPDIR)/rules.mk
@@ -9,7 +9,7 @@ PKG_VERSION:=1.1.15
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://github.com/ndmsystems/libndm/archive/$(PKG_VERSION)
+PKG_SOURCE_URL:=https://codeload.github.com/ndmsystems/libndm/tar.gz/$(PKG_VERSION)?
 PKG_HASH:=bdbb8a236b9cdc64edaddc153a5c376867aea3d761ef0faee9914fc0dff4fa94
 
 PKG_LICENSE:=MIT
