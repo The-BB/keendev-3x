@@ -1,4 +1,6 @@
 #
+# Copyright (C) 2021 Entware
+#
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
 #
@@ -7,7 +9,7 @@ include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=usbip2
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_LICENSE:=GPL-2.0-only
 
 # Since kernel 2.6.39.1 userspace tools are inside the kernel tree
@@ -41,7 +43,7 @@ endef
 define Package/usbip2
   $(call Package/usbip2/Default)
   TITLE+= (common)
-  DEPENDS+= +libwrap +libudev
+  DEPENDS+= +libwrap +libudev +usbids
 endef
 
 define Package/usbip2-client
@@ -78,20 +80,9 @@ endef
 CONFIGURE_VARS+= $(if $(CONFIG_USE_GLIBC),LIBS='-lpthread')
 CFLAGS+="$(TARGET_CFLAGS) -I$(STAGING_DIR)/opt/include"
 
-USB_IDS_VER:=0.344
-USB_IDS_FILE:=usb.ids.$(USB_IDS_VER)
-define Download/usb.ids
-  FILE:=$(USB_IDS_FILE)
-  URL_FILE:=usb.ids
-  URL:=@GITHUB/vcrhonek/hwdata/v$(USB_IDS_VER)
-  HASH:=72d0df3871a1bacf0ecd7bd126a88b310c43b7dca25886295292aa975c75a44f
-endef
-
 define Package/usbip2/install
 	$(INSTALL_DIR) $(1)/opt/lib
 	$(CP) $(PKG_INSTALL_DIR)/opt/lib/libusbip.so.* $(1)/opt/lib/
-	$(INSTALL_DIR) $(1)/opt/share/hwdata
-	$(CP) $(DL_DIR)/usb.ids.$(USB_IDS_VER) $(1)/opt/share/hwdata/usb.ids
 endef
 
 define Package/usbip2-client/install
@@ -106,7 +97,6 @@ define Package/usbip2-server/install
 	$(CP) $(PKG_INSTALL_DIR)/opt/sbin/usbipd $(1)/opt/sbin/
 endef
 
-$(eval $(call Download,usb.ids))
 $(eval $(call BuildPackage,usbip2))
 $(eval $(call BuildPackage,usbip2-client))
 $(eval $(call BuildPackage,usbip2-server))
