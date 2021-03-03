@@ -9,9 +9,9 @@ timer=$(($(date +%s) + seconds))
 
 while [ "$timer" -ge "$(date +%s)" ]; do
   if [ -L "/opt/etc/localtime" ]; then
-        break
+	break
   fi
-        echo "... in progress..." && sleep 1
+	echo "... in progress..." && sleep 1
 done
 
 #rm "$0"
