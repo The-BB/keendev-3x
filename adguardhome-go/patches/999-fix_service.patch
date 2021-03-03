@@ -1,0 +1,22 @@
+--- a/src/github.com/AdguardTeam/AdGuardHome/internal/home/service.go
++++ b/src/github.com/AdguardTeam/AdGuardHome/internal/home/service.go
+@@ -19,8 +19,8 @@ import (
+ // v0.106.0 cycle using packr or during the following cycle using go:embed.
+ 
+ const (
+-	launchdStdoutPath  = "/var/log/AdGuardHome.stdout.log"
+-	launchdStderrPath  = "/var/log/AdGuardHome.stderr.log"
++	launchdStdoutPath  = "/opt/var/log/AdGuardHome.stdout.log"
++	launchdStderrPath  = "/opt/var/log/AdGuardHome.stderr.log"
+ 	serviceName        = "AdGuardHome"
+ 	serviceDisplayName = "AdGuard Home service"
+ 	serviceDescription = "AdGuard Home: Network-level blocker"
+@@ -87,7 +87,7 @@ func sendSigReload() {
+ 		return
+ 	}
+ 
+-	pidfile := fmt.Sprintf("/var/run/%s.pid", serviceName)
++	pidfile := fmt.Sprintf("/opt/var/run/%s.pid", serviceName)
+ 	data, err := ioutil.ReadFile(pidfile)
+ 	if os.IsNotExist(err) {
+ 		code, psdata, err := util.RunCommand("ps", "-C", serviceName, "-o", "pid=")
