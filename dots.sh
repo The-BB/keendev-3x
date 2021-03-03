@@ -9,9 +9,9 @@ timer=$(($(date +%s) + seconds))
 
 while [ "$timer" -ge "$(date +%s)" ]; do
   if [ -x "/opt/etc/init.d/S51dropbear" ]; then
-        break
+	break
   fi
-        echo "... in progress..." && sleep 1
+	echo "... in progress..." && sleep 1
 done
 
 #rm "$0"
