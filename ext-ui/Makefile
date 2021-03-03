@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2016-2019 Entware
+# Copyright (C) 2016-2021 Entware
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -28,7 +28,7 @@ define Package/ext-ui
 endef
 
 define Package/ext-ui/description
-  PHP (v7.x) version extended web user interface (ext-UI) for keenetic routers with NDMSv2
+  PHP (v7.x) version extended web user interface (ext-UI) for Keenetic routers.
 endef
 
 define Package/ext-ui/conffiles
