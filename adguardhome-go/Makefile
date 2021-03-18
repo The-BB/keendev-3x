@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=adguardhome
-PKG_VERSION:=v0.105.1
-PKG_RELEASE:=3
+PKG_VERSION:=v0.105.2
+PKG_RELEASE:=1
 
 PKG_GOGET:=github.com/AdguardTeam/AdGuardHome
 
@@ -17,7 +17,7 @@ GOPKG_SOURCE=GO_$(PKG_NAME)-$(PKG_VERSION)-$(PKG_RELEASE).tar.bz2
 
 #!!! uncomment PKG_SOURCE to download fixed version
 #PKG_SOURCE=$(GOPKG_SOURCE)
-PKG_COMMIT=f68f6c9b37cea1f33cb6fa791e6678b9df3a237b
+PKG_COMMIT=1789c96c7f59fe3b94270e0a6133f8baf0aa01eb
 PKG_HASH:=skip
 PKG_MIRROR_HASH:=skip
 
