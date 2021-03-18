@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ext-ui
 PKG_VERSION:=0.4
-PKG_RELEASE:=5b
+PKG_RELEASE:=6
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -17,11 +17,11 @@ define Package/ext-ui
   SECTION:=keendev
   CATEGORY:=keendev
   TITLE:=Easy installation script for extended web UI (php v7.x)
-  DEPENDS:=+curl +pciutils +php7-cli +php7-fastcgi +php7-mod-curl \
+  DEPENDS:=+curl +pciids +php7-cli +php7-fastcgi +php7-mod-curl \
 	+php7-mod-dom +php7-mod-exif +php7-mod-gd +php7-mod-json \
 	+php7-mod-mbstring +php7-mod-session +php7-mod-simplexml \
 	+php7-mod-xml +php7-mod-xmlreader +php7-mod-xmlwriter \
-	+php7-mod-zip +vnstat +shellinabox +usbip
+	+php7-mod-zip +vnstat +shellinabox +usbids
   ifneq (,$(filter mips mipsel,$(ARCH)))
 	PKGARCH:=$(BOARD)_kn
   endif
