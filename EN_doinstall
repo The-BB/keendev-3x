@@ -13,20 +13,29 @@ unset LD_PRELOAD
 
 echo '[1/5] Starting "Entware" deployment...'
 
-# checking "opkg timezone"
-if [ "$(ndmq -p "show running-config" -P message | grep "opkg timezone" | cut -d' ' -f1,2)" = "opkg timezone" ]
-  then
-	echo 'Info: Have you activated "opkg timezone" in CLI/web?'
-	ndmq -p "opkg timezone $timezone"
+# checking "opkg dns-override"
+if [ "$(ndmq -p "show running-config" -P message | grep "opkg dns-override")" = "opkg dns-override" ]; then
+	echo 'Critical error: The "opkg dns-override" setting is activated. Aborting...'
+	echo 'Exit.'
+	exit 1
 fi
+
+# checking "opkg timezone"
+#if [ "$(ndmq -p "show running-config" -P message | grep "opkg timezone" | cut -d' ' -f1,2)" = "opkg timezone" ]
+#  then
+#	echo 'Info: Have you activated "opkg timezone" in CLI/web?'
+#	ndmq -p "opkg timezone $timezone"
+#fi
 
 # checking "opkg chroot"
 if [ "$(ndmq -p "show running-config" -P message | grep "opkg chroot")" = "opkg chroot" ]; then
-	echo 'Info: Have you activated "opkg chroot" in CLI/web?'
-	for files in group passwd profile shell; do rm -f /opt/etc/$files; done
-	for files in hosts resolv.conf; do cp /tmp/$files /opt/etc/; done
+	echo 'Critical error: The "opkg chroot" setting is activated. Aborting...'
+	echo 'Exit.'
+	exit 1
+#	for files in group passwd profile shell; do rm -f /opt/etc/$files; done
+#	for files in hosts resolv.conf; do cp /tmp/$files /opt/etc/; done
 # checking opt fs
-	check_fs_opt="$(mount | grep 'on / ' | cut -d' ' -f5)"
+#	check_fs_opt="$(mount | grep 'on / ' | cut -d' ' -f5)"
   else
 	check_fs_opt="$(mount | grep 'on /opt ' | cut -d' ' -f5)"
 fi
