@@ -1,6 +1,4 @@
-#!/opt/bin/sh
-
-#set -x
+#!/bin/sh
 
 export PATH=$PATH
 
@@ -113,11 +111,8 @@ for ipk in libgcc libc libpthread librt entware-release findutils grep ldconfig 
 	exit 1
     else
 	echo "Info: The \"$ipk\" package has been installed."
-	sleep 2
+	sleep 1
   fi
-    if [ "$ipk" = "libc" ]; then
-	dots.sh &
-    fi
 done
 
 echo 'Info: All basic packages were installed...'
@@ -126,9 +121,6 @@ ldconfig >/dev/null 2>&1
 
 # Fix for multiuser environment
 chmod 777 /opt/tmp
-
-# flooder
-dots-n.sh &
 
 # keygen
 echo '[3/5] Generating SSH keys...'
@@ -170,8 +162,5 @@ if grep -q "222" /opt/etc/config/dropbear.conf; then
 fi
 
 echo '[5/5] "Entware" installed!'
-
-rm /opt/bin/dots.sh
-rm /opt/bin/dots-n.sh
 
 rm "$0"
