@@ -1,6 +1,4 @@
-#!/opt/bin/sh
-
-#set -x
+#!/bin/sh
 
 export PATH=$PATH
 
@@ -12,11 +10,11 @@ unset LD_BIND_NOW
 unset LD_LIBRARY_PATH
 unset LD_PRELOAD
 
-logger -t installer '[1/5] Начало установки системы пакетов "Entware"...'
+logger -s -t installer '[1/5] Начало установки системы пакетов "Entware"...'
 
 # checking "opkg dns-override"
 if [ "$(ndmq -p "show running-config" -P message | grep "opkg dns-override")" = "opkg dns-override" ]; then
-	logger -t installer 'Info: Активирована настройка "opkg dns-override"...'
+	logger -s -t installer 'Info: Активирована настройка "opkg dns-override"...'
 	logger -t installer 'Critical error: Продолжение установки невозможно!'
 	logger -t installer 'Выход из установки.'
 	exit 1
@@ -25,7 +23,7 @@ fi
 # checking "opkg timezone"
 if [ "$(ndmq -p "show running-config" -P message | grep "opkg timezone" | cut -d' ' -f1,2)" = "opkg timezone" ]
   then
-	logger -t installer 'Info: Активирована настройка "opkg timezone"...'
+	logger -s -t installer 'Info: Активирована настройка "opkg timezone"...'
 	logger -t installer 'Critical error: Продолжение установки невозможно!'
 	logger -t installer 'Выход из установки.'
 	exit 1
@@ -34,7 +32,7 @@ fi
 
 # checking "opkg chroot"
 if [ "$(ndmq -p "show running-config" -P message | grep "opkg chroot")" = "opkg chroot" ]; then
-	logger -t installer 'Info: Активирована настройка "opkg chroot"...'
+	logger -s -t installer 'Info: Активирована настройка "opkg chroot"...'
 	logger -t installer 'Critical error: Продолжение установки невозможно!'
 	logger -t installer 'Выход из установки.'
 	exit 1
@@ -48,29 +46,29 @@ fi
 
 case "$check_fs_opt" in
     ext*)
-	logger -t installer 'Info: Раздел пригоден для установки.'
+	logger -s -t installer 'Info: Раздел пригоден для установки.'
     ;;
     *ntfs*)
-	logger -t installer 'Info: Раздел NTFS! Атрибуты "owner:group" могут не поддерживаться.'
+	logger -s -t installer 'Info: Раздел NTFS! Атрибуты "owner:group" могут не поддерживаться.'
 	logger -t installer 'При возникновении проблем, используйте накопитель с файловой системой ext2/ext3/ext4.'
     ;;
     *hfs*)
-	logger -t installer 'Info: Раздел с HFS! (!не тестировалось!)'
+	logger -s -t installer 'Info: Раздел с HFS! (!не тестировалось!)'
 	logger -t installer 'При возникновении проблем, используйте накопитель с файловой системой ext2/ext3/ext4.'
     ;;
     ubifs)
-	logger -t installer 'Info: Раздел с UBIFS! (!не тестировалось!)'
+	logger -s -t installer 'Info: Раздел с UBIFS! (!не тестировалось!)'
 	logger -t installer 'При возникновении проблем, используйте внешний накопитель с файловой системой ext2/ext3/ext4.'
     ;;
     *)
-        logger -t installer 'Critical error: Неизвестный тип ФС. Используйте накопитель с файловой системой ext2/ext3/ext4. Отменяем...'
+        logger -s -t installer 'Critical error: Неизвестный тип ФС. Используйте накопитель с файловой системой ext2/ext3/ext4. Отменяем...'
 	logger -t installer 'Выход из установки.'
 	exit 1
     ;;
 esac
 
 # checking network
-logger -t installer 'Info: "ping google.com"...'
+logger -s -t installer 'Info: "ping google.com"...'
 if ! ping -c 3 google.com >/dev/null 2>&1
   then
 	logger -t installer 'Critical error: Ресурс недоступен. Проверьте настройки сети.'
@@ -81,7 +79,7 @@ if ! ping -c 3 google.com >/dev/null 2>&1
 	sleep 1
 fi
 
-logger -t installer 'Info: "ping bin.entware.net"...'
+logger -s -t installer 'Info: "ping bin.entware.net"...'
 if ! ping -c 3 bin.entware.net >/dev/null 2>&1
   then
 	logger -t installer 'Critical error: Ресурс недоступен. Повторите попытку позже.'
@@ -101,7 +99,7 @@ for folder in lib/opkg tmp var/lock; do
 done
 
 # opkg update
-logger -t installer '[2/5] Загрузка и установка основных пакетов...'
+logger -s -t installer '[2/5] Загрузка и установка основных пакетов...'
 if ! opkg update >/dev/null 2>&1
   then
 	logger -t installer 'Critical error: Во время обновления списка пакетов произошла ошибка.'
@@ -112,19 +110,16 @@ fi
 # install basic packages
 for ipk in libgcc libc libpthread librt entware-release findutils grep ldconfig locales ndmq opkg zoneinfo-asia zoneinfo-europe opt-ndmsv2 dropbear poorbox busybox
  do
-	logger -t installer "Info: Устанавливается пакет \"$ipk\"..."
+	logger -s -t installer "Info: Устанавливается пакет \"$ipk\"..."
   if ! opkg install $ipk >/dev/null 2>&1
     then
 	logger -t installer "Critical error: Во время установки пакета \"$ipk\" произошла ошибка."
 	logger -t installer 'Выход из установки.'
 	exit 1
     else
-	logger -t installer "Info: Пакет \"$ipk\" установлен."
-	sleep 2
+	logger -s -t installer "Info: Пакет \"$ipk\" установлен."
+	sleep 1
   fi
-    if [ "$ipk" = "libc" ]; then
-	dots.sh &
-    fi
 done
 
 logger -t installer 'Info: Установка пакетов прошла успешно!'
@@ -134,27 +129,24 @@ ldconfig >/dev/null 2>&1
 # Установка прав для многопользовательской среды
 chmod 777 /opt/tmp
 
-# flooder
-dots-n.sh &
-
 # keygen
-logger -t installer '[3/5] Генерация SSH-ключей...'
+logger -s -t installer '[3/5] Генерация SSH-ключей...'
 
 for key in rsa ecdsa ed25519; do
   rm /opt/etc/dropbear/dropbear_${key}_host_key
-	logger -t installer "Info: Генерируется ключ \"$key\"..."
+	logger -s -t installer "Info: Генерируется ключ \"$key\"..."
   if ! dropbearkey -t $key -f /opt/etc/dropbear/dropbear_${key}_host_key >/dev/null 2>&1
     then
 	logger -t installer "Critical error: Во время генерации ключа \"$key\" произошла ошибка."
 	logger -t installer 'Выход из установки.'
 	exit 1
     else
-	logger -t installer "Info: Ключ \"$key\" создан."
+	logger -s -t installer "Info: Ключ \"$key\" создан."
 	sleep 1
   fi
 done
 
-logger -t installer '[4/5] Настройка сценария запуска, установка часового пояса и запуск "dropbear"...'
+logger -s -t installer '[4/5] Настройка сценария запуска, установка часового пояса и запуск "dropbear"...'
 
 # TZ
 timezone="$(ndmq -p "show clock date" -P tz/locality)"
@@ -177,8 +169,5 @@ if grep -q "222" /opt/etc/config/dropbear.conf; then
 fi
 
 logger -t installer '[5/5] Установка системы пакетов "Entware" завершена! Не забудьте сменить пароль и номер порта!'
-
-rm /opt/bin/dots.sh
-rm /opt/bin/dots-n.sh
 
 rm "$0"
