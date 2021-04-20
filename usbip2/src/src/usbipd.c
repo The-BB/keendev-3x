@@ -56,7 +56,7 @@
 
 #define MAIN_LOOP_TIMEOUT 10
 
-#define DEFAULT_PID_FILE "/var/run/" PROGNAME ".pid"
+#define DEFAULT_PID_FILE "/opt/var/run/" PROGNAME ".pid"
 
 static const char usbip_version_string[] = PACKAGE_STRING;
 

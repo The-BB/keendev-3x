@@ -86,8 +86,8 @@ AC_ARG_WITH([tcp-wrappers],
 # Sets directory containing usb.ids.
 AC_ARG_WITH([usbids-dir],
 	    [AS_HELP_STRING([--with-usbids-dir=DIR],
-	       [where usb.ids is found (default /usr/share/hwdata/)])],
-	    [USBIDS_DIR=$withval], [USBIDS_DIR="/usr/share/hwdata/"])
+	       [where usb.ids is found (default /opt/share/hwdata/)])],
+	    [USBIDS_DIR=$withval], [USBIDS_DIR="/opt/share/hwdata/"])
 AC_SUBST([USBIDS_DIR])
 
 # use _FORTIFY_SOURCE
