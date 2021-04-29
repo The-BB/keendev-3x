@@ -1,6 +1,6 @@
---- a/src/github.com/AdguardTeam/AdGuardHome/internal/sysutil/net_linux.go
-+++ b/src/github.com/AdguardTeam/AdGuardHome/internal/sysutil/net_linux.go
-@@ -31,10 +31,10 @@ func ifaceHasStaticIP(ifaceName string)
+--- a/src/github.com/AdguardTeam/AdGuardHome/internal/aghnet/net_linux.go
++++ b/src/github.com/AdguardTeam/AdGuardHome/internal/aghnet/net_linux.go
+@@ -30,7 +30,7 @@ func ifaceHasStaticIP(ifaceName string)
  		filePath string
  	}{{
  		checker:  dhcpcdStaticConfig,
@@ -8,12 +8,8 @@
 +		filePath: "/opt/etc/dhcpcd.conf",
  	}, {
  		checker:  ifacesStaticConfig,
--		filePath: "/etc/network/interfaces",
-+		filePath: "/opt/etc/network/interfaces",
- 	}} {
- 		var f *os.File
- 		f, err = os.Open(check.filePath)
-@@ -140,13 +140,13 @@ func ifaceSetStaticIP(ifaceName string)
+ 		filePath: "/etc/network/interfaces",
+@@ -139,13 +139,13 @@ func ifaceSetStaticIP(ifaceName string)
  	gatewayIP := GatewayIP(ifaceName)
  	add := updateStaticIPdhcpcdConf(ifaceName, ipNet.String(), gatewayIP, ipNet.IP)
  
@@ -24,8 +20,8 @@
  	}
  
  	body = append(body, []byte(add)...)
--	err = file.SafeWrite("/etc/dhcpcd.conf", body)
-+	err = file.SafeWrite("/opt/etc/dhcpcd.conf", body)
+-	err = maybe.WriteFile("/etc/dhcpcd.conf", body, 0o644)
++	err = maybe.WriteFile("/opt/etc/dhcpcd.conf", body, 0o644)
  	if err != nil {
- 		return err
+ 		return fmt.Errorf("writing conf: %w", err)
  	}
