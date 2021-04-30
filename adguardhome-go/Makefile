@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=adguardhome
-PKG_VERSION:=v0.106.0
+PKG_VERSION:=v0.106.1
 PKG_RELEASE:=1
 
 PKG_GOGET:=github.com/AdguardTeam/AdGuardHome
@@ -17,8 +17,8 @@ GOPKG_SOURCE=GO_$(PKG_NAME)-$(PKG_VERSION)-$(PKG_RELEASE).tar.bz2
 
 #!!! uncomment PKG_SOURCE to download fixed version
 PKG_SOURCE=$(GOPKG_SOURCE)
-PKG_COMMIT=fd3b244a8a7e8ad451fbac61d40f584d30904c4a
-PKG_HASH:=2dfba00673d3b727f6d67a9ea213543a17d016a4914e9196f5cf9c9d86f28ea3
+PKG_COMMIT=7696afd03c860bf9193c33378634f1ea4e518b1e
+PKG_HASH:=d74daa6b83b7b16ee4c71228eaee4af4cbfa0e1978983aad91440e9f78e853a9
 
 PKG_LICENSE:=GPL-3.0-only
 PKG_LICENSE_FILES:=LICENSE.txt
@@ -71,12 +71,14 @@ Package/adguardhome-go_nohf/conffiles=$(Package/adguardhome-go/conffiles)
 
 Package/adguardhome-go_nohf/description=$(Package/adguardhome-go/description)
 
+BUILDTIME:=$(shell date -u +%FT%TZ%z)
+VERSION_PKG:=github.com/AdguardTeam/AdGuardHome/internal/version
+
 define Build/Compile
 	( cd $(PKG_BUILD_DIR)/src/$(PKG_GOGET); \
 	\
 		pushd $(PKG_BUILD_DIR)/src/$(PKG_GOGET) ; \
 		make js-deps js-build ; \
-		mkdir -p build{,2}/static ; \
 		$(GOROOT)/bin/packr -z -v -i internal ; \
 		popd ; \
 	\
@@ -85,7 +87,10 @@ define Build/Compile
 		GOARCH=$(GOARCH) \
 		$(GOARM) \
 		$(GOROOT)/bin/go build \
-		-ldflags="-s -w -X main.version=$(PKG_VERSION) -X main.channel=release" ; \
+		-ldflags="-s -w \
+			-X $(VERSION_PKG).channel=release \
+			-X $(VERSION_PKG).version=$(PKG_VERSION) \
+			-X $(VERSION_PKG).buildtime=$(BUILDTIME)" ; \
 	)
 endef
 
