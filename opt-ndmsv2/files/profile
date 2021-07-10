@@ -5,10 +5,10 @@
 # at console logon.
 
 export PATH="/opt/sbin:/opt/bin:/opt/usr/sbin:/opt/usr/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-export TERMINFO=/opt/share/terminfo
-export TERM=xterm
-export TMP=/opt/tmp
-export TEMP=/opt/tmp
+export TERMINFO="/opt/share/terminfo"
+export TERM="xterm"
+export TMP="/opt/tmp"
+export TEMP="/opt/tmp"
 alias mc="mc -c"
 
 # You may define localization
