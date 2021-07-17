@@ -25,7 +25,7 @@ define Package/opt-ndmsv2
 	+USE_GLIBC:zoneinfo-europe
   TITLE:=provides basic toolchain libraries (dummy)
   MAINTAINER:=Entware team, http://entware.net
-  ifneq (,$(filter mips mipsel,$(ARCH)))
+  ifneq (,$(filter aarch64 mips mipsel,$(ARCH)))
 	PKGARCH:=$(BOARD)_kn
   endif
 endef
