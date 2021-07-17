@@ -22,8 +22,7 @@ define Package/libndm
   CATEGORY:=keendev
   TITLE:=NDM base C library
   URL:=https://github.com/ndmsystems/libndm
-  DEPENDS:=+librt
-  ifneq (,$(filter mips mipsel,$(ARCH)))
+  ifneq (,$(filter aarch64 mips mipsel,$(ARCH)))
 	PKGARCH:=$(BOARD)_kn
   endif
 endef
