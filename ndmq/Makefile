@@ -23,7 +23,7 @@ define Package/ndmq
   TITLE:=NDM Query utility
   URL:=https://github.com/ndmsystems/ndmq
   DEPENDS:=+libndm
-  ifneq (,$(filter mips mipsel,$(ARCH)))
+  ifneq (,$(filter aarch64 mips mipsel,$(ARCH)))
 	PKGARCH:=$(BOARD)_kn
   endif
 endef
