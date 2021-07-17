@@ -29,7 +29,7 @@ define Package/at
   DEPENDS:=+libelf
   TITLE:=Delayed job execution and batch processing
   URL:=http://packages.debian.org/stable/at
-  ifneq (,$(filter mips mipsel,$(ARCH)))
+  ifneq (,$(filter aarch64 mips mipsel,$(ARCH)))
 	PKGARCH:=$(BOARD)_kn
   endif
 endef
