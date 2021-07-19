@@ -54,17 +54,11 @@ chmod 644 $ROOT_DIR/opt/etc/opkg.conf
 rm -f $ROOT_DIR/opt/etc/init.d/S*
 
 # Adding install script
-mkdir -p $ROOT_DIR/opt/etc/init.d
-cp $SCRIPT_DIR/doinstall $ROOT_DIR/opt/etc/init.d/
-chmod +x $ROOT_DIR/opt/etc/init.d/doinstall
-
-# This script will seed some dots to terminal.
-# Otherwise, f\w will kill installation after 8 seconds of silence
-#cp $SCRIPT_DIR/dots.sh $ROOT_DIR/opt/bin
-#chmod +x $ROOT_DIR/opt/bin/dots.sh
-
-#cp $SCRIPT_DIR/dots-n.sh $ROOT_DIR/opt/bin
-#chmod +x $ROOT_DIR/opt/bin/dots-n.sh
+mkdir -p $ROOT_DIR/opt/etc/
+cp $SCRIPT_DIR/initrc $ROOT_DIR/opt/etc/
+chmod +x $ROOT_DIR/opt/etc/initrc
+cp $SCRIPT_DIR/doinstall $ROOT_DIR/opt/bin/
+chmod +x $ROOT_DIR/opt/bin/doinstall
 
 # Packing installer
 [ -f $INSTALLER ] && rm $INSTALLER
