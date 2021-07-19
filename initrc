@@ -4,11 +4,4 @@ unset LD_BIND_NOW
 unset LD_LIBRARY_PATH
 unset LD_PRELOAD
 
-#LANG="ru_RU.UTF-8"
-#export LC_ALL="ru_RU.UTF-8"
-#export LD_LIBRARY_PATH="/opt/lib:/opt/usr/lib"
-#SHELL="/opt/bin/sh"
-
-#ldconfig >/dev/null 2>&1
-
 exec /opt/bin/sh /opt/bin/doinstall &
