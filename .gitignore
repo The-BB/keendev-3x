@@ -1,6 +1,2 @@
-aarch64-installer.tar.gz
-mips-installer.tar.gz
-mipsel-installer.tar.gz
-EN_mips-installer.tar.gz
-EN_mipsel-installer.tar.gz
+*-installer.tar.gz
 installer_root
