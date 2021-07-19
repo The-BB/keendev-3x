@@ -1,13 +1,5 @@
-#!/bin/sh
-
-export PATH=$PATH
-
 timezone="$(ndmq -p "show clock date" -P tz/rule)"
 export TZ="$timezone"
-
-unset LD_BIND_NOW
-unset LD_LIBRARY_PATH
-unset LD_PRELOAD
 
 echo '[1/5] Starting "Entware" deployment...'
 
@@ -162,5 +154,7 @@ if grep -q "222" /opt/etc/config/dropbear.conf; then
 fi
 
 echo '[5/5] "Entware" installed!'
+
+rm /opt/etc/initrc
 
 rm "$0"
