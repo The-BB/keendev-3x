@@ -26,10 +26,7 @@ if (is_dir($dir)) {
 			$allserv = array(
 				".",
 				"..",
-				"S79php-fcgi",
-				"S80extui",
-				"S80lighttpd",
-				"S80nginx",
+				"S80uhttpd",
 				"rc.func",
 				"rc.unslung",
 				);
