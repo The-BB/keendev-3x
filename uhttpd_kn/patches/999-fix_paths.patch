@@ -1,0 +1,29 @@
+--- a/main.c
++++ b/main.c
+@@ -61,7 +61,7 @@ static void uh_config_parse(void)
+ 	char *eol;
+ 
+ 	if (!path)
+-		path = "/etc/httpd.conf";
++		path = "/opt/etc/httpd.conf";
+ 
+ 	c = fopen(path, "r");
+ 	if (!c)
+@@ -133,7 +133,7 @@ static int usage(const char *name)
+ 	fprintf(stderr,
+ 		"Usage: %s -p [addr:]port -h docroot\n"
+ 		"	-f              Do not fork to background\n"
+-		"	-c file         Configuration file, default is '/etc/httpd.conf'\n"
++		"	-c file         Configuration file, default is '/opt/etc/httpd.conf'\n"
+ 		"	-p [addr:]port  Bind to specified address and port, multiple allowed\n"
+ #ifdef HAVE_TLS
+ 		"	-s [addr:]port  Like -p but provide HTTPS on this port\n"
+@@ -185,7 +185,7 @@ static void init_defaults_pre(void)
+ 	conf.max_connections = 100;
+ 	conf.realm = "Protected Area";
+ 	conf.cgi_prefix = "/cgi-bin";
+-	conf.cgi_path = "/sbin:/usr/sbin:/bin:/usr/bin";
++	conf.cgi_path = "/opt/sbin:/opt/usr/sbin:/opt/bin:/opt/usr/bin";
+ 	INIT_LIST_HEAD(&conf.cgi_alias);
+ 	INIT_LIST_HEAD(&conf.lua_prefix);
+ }
