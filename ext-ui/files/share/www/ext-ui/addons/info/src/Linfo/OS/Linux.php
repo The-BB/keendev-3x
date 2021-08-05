@@ -741,6 +741,7 @@ class Linux extends Unixcommon
 
         // Location of useful paths
         $pci_ids = Common::locateActualPath(array(
+            '/opt/share/hwdata/pci.ids',    // Entware
             '/opt/share/pci.ids',   // Entware
             '/usr/share/misc/pci.ids',    // debian/ubuntu
             '/usr/share/pci.ids',        // opensuse
@@ -1514,7 +1515,7 @@ class Linux extends Unixcommon
         }
 
         $existence_distros = array(
-            '/opt/etc/entware-release ' => 'Entware',
+            '/opt/etc/entware_release' => 'Entware',
             '/etc/arch-release' => 'Arch',
             '/etc/mklinux-release' => 'MkLinux',
             '/etc/tinysofa-release ' => 'TinySofa',

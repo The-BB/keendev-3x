@@ -7,7 +7,7 @@
  * Usual configuration
  */
 $settings['byte_notation'] = 1024; // Either 1024 or 1000; defaults to 1024
-$settings['dates'] = 'r'; // Format for dates shown. See php.net/date for syntax
+$settings['dates'] = 'l, d M Y G:i (T)'; // Format for dates shown. See php.net/date for syntax
 $settings['language'] = 'en'; // Refer to the lang/ folder for supported languages
 $settings['icons'] = true; // simple icons
 $settings['theme'] = 'default'; // Theme file (layout/theme_$n.css). Look at the contents of the layout/ folder for other themes.
@@ -72,7 +72,8 @@ $settings['show']['services'] = true;
 $settings['hide']['filesystems'] = array(
 	'tmpfs', 'ecryptfs', 'nfsd', 'rpc_pipefs', 'proc', 'sysfs',
 	'usbfs', 'devpts', 'fusectl', 'securityfs', 'fuse.truecrypt',
-  'cgroup', 'debugfs', 'mqueue', 'hugetlbfs', 'pstore');
+	'cgroup', 'cgroup2', 'debugfs', 'mqueue', 'hugetlbfs', 'pstore',
+	'tracefs', 'configfs', 'efivarfs');
 $settings['hide']['storage_devices'] = array('gvfs-fuse-daemon', 'none', 'systemd-1', 'udev');
 
 // filter mountpoints based on PCRE regex, eg '@^/proc@', '@^/sys@', '@^/dev@'
@@ -200,6 +201,6 @@ $settings['extensions']['smb'] = false;
 
 // for details, see ./src/Linfo/Extension/Transmission.php
 $settings['extensions']['transmission'] = false;
-$settings['transmission_api_url'] = 'http://127.0.0.1:9091';
+$settings['transmission_api_url'] = 'http://0.0.0.0:9091';
 $settings['transmission_folder'] = '/opt/etc/transmission/';
 
