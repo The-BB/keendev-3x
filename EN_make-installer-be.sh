@@ -36,8 +36,8 @@ cp -fr $BUILD_DIR/grep-*/ipkg-mips-3.4/grep/opt $ROOT_DIR
 cp -r $BUILD_DIR/pcre-*/ipkg-mips-3.4/libpcre/opt $ROOT_DIR
 
 # Adding libndm&ndmq
-cp -r $BUILD_DIR/ndmq-*/ipkg-mips-3.4_kn/ndmq/opt $ROOT_DIR
-cp -r $BUILD_DIR/libndm-*/ipkg-mips-3.4_kn/libndm/opt $ROOT_DIR
+#cp -r $BUILD_DIR/ndmq-*/ipkg-mips-3.4_kn/ndmq/opt $ROOT_DIR
+#cp -r $BUILD_DIR/libndm-*/ipkg-mips-3.4_kn/libndm/opt $ROOT_DIR
 
 # Adding dummie SSH keys to avoid dropbear post-install timeout
 mkdir -p $ROOT_DIR/opt/etc/dropbear
