@@ -1,24 +1,23 @@
-timezone="$(ndmq -p "show clock date" -P tz/rule)"
-export TZ="$timezone"
+#timezone="$(ndmq -p "show clock date" -P tz/rule)"
+if [ -f "/var/TZ" ]; then
+  export TZ="$(cat /var/TZ)"
+else
+  export TZ="UTC"
+fi
 
 echo '[1/5] Starting "Entware" deployment...'
 
 # checking "opkg dns-override"
-if [ "$(ndmq -p "show running-config" -P message | grep "opkg dns-override")" = "opkg dns-override" ]; then
+#if [ "$(ndmq -p "show running-config" -P message | grep "opkg dns-override")" = "opkg dns-override" ]; then
+if [ "$(echo $(wget -qO - localhost:79/rci/opkg/dns-override))" = "true" ]; then
 	echo 'Critical error: The "opkg dns-override" setting is activated. Aborting...'
 	echo 'Exit.'
 	exit 1
 fi
 
-# checking "opkg timezone"
-#if [ "$(ndmq -p "show running-config" -P message | grep "opkg timezone" | cut -d' ' -f1,2)" = "opkg timezone" ]
-#  then
-#	echo 'Info: Have you activated "opkg timezone" in CLI/web?'
-#	ndmq -p "opkg timezone $timezone"
-#fi
-
 # checking "opkg chroot"
-if [ "$(ndmq -p "show running-config" -P message | grep "opkg chroot")" = "opkg chroot" ]; then
+#if [ "$(ndmq -p "show running-config" -P message | grep "opkg chroot")" = "opkg chroot" ]; then
+if [ -n "$(echo $(wget -qO - localhost:79/rci/opkg/chroot) | grep 'true')" ]; then
 	echo 'Critical error: The "opkg chroot" setting is activated. Aborting...'
 	echo 'Exit.'
 	exit 1
@@ -55,7 +54,7 @@ esac
 
 # checking network
 echo 'Info: "ping google.com"...'
-if ! ping -c 3 google.com >/dev/null 2>&1
+if ! ping -c 3 dns.google.com >/dev/null 2>&1
   then
 	echo 'Critical error: The resource is not available. Check your network settings.'
 	echo 'Exit.'
@@ -93,7 +92,7 @@ if ! opkg update >/dev/null 2>&1
 fi
 
 # install basic packages
-for ipk in libgcc libc libpthread librt entware-release findutils grep ldconfig locales ndmq opkg zoneinfo-asia zoneinfo-europe opt-ndmsv2 dropbear poorbox busybox
+for ipk in libgcc libc libpthread librt entware-release findutils grep ldconfig locales opkg zoneinfo-asia zoneinfo-europe opt-ndmsv2 dropbear poorbox busybox
  do
 	echo "Info: Installing \"$ipk\" package..."
   if ! opkg install $ipk >/dev/null 2>&1
@@ -131,10 +130,10 @@ for key in rsa ecdsa ed25519; do
   fi
 done
 
-echo '[4/5] Setting timezone, script initrc and starting "dropbear"...'
+echo '[4/5] Setting timezone and starting "dropbear"...'
 
 # TZ
-timezone="$(ndmq -p "show clock date" -P tz/locality)"
+timezone="$(echo $(wget -qO - localhost:79/rci/system/clock/timezone/locality | sed 's,",,g'))"
 ln -sf /opt/share/zoneinfo/"$timezone" /opt/etc/localtime
 
 # SSH
@@ -144,8 +143,8 @@ fi
 
 /opt/etc/init.d/S51dropbear start
 
-ndmq -p "opkg initrc /opt/etc/init.d/rc.unslung"
-ndmq -p "system configuration save"
+#ndmq -p "opkg initrc /opt/etc/init.d/rc.unslung"
+#ndmq -p "system configuration save"
 
 if grep -q "222" /opt/etc/config/dropbear.conf; then
 	echo 'Log on to start an SSH session using login - root, password - keenetic, port - 222.'
