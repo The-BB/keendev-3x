@@ -36,8 +36,8 @@ cp -fr $BUILD_DIR/grep-*/ipkg-aarch64-3.10/grep/opt $ROOT_DIR
 cp -r $BUILD_DIR/pcre-*/ipkg-aarch64-3.10/libpcre/opt $ROOT_DIR
 
 # Adding libndm&ndmq
-cp -r $BUILD_DIR/ndmq-*/ipkg-aarch64-3.10_kn/ndmq/opt $ROOT_DIR
-cp -r $BUILD_DIR/libndm-*/ipkg-aarch64-3.10_kn/libndm/opt $ROOT_DIR
+#cp -r $BUILD_DIR/ndmq-*/ipkg-aarch64-3.10_kn/ndmq/opt $ROOT_DIR
+#cp -r $BUILD_DIR/libndm-*/ipkg-aarch64-3.10_kn/libndm/opt $ROOT_DIR
 
 # Adding dummie SSH keys to avoid dropbear post-install timeout
 mkdir -p $ROOT_DIR/opt/etc/dropbear
