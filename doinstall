@@ -1,29 +1,25 @@
 # Это временно. Переменную timezone должна определить ndms (прошивка)
-timezone="$(ndmq -p "show clock date" -P tz/rule)"
-export TZ="$timezone"
+#timezone="$(ndmq -p "show clock date" -P tz/rule)"
+if [ -f "/var/TZ" ]; then
+  export TZ="$(cat /var/TZ)"
+else
+  export TZ="UTC"
+fi
 
 logger -t installer '[1/5] Начало установки системы пакетов "Entware"...'
 
 # checking "opkg dns-override"
-if [ "$(ndmq -p "show running-config" -P message | grep "opkg dns-override")" = "opkg dns-override" ]; then
+#if [ "$(ndmq -p "show running-config" -P message | grep "opkg dns-override")" = "opkg dns-override" ]; then
+if [ "$(echo $(wget -qO - localhost:79/rci/opkg/dns-override))" = "true" ]; then
 	logger -t installer 'Info: Активирована настройка "opkg dns-override"...'
 	logger -t installer 'Critical error: Продолжение установки невозможно!'
 	logger -t installer 'Выход из установки.'
 	exit 1
 fi
 
-# checking "opkg timezone"
-if [ "$(ndmq -p "show running-config" -P message | grep "opkg timezone" | cut -d' ' -f1,2)" = "opkg timezone" ]
-  then
-	logger -t installer 'Info: Активирована настройка "opkg timezone"...'
-	logger -t installer 'Critical error: Продолжение установки невозможно!'
-	logger -t installer 'Выход из установки.'
-	exit 1
-#	ndmq -p "opkg timezone $timezone"
-fi
-
 # checking "opkg chroot"
-if [ "$(ndmq -p "show running-config" -P message | grep "opkg chroot")" = "opkg chroot" ]; then
+#if [ "$(ndmq -p "show running-config" -P message | grep "opkg chroot")" = "opkg chroot" ]; then
+if [ -n "$(echo $(wget -qO - localhost:79/rci/opkg/chroot) | grep 'true')" ]; then
 	logger -t installer 'Info: Активирована настройка "opkg chroot"...'
 	logger -t installer 'Critical error: Продолжение установки невозможно!'
 	logger -t installer 'Выход из установки.'
@@ -61,7 +57,7 @@ esac
 
 # checking network
 logger -t installer 'Info: "ping google.com"...'
-if ! ping -c 3 google.com >/dev/null 2>&1
+if ! ping -c 3 dns.google.com >/dev/null 2>&1
   then
 	logger -t installer 'Critical error: Ресурс недоступен. Проверьте настройки сети.'
 	logger -t installer 'Выход из установки.'
@@ -100,7 +96,7 @@ if ! opkg update >/dev/null 2>&1
 fi
 
 # install basic packages
-for ipk in libgcc libc libpthread librt entware-release findutils grep ldconfig locales ndmq opkg zoneinfo-asia zoneinfo-europe opt-ndmsv2 dropbear poorbox busybox
+for ipk in libgcc libc libpthread librt entware-release findutils grep ldconfig locales opkg zoneinfo-asia zoneinfo-europe opt-ndmsv2 dropbear poorbox busybox
  do
 	logger -t installer "Info: Устанавливается пакет \"$ipk\"..."
   if ! opkg install $ipk >/dev/null 2>&1
@@ -138,10 +134,10 @@ for key in rsa ecdsa ed25519; do
   fi
 done
 
-logger -t installer '[4/5] Настройка сценария запуска, установка часового пояса и запуск "dropbear"...'
+logger -t installer '[4/5] Установка часового пояса и запуск "dropbear"...'
 
 # TZ
-timezone="$(ndmq -p "show clock date" -P tz/locality)"
+timezone="$(echo $(wget -qO - localhost:79/rci/system/clock/timezone/locality | sed 's,",,g'))"
 ln -sf /opt/share/zoneinfo/"$timezone" /opt/etc/localtime
 
 # SSH
@@ -151,8 +147,8 @@ fi
 
 /opt/etc/init.d/S51dropbear start
 
-ndmq -p "opkg initrc /opt/etc/init.d/rc.unslung"
-ndmq -p "system configuration save"
+#ndmq -p "opkg initrc /opt/etc/init.d/rc.unslung"
+#ndmq -p "system configuration save"
 
 if grep -q "222" /opt/etc/config/dropbear.conf; then
 	logger -t installer 'Можно открыть SSH-сессию для соединения с устройством (логин - root, пароль - keenetic, порт - 222).'
