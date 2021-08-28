@@ -1,5 +1,4 @@
 # Это временно. Переменную timezone должна определить ndms (прошивка)
-#timezone="$(ndmq -p "show clock date" -P tz/rule)"
 if [ -f "/var/TZ" ]; then
   export TZ="$(cat /var/TZ)"
 else
@@ -9,7 +8,6 @@ fi
 logger -t installer '[1/5] Начало установки системы пакетов "Entware"...'
 
 # checking "opkg dns-override"
-#if [ "$(ndmq -p "show running-config" -P message | grep "opkg dns-override")" = "opkg dns-override" ]; then
 if [ "$(echo $(wget -qO - localhost:79/rci/opkg/dns-override))" = "true" ]; then
 	logger -t installer 'Info: Активирована настройка "opkg dns-override"...'
 	logger -t installer 'Critical error: Продолжение установки невозможно!'
@@ -18,16 +16,11 @@ if [ "$(echo $(wget -qO - localhost:79/rci/opkg/dns-override))" = "true" ]; then
 fi
 
 # checking "opkg chroot"
-#if [ "$(ndmq -p "show running-config" -P message | grep "opkg chroot")" = "opkg chroot" ]; then
 if [ -n "$(echo $(wget -qO - localhost:79/rci/opkg/chroot) | grep 'true')" ]; then
 	logger -t installer 'Info: Активирована настройка "opkg chroot"...'
 	logger -t installer 'Critical error: Продолжение установки невозможно!'
 	logger -t installer 'Выход из установки.'
 	exit 1
-#	for files in group passwd profile shell; do rm -f /opt/etc/$files; done
-#	for files in hosts resolv.conf; do cp /tmp/$files /opt/etc/; done
-# checking opt fs
-#	check_fs_opt="$(mount | grep 'on / ' | cut -d' ' -f5)"
   else
 	check_fs_opt="$(mount | grep 'on /opt ' | cut -d' ' -f5)"
 fi
@@ -150,9 +143,7 @@ fi
 
 /opt/etc/init.d/S51dropbear start
 
-#ndmq -p "opkg initrc /opt/etc/init.d/rc.unslung"
-#ndmq -p "system configuration save"
-wget --post-data='[{"opkg": {"initrc": {"path": "/opt/etc/init.d/rc.unslung", "no": false}}},{"system": {"configuration": {"save": true}}}]' http://127.0.0.1:79/rci/ -qO - >/dev/null 2>&1
+wget -qO - --post-data='[{"opkg": {"initrc": {"path": "/opt/etc/init.d/rc.unslung"}}},{"system": {"configuration": {"save": true}}}]' localhost:79/rci
 
 if grep -q "222" /opt/etc/config/dropbear.conf; then
 	logger -t installer 'Можно открыть SSH-сессию для соединения с устройством (логин - root, пароль - keenetic, порт - 222).'
