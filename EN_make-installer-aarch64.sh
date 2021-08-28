@@ -18,7 +18,7 @@ cp -r $BUILD_DIR/toolchain/ipkg-aarch64-3.10/libssp/opt $ROOT_DIR
 
 # Adding locales
 mkdir -p $ROOT_DIR/opt/usr/lib/locale
-cp -r $SCRIPT_DIR/locale-archive.2.27-aarch64 $ROOT_DIR/opt/usr/lib/locale/locale-archive
+cp -r $SCRIPT_DIR/EN_locale-archive.2.27-aarch64 $ROOT_DIR/opt/usr/lib/locale/locale-archive
 
 # Adding busybox
 cp -r $BUILD_DIR/busybox-default/busybox-*/ipkg-install/opt $ROOT_DIR
@@ -34,10 +34,6 @@ cp -fr $BUILD_DIR/busybox-default/busybox-*/ipkg-aarch64-3.10/busybox/opt $ROOT_
 # Adding libpcre&grep
 cp -fr $BUILD_DIR/grep-*/ipkg-aarch64-3.10/grep/opt $ROOT_DIR
 cp -r $BUILD_DIR/pcre-*/ipkg-aarch64-3.10/libpcre/opt $ROOT_DIR
-
-# Adding libndm&ndmq
-#cp -r $BUILD_DIR/ndmq-*/ipkg-aarch64-3.10_kn/ndmq/opt $ROOT_DIR
-#cp -r $BUILD_DIR/libndm-*/ipkg-aarch64-3.10_kn/libndm/opt $ROOT_DIR
 
 # Adding dummie SSH keys to avoid dropbear post-install timeout
 mkdir -p $ROOT_DIR/opt/etc/dropbear
