@@ -8,7 +8,6 @@ fi
 echo '[1/5] Starting "Entware" deployment...'
 
 # checking "opkg dns-override"
-#if [ "$(ndmq -p "show running-config" -P message | grep "opkg dns-override")" = "opkg dns-override" ]; then
 if [ "$(echo $(wget -qO - localhost:79/rci/opkg/dns-override))" = "true" ]; then
 	echo 'Critical error: The "opkg dns-override" setting is activated. Aborting...'
 	echo 'Exit.'
@@ -16,15 +15,10 @@ if [ "$(echo $(wget -qO - localhost:79/rci/opkg/dns-override))" = "true" ]; then
 fi
 
 # checking "opkg chroot"
-#if [ "$(ndmq -p "show running-config" -P message | grep "opkg chroot")" = "opkg chroot" ]; then
 if [ -n "$(echo $(wget -qO - localhost:79/rci/opkg/chroot) | grep 'true')" ]; then
 	echo 'Critical error: The "opkg chroot" setting is activated. Aborting...'
 	echo 'Exit.'
 	exit 1
-#	for files in group passwd profile shell; do rm -f /opt/etc/$files; done
-#	for files in hosts resolv.conf; do cp /tmp/$files /opt/etc/; done
-# checking opt fs
-#	check_fs_opt="$(mount | grep 'on / ' | cut -d' ' -f5)"
   else
 	check_fs_opt="$(mount | grep 'on /opt ' | cut -d' ' -f5)"
 fi
@@ -146,9 +140,7 @@ fi
 
 /opt/etc/init.d/S51dropbear start
 
-#ndmq -p "opkg initrc /opt/etc/init.d/rc.unslung"
-#ndmq -p "system configuration save"
-wget --post-data='[{"opkg": {"initrc": {"path": "/opt/etc/init.d/rc.unslung", "no": false}}},{"system": {"configuration": {"save": true}}}]' http://127.0.0.1:79/rci/ -qO - >/dev/null 2>&1
+wget -qO - --post-data='[{"opkg": {"initrc": {"path": "/opt/etc/init.d/rc.unslung"}}},{"system": {"configuration": {"save": true}}}]' localhost:79/rci
 
 if grep -q "222" /opt/etc/config/dropbear.conf; then
 	echo 'Log on to start an SSH session using login - root, password - keenetic, port - 222.'
