@@ -130,11 +130,14 @@ for key in rsa ecdsa ed25519; do
   fi
 done
 
-echo '[4/5] Setting timezone and starting "dropbear"...'
+echo '[4/5] Setting timezone, script initrc and starting "dropbear"...'
 
 # TZ
 timezone="$(echo $(wget -qO - localhost:79/rci/system/clock/timezone/locality | sed 's,",,g'))"
-ln -sf /opt/share/zoneinfo/"$timezone" /opt/etc/localtime
+
+if [ -n "$timezone" ]; then
+  ln -sf /opt/share/zoneinfo/"$timezone" /opt/etc/localtime
+fi
 
 # SSH
 if [ -f "/usr/sbin/dropbear" ] || [ -n "$(pidof dropbear)" ]; then
@@ -145,6 +148,7 @@ fi
 
 #ndmq -p "opkg initrc /opt/etc/init.d/rc.unslung"
 #ndmq -p "system configuration save"
+wget --post-data='[{"opkg": {"initrc": {"path": "/opt/etc/init.d/rc.unslung", "no": false}}},{"system": {"configuration": {"save": true}}}]' http://127.0.0.1:79/rci/ -qO - >/dev/null 2>&1
 
 if grep -q "222" /opt/etc/config/dropbear.conf; then
 	echo 'Log on to start an SSH session using login - root, password - keenetic, port - 222.'
