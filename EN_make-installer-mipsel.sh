@@ -18,7 +18,7 @@ cp -r $BUILD_DIR/toolchain/ipkg-mipsel-3.4/libssp/opt $ROOT_DIR
 
 # Adding locales
 mkdir -p $ROOT_DIR/opt/usr/lib/locale
-cp -r $SCRIPT_DIR/EN_locale-archive.2.27-le $ROOT_DIR/opt/usr/lib/locale/locale-archive
+cp -r $SCRIPT_DIR/EN_locale-archive.2.27-mipsel $ROOT_DIR/opt/usr/lib/locale/locale-archive
 
 # Adding busybox
 cp -r $BUILD_DIR/busybox-default/busybox-*/ipkg-install/opt $ROOT_DIR
@@ -35,10 +35,6 @@ cp -fr $BUILD_DIR/busybox-default/busybox-*/ipkg-mipsel-3.4/busybox/opt $ROOT_DI
 cp -fr $BUILD_DIR/grep-*/ipkg-mipsel-3.4/grep/opt $ROOT_DIR
 cp -r $BUILD_DIR/pcre-*/ipkg-mipsel-3.4/libpcre/opt $ROOT_DIR
 
-# Adding libndm&ndmq
-#cp -r $BUILD_DIR/ndmq-*/ipkg-mipsel-3.4_kn/ndmq/opt $ROOT_DIR
-#cp -r $BUILD_DIR/libndm-*/ipkg-mipsel-3.4_kn/libndm/opt $ROOT_DIR
-
 # Adding dummie SSH keys to avoid dropbear post-install timeout
 mkdir -p $ROOT_DIR/opt/etc/dropbear
 touch $ROOT_DIR/opt/etc/dropbear/dropbear_ecdsa_host_key
@@ -47,7 +43,7 @@ touch $ROOT_DIR/opt/etc/dropbear/dropbear_rsa_host_key
 
 # Adding opkg&opkg.conf
 cp -r $BUILD_DIR/linux-mipsel-3.4/opkg-*/ipkg-mipsel-3.4/opkg/opt $ROOT_DIR
-cp -r $SCRIPT_DIR/opkg-le.conf $ROOT_DIR/opt/etc/opkg.conf
+cp -r $SCRIPT_DIR/opkg-mipsel.conf $ROOT_DIR/opt/etc/opkg.conf
 chmod 644 $ROOT_DIR/opt/etc/opkg.conf
 
 # Removing starting scripts
