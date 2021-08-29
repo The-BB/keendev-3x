@@ -143,7 +143,7 @@ fi
 
 /opt/etc/init.d/S51dropbear start
 
-wget -qO - --post-data='[{"opkg": {"initrc": {"path": "/opt/etc/init.d/rc.unslung"}}},{"system": {"configuration": {"save": true}}}]' localhost:79/rci
+wget -qO - --post-data='[{"opkg": {"initrc": {"path": "/opt/etc/init.d/rc.unslung"}}},{"system": {"configuration": {"save": true}}}]' localhost:79/rci &
 
 if grep -q "222" /opt/etc/config/dropbear.conf; then
 	logger -t installer 'Можно открыть SSH-сессию для соединения с устройством (логин - root, пароль - keenetic, порт - 222).'
@@ -153,6 +153,6 @@ fi
 
 logger -t installer '[5/5] Установка системы пакетов "Entware" завершена! Не забудьте сменить пароль и номер порта!'
 
-rm /opt/etc/initrc
+rm /opt/etc/init.d/doinstall
 
 rm "$0"
