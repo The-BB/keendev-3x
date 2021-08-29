@@ -50,11 +50,11 @@ chmod 644 $ROOT_DIR/opt/etc/opkg.conf
 rm -f $ROOT_DIR/opt/etc/init.d/S*
 
 # Adding install script
-mkdir -p $ROOT_DIR/opt/etc/
-cp $SCRIPT_DIR/initrc $ROOT_DIR/opt/etc/
-chmod +x $ROOT_DIR/opt/etc/initrc
-cp $SCRIPT_DIR/doinstall $ROOT_DIR/opt/bin/
-chmod +x $ROOT_DIR/opt/bin/doinstall
+mkdir -p $ROOT_DIR/opt/etc/init.d
+cp $SCRIPT_DIR/doinstall $ROOT_DIR/opt/etc/init.d/
+chmod +x $ROOT_DIR/opt/etc/init.d/doinstall
+cp $SCRIPT_DIR/install $ROOT_DIR/opt/bin/
+chmod +x $ROOT_DIR/opt/bin/install
 
 # Packing installer
 [ -f $INSTALLER ] && rm $INSTALLER
