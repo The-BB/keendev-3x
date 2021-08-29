@@ -4,4 +4,4 @@ unset LD_BIND_NOW
 unset LD_LIBRARY_PATH
 unset LD_PRELOAD
 
-exec /opt/bin/sh /opt/bin/doinstall &
+exec /opt/bin/sh /opt/bin/install &
