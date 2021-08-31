@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=adguardhome
-PKG_VERSION:=v0.106.3
+PKG_VERSION:=v0.107.0-b.8
 PKG_RELEASE:=1
 
 PKG_GOGET:=github.com/AdguardTeam/AdGuardHome
@@ -17,8 +17,8 @@ GOPKG_SOURCE=GO_$(PKG_NAME)-$(PKG_VERSION)-$(PKG_RELEASE).tar.bz2
 
 #!!! uncomment PKG_SOURCE to download fixed version
 PKG_SOURCE=$(GOPKG_SOURCE)
-PKG_COMMIT=dda513fe82e6a46d6bcfb0d889d66cd76ea25ee6
-PKG_HASH:=b6117e05d4c875a2d8952162bb5ccaaf3af7a16cc2dbace5adebe953f2a4337c
+PKG_COMMIT=d2c9052dde899297f907b80c79b7ec7e7ab72b80
+PKG_HASH:=09dc125bfbc064f6c5f9ccaf2e0c59fbb7e9fc2f27cc4bfb26aebec8a44f4870
 
 PKG_LICENSE:=GPL-3.0-only
 PKG_LICENSE_FILES:=LICENSE.txt
@@ -26,7 +26,7 @@ PKG_LICENSE_FILES:=LICENSE.txt
 PKG_BUILD_PARALLEL:=1
 PKG_USE_MIPS16:=0
 
-PKG_BUILD_DEPENDS:=node/host packr-go/host node-yarn/host
+PKG_BUILD_DEPENDS:=node/host node-yarn/host packr-go/host
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/golang.mk
@@ -88,7 +88,7 @@ define Build/Compile
 		$(GOARM) \
 		$(GOROOT)/bin/go build \
 		-ldflags="-s -w \
-			-X $(VERSION_PKG).channel=release \
+			-X $(VERSION_PKG).channel=beta \
 			-X $(VERSION_PKG).version=$(PKG_VERSION) \
 			-X $(VERSION_PKG).buildtime=$(BUILDTIME)" ; \
 	)
