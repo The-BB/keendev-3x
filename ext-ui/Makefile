@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ext-ui
 PKG_VERSION:=0.5
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -19,7 +19,7 @@ define Package/ext-ui
   TITLE:=Easy installation script for extended web UI (php v7.x)
   DEPENDS:=+pciids +php7-cli +php7-cgi +php7-mod-json +php7-mod-session +vnstat
   DEPENDS+=+shellinabox +uhttpd_kn +usbids
-  ifneq (,$(filter mips mipsel,$(ARCH)))
+  ifneq (,$(filter aarch64 mips mipsel,$(ARCH)))
 	PKGARCH:=$(BOARD)_kn
   endif
 endef
@@ -122,12 +122,11 @@ for iface in $$(ls -1 /sys/class/net | sort -r)
 done
 
 # name to ip
-#sed -i -e "s,my.keenetic.net,$$(ndmq -p 'show interface Bridge0' -P address),g" /opt/share/www/ext-ui/index.html
+sed -i -e "s#my.keenetic.net#$$(wget -qO - localhost:79/rci/show/interface/Home/address | sed 's,",,g')#g" /opt/share/www/ext-ui/index.html
 
-# http://$$(ndmq -p 'show interface Bridge0' -P address):88/ext-ui/\n\n"
 echo -e "\n Done!\vPay your attention! The web-interfase login name is \"root\"!\n\n\t \
 	Extended web UI will be available at following URL:\n\n\t\t \
-	http://IP.ADD.RE.SS:88/ext-ui/\n\n"
+	http://$$(wget -qO - localhost:79/rci/show/interface/Home/address | sed 's,",,g'):88/ext-ui/\n\n"
 echo -n "Do you wish to start extended web UI? [y]: "
 
 read -r wish_to_start
