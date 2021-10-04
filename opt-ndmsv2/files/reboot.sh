@@ -1,3 +1,3 @@
 #!/bin/sh
 
-ndmq -p 'system reboot' -P 'message'
+wget -qO - --post-data='[{"system":{"reboot":true}}]' localhost:79/rci >/dev/null 2>&1

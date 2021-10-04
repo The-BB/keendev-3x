@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=opt-ndmsv2
 PKG_VERSION:=1.0
-PKG_RELEASE:=15
+PKG_RELEASE:=16
 
 PKG_FLAGS:=essential
 
@@ -63,6 +63,7 @@ define Package/opt-ndmsv2/install
 	    $(1)/opt/etc/ndm/openvpn-{client-{connect,disconnect},down,ipchange,learn-address,route-up,tls-verify,up}.d \
 	    $(1)/opt/etc/ndm/{ifcreated,ifdestroyed,ifipchanged,ifstatechanged}.d \
 	    $(1)/opt/etc/ndm/{pptp,sstp,l2tp_ipsec,vip}{_vpn_up,_vpn_down}.d
+	$(INSTALL_BIN) files/reboot.sh $(1)/opt/sbin
 endef
 
 define Package/opt-ndmsv2/postinst
