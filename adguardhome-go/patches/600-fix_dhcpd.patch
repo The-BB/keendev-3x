@@ -4,11 +4,11 @@
  		filename string
  	}{{
  		FileWalker: iface.dhcpcdStaticConfig,
--		filename:   "/etc/dhcpcd.conf",
-+		filename:   "/opt/etc/dhcpcd.conf",
+-		filename:   "etc/dhcpcd.conf",
++		filename:   "opt/etc/dhcpcd.conf",
  	}, {
  		FileWalker: iface.ifacesStaticConfig,
- 		filename:   "/etc/network/interfaces",
+ 		filename:   "etc/network/interfaces",
 @@ -141,13 +141,13 @@ func ifaceSetStaticIP(ifaceName string)
  	gatewayIP := GatewayIP(ifaceName)
  	add := dhcpcdConfIface(ifaceName, ipNet, gatewayIP, ipNet.IP)
