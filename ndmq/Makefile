@@ -28,6 +28,10 @@ define Package/ndmq
   endif
 endef
 
+ifeq ($(CONFIG_aarch64),y)
+TARGET_CFLAGS += -fsigned-char
+endif
+
 EXTRA_CFLAGS:= \
 	-std=c99 \
 	-D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 \
