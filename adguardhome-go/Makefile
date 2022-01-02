@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2019-2021 Entware
+# Copyright (C) 2019-2022 Entware
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=adguardhome
-PKG_VERSION:=v0.107.0
+PKG_VERSION:=v0.107.2
 PKG_RELEASE:=1
 
 PKG_GOGET:=github.com/AdguardTeam/AdGuardHome
@@ -17,8 +17,8 @@ GOPKG_SOURCE=GO_$(PKG_NAME)-$(PKG_VERSION)-$(PKG_RELEASE).tar.bz2
 
 #!!! uncomment PKG_SOURCE to download fixed version
 PKG_SOURCE=$(GOPKG_SOURCE)
-PKG_COMMIT=0aac9908c1d47d5a5d6d0bffd0be5fdcc2356d95
-PKG_HASH:=842556f1d8d93797a19e344a1351aa1502cd7f4e0ff5929192b89340ba7a34b3
+PKG_COMMIT=d50fd0ba91e6457ab9d0dd5dc1039191e57e173a
+PKG_HASH:=289bcf9849839870c38c1c7aa050953735942a2fb5fa25cb731f21e8611392af
 
 PKG_LICENSE:=GPL-3.0-only
 PKG_LICENSE_FILES:=LICENSE.txt
@@ -26,7 +26,7 @@ PKG_LICENSE_FILES:=LICENSE.txt
 PKG_BUILD_PARALLEL:=1
 PKG_USE_MIPS16:=0
 
-PKG_BUILD_DEPENDS:=node/host node-yarn/host packr-go/host
+PKG_BUILD_DEPENDS:=node/host node-yarn/host
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/golang.mk
@@ -79,7 +79,6 @@ define Build/Compile
 	\
 		pushd $(PKG_BUILD_DIR)/src/$(PKG_GOGET) ; \
 		make js-deps js-build ; \
-		$(GOROOT)/bin/packr -z -v -i internal ; \
 		popd ; \
 	\
 		CGO_ENABLED=0 \
