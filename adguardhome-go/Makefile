@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=adguardhome
-PKG_VERSION:=v0.107.2
+PKG_VERSION:=v0.107.3
 PKG_RELEASE:=1
 
 PKG_GOGET:=github.com/AdguardTeam/AdGuardHome
@@ -17,8 +17,8 @@ GOPKG_SOURCE=GO_$(PKG_NAME)-$(PKG_VERSION)-$(PKG_RELEASE).tar.bz2
 
 #!!! uncomment PKG_SOURCE to download fixed version
 PKG_SOURCE=$(GOPKG_SOURCE)
-PKG_COMMIT=d50fd0ba91e6457ab9d0dd5dc1039191e57e173a
-PKG_HASH:=289bcf9849839870c38c1c7aa050953735942a2fb5fa25cb731f21e8611392af
+PKG_COMMIT=ede85ab2f2aab990d6fd7e943d54d906279328be
+PKG_HASH:=acfd4bd6cf74b726622ae8ed533ff4e8f6d1b022aab75674e84b7a402f65ab6c
 
 PKG_LICENSE:=GPL-3.0-only
 PKG_LICENSE_FILES:=LICENSE.txt
@@ -87,7 +87,7 @@ define Build/Compile
 		$(GOARM) \
 		$(GOROOT)/bin/go build \
 		-ldflags="-s -w \
-			-X $(VERSION_PKG).channel=beta \
+			-X $(VERSION_PKG).channel=release \
 			-X $(VERSION_PKG).version=$(PKG_VERSION) \
 			-X $(VERSION_PKG).buildtime=$(BUILDTIME)" ; \
 	)
