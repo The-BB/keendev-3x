@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=adguardhome
-PKG_VERSION:=v0.107.5
+PKG_VERSION:=v0.107.6
 PKG_RELEASE:=1
 
 PKG_GOGET:=github.com/AdguardTeam/AdGuardHome
@@ -17,16 +17,15 @@ GOPKG_SOURCE=GO_$(PKG_NAME)-$(PKG_VERSION)-$(PKG_RELEASE).tar.bz2
 
 #!!! uncomment PKG_SOURCE to download fixed version
 PKG_SOURCE=$(GOPKG_SOURCE)
-PKG_COMMIT=52bc1b3f1069788004c85ffecc30fe16d59a0bd1
-PKG_HASH:=b602fa7d7aeb69df78109032cad8c648d756ecbb3765f38d157fe6f05d2a900a
+PKG_COMMIT=6a0ef2df156f345e5fc1f46f4081fb368dd0ba08
+PKG_HASH:=84adc32ab99c483fb6855afc763d578dff4f310dff26bc89031b2455b57af32c
 
 PKG_LICENSE:=GPL-3.0-only
 PKG_LICENSE_FILES:=LICENSE.txt
 
+PKG_BUILD_DEPENDS:=node/host node-yarn/host
 PKG_BUILD_PARALLEL:=1
 PKG_USE_MIPS16:=0
-
-PKG_BUILD_DEPENDS:=node/host node-yarn/host
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/golang.mk
