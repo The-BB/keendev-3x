@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ext-ui
 PKG_VERSION:=0.5
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -122,11 +122,11 @@ for iface in $$(ls -1 /sys/class/net | sort -r)
 done
 
 # name to ip
-sed -i -e "s#my.keenetic.net#$$(wget -qO - localhost:79/rci/show/interface/Home/address | sed 's,",,g')#g" /opt/share/www/ext-ui/index.html
+sed -i -e "s#my.keenetic.net#$$(wget -qO - localhost:79/rci/show/interface/Bridge0/address | sed 's,",,g')#g" /opt/share/www/ext-ui/index.html
 
 echo -e "\n Done!\vPay your attention! The web-interfase login name is \"root\"!\n\n\t \
 	Extended web UI will be available at following URL:\n\n\t\t \
-	http://$$(wget -qO - localhost:79/rci/show/interface/Home/address | sed 's,",,g'):88/ext-ui/\n\n"
+	http://$$(wget -qO - localhost:79/rci/show/interface/Bridge0/address | sed 's,",,g'):88/ext-ui/\n\n"
 echo -n "Do you wish to start extended web UI? [y]: "
 
 read -r wish_to_start
