@@ -138,4 +138,4 @@ if [ "$$wish_to_start" = "y" ]; then
 fi
 endef
 
-$(eval $(call BuildPackage,ext-ui))
+#$(eval $(call BuildPackage,ext-ui))
