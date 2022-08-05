@@ -110,6 +110,6 @@ endef
 #endef
 
 
-$(eval $(call BuildPackage,uhttpd_kn))
+#$(eval $(call BuildPackage,uhttpd_kn))
 #$(eval $(call BuildPackage,uhttpd_kn-mod-lua))
 #$(eval $(call BuildPackage,uhttpd_kn-mod-ubus))
