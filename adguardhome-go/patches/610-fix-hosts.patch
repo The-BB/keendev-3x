@@ -1,0 +1,22 @@
+--- a/src/github.com/AdguardTeam/AdGuardHome/internal/aghnet/hostscontainer_linux.go
++++ b/src/github.com/AdguardTeam/AdGuardHome/internal/aghnet/hostscontainer_linux.go
+@@ -8,7 +8,7 @@ import (
+ )
+ 
+ func defaultHostsPaths() (paths []string) {
+-	paths = []string{"etc/hosts"}
++	paths = []string{"opt/etc/hosts"}
+ 
+ 	if aghos.IsOpenWrt() {
+ 		paths = append(paths, "tmp/hosts")
+--- a/src/github.com/AdguardTeam/AdGuardHome/internal/home/clientshttp.go
++++ b/src/github.com/AdguardTeam/AdGuardHome/internal/home/clientshttp.go
+@@ -85,7 +85,7 @@ func (clients *clientsContainer) handleG
+ 			IP:   ip,
+ 		}
+ 
+-		cj.Source = "etc/hosts"
++		cj.Source = "opt/etc/hosts"
+ 		switch rc.Source {
+ 		case ClientSourceDHCP:
+ 			cj.Source = "DHCP"

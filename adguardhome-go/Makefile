@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=adguardhome
-PKG_VERSION:=v0.107.6
+PKG_VERSION:=v0.107.9
 PKG_RELEASE:=1
 
 PKG_GOGET:=github.com/AdguardTeam/AdGuardHome
@@ -17,8 +17,8 @@ GOPKG_SOURCE=GO_$(PKG_NAME)-$(PKG_VERSION)-$(PKG_RELEASE).tar.bz2
 
 #!!! uncomment PKG_SOURCE to download fixed version
 PKG_SOURCE=$(GOPKG_SOURCE)
-PKG_COMMIT=6a0ef2df156f345e5fc1f46f4081fb368dd0ba08
-PKG_HASH:=84adc32ab99c483fb6855afc763d578dff4f310dff26bc89031b2455b57af32c
+PKG_COMMIT=cbf221585eb5c325a72c751dfef0c8a83abbacc6
+PKG_HASH:=40f2b22be8933302b71caa3f7a919415a0a24d04499d71ae46ea24ba43fb9de4
 
 PKG_LICENSE:=GPL-3.0-only
 PKG_LICENSE_FILES:=LICENSE.txt
@@ -64,6 +64,7 @@ endef
 
 define Package/adguardhome-go/conffiles
 /opt/etc/AdGuardHome/adguardhome.conf
+/opt/etc/hosts
 endef
 
 Package/adguardhome-go_nohf/conffiles=$(Package/adguardhome-go/conffiles)
@@ -84,7 +85,8 @@ define Build/Compile
 		GOOS=linux \
 		GOARCH=$(GOARCH) \
 		$(GOARM) \
-		$(GOROOT)/bin/go build \
+		$(GOMIPS) \
+		$(GOROOT)/bin/go build -o $(PKG_BUILD_DIR)/bin/AdGuardHome \
 		-ldflags="-s -w \
 			-X $(VERSION_PKG).channel=release \
 			-X $(VERSION_PKG).version=$(PKG_VERSION) \
@@ -95,16 +97,27 @@ endef
 
 define Package/adguardhome-go/install
 	$(INSTALL_DIR) $(1)/opt/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/$(PKG_GOGET)/AdGuardHome $(1)/opt/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/AdGuardHome $(1)/opt/bin
 
 	$(INSTALL_DIR) $(1)/opt/etc/init.d
 	$(INSTALL_BIN) files/S99adguardhome $(1)/opt/etc/init.d
 
 	$(INSTALL_DIR) $(1)/opt/etc/AdGuardHome
 	$(INSTALL_CONF) files/adguardhome.conf $(1)/opt/etc/AdGuardHome
+	touch $(1)/opt/etc/hosts
 endef
 
 Package/adguardhome-go_nohf/install=$(Package/adguardhome-go/install)
+
+define Package/adguardhome-go/postinst
+#!/bin/sh
+
+if [ ! -f "/opt/etc/hosts" ]; then
+  cat /etc/hosts > /opt/etc/hosts
+fi
+endef
+
+Package/adguardhome-go_nohf/postinst=$(Package/adguardhome-go/postinst)
 
 $(eval $(call BuildPackage,adguardhome-go))
 $(eval $(call BuildPackage,adguardhome-go_nohf))
