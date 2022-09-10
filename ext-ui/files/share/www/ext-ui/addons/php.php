@@ -1,10 +1,36 @@
 <?php
-$title='Modules PHP';
-$header='Расширения PHP';
+$title='PHP Extensions';
+$header='PHP Extensions';
 $serveradr=$_SERVER["SERVER_ADDR"];
 include('header.php');
-$dirphp = "/opt/etc/php7/";
-if ($_GET["act"] != '')
+$dirphp = "/opt/etc/php8/";
+
+/* Select your language:
+ * 'en' - English
+ * 'ru' - Russian
+ */
+$language = 'en';
+$words = getwords($language);
+
+function getwords ($language) {
+    switch ($language) {
+    case 'ru':
+	$words['enable'] = 'включить';
+	$words['disable'] = 'выключить';
+	$words['installed'] = 'Установленные модули:';
+	$words['version'] = 'Версия PHP:';
+	break;
+    case 'en':
+    default:
+	$words['enable'] = 'enable';
+	$words['disable'] = 'disable';
+	$words['installed'] = 'List installed modules:';
+	$words['version'] = 'PHP Version:';
+    }
+    return $words;
+}
+
+if (($_GET["act"] ?? '') != '')
 {
 	if ($_GET["act"] == 'enable')
 	{
@@ -17,7 +43,7 @@ if ($_GET["act"] != '')
 unset($_GET["act"]);
 unset($_GET["mod"]);
 }
-echo "<table class='status'><thead><tr><th class='left' colspan='3'>Установленные модули PHP</th></tr>";
+echo "<table class='status'><thead><tr><th class='left' colspan='3'>{$words['installed']}</th></tr>";
 if (is_dir($dirphp)) {
 	if ($dhphp = opendir($dirphp)) {
 		while (($filephp = readdir($dhphp)) !== false) {
@@ -32,15 +58,15 @@ if (is_dir($dirphp)) {
 				{
 					$img = '<img src="img/p-off.png">';
 					$tabphpmod = '<b>'.$phpmod.'</b>';
-					$phpchange = "<a href='../addons/php.php?mod=".$filephp."&act=enable'>Подключить</a>";
+					$phpchange = "<a href='../addons/php.php?mod=".$filephp."&act=enable'>{$words['enable']}</a>";
 				}
 				else
 				{
 					$img = '<img src="img/p-on.png">';
 					$tabphpmod = $dirphp.$phpmod;
-					$phpchange = "<a href='../addons/php.php?mod=".$filephp."&act=disable'>Отключить</a>";
+					$phpchange = "<a href='../addons/php.php?mod=".$filephp."&act=disable'>{$words['disable']}</a>";
 				}
-				if ($class == '') {$class = 'even'; }
+				if (!isset($class)) {$class = 'even'; }
 				echo "<tr class='".$class."'><td class='value' width='18px'>".$img."</td><td class='name'>".$tabphpmod."</td><td class='value'>".$phpchange."</td></tr>";
 				if ($class == 'even') { $class = 'odd'; } else { $class = 'even'; }
 			}
@@ -48,7 +74,7 @@ if (is_dir($dirphp)) {
 		closedir($dhphp);
 	}
 }
-echo "<th class='footer' colspan='3'> Версия PHP: ".phpversion()."</th>";
+echo "<th class='footer' colspan='3'> {$words['version']} ".phpversion()."</th>";
 echo "</table>";
 echo "<table class='status'><thead><tr class='even'><td class='footer'>
 <a href='http://www.php.net/'><img src='img/logo_php.png' alt='PHP Logo' border='0'></a>

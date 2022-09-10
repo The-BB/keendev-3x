@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-<?php if (!$codepage) { $codepage='UTF-8'; } ?>
+<?php if (!isset($codepage)) { $codepage='UTF-8'; } ?>
 <meta http-equiv="Content-Type" content="text/html;charset=<?php echo $codepage; ?>"/>
 <title><?php echo $title ?></title>
 <link rel="icon"          href="../favicon.ico" type="image/vnd.microsoft.icon"/>
@@ -14,8 +14,9 @@
 </head>
 <body class="body">
 <div class="leaf">
-<div class="leaf_head"><?php echo $header ?></div>
+<div class="leaf_head"><?php $header ??= ''; echo $header; ?></div>
 <?php
+$descript ??= '';
 if ($descript != '')
 {
 	echo "<div class='leaf_info'>".$descript."</div>";

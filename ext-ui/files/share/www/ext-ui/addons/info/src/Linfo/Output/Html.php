@@ -296,7 +296,7 @@ echo '
         foreach ((array) $info['CPU'] as $cpu) {
             $cpu_html =
                 (array_key_exists('Vendor', $cpu) && !empty($cpu['Vendor']) ? $cpu['Vendor'].' - ' : '').
-                $cpu['Model'].
+//                $cpu['Model'].
                 (array_key_exists('MHz', $cpu) ?
                     ($cpu['MHz'] < 1000 ? ' ('.$cpu['MHz'].' MHz)' : ' ('.round($cpu['MHz'] / 1000, 3).' GHz)') : '').
                         (array_key_exists('usage_percentage', $cpu) ? ' ('.$cpu['usage_percentage'].'%)' : '');

@@ -24,8 +24,9 @@
  * 'de' - German
  * 'cz' - Czech
  * 'it' - Italian
+ * 'ru' - Russian
  */
-$language = 'ru';
+$language = 'en';
 
 /* This directory is shown when you start filemgr.php.
  * For example: './' would be the current directory.
@@ -86,10 +87,6 @@ ini_set('session.use_trans_sid', FALSE);
 session_name('id');
 session_start(); */
 
-
-
-
-
 /* Initialize dirlisting output */
 $error = $notice = '';
 $updatetreeview = FALSE;
@@ -136,7 +133,6 @@ if (!empty($_REQUEST['dir'])) {
 /* Show a file */
 if (!empty($_GET['show'])) {
 	$show = relpathtoabspath($_GET['show'], $_SESSION['dir']);
-
 	if (!show($show)) {
 		$error= buildphrase('&quot;<b>' . htmlentities($show) . '</b>&quot;', $words['cantbeshown']);
 	} else {
@@ -634,7 +630,7 @@ function abspathtorelpath ($pos, $target) {
 }
 
 function is_script ($file) {
-	#return preg_match('.php[3-4]?$', $file);
+//	return ereg('.php[3-4]?$', $file);
 }
 
 function spath ($path) {
@@ -711,6 +707,7 @@ function getwords ($language) {
 		$words['owner'] = 'Eigner'; $words['group'] = 'Gruppe'; $words['other'] = 'Andere';
 		$words['create'] = 'erstellen'; $words['copy'] = 'kopieren'; $words['copyto'] = 'kopieren nach'; $words['move'] = 'verschieben'; $words['moveto'] = 'verschieben nach'; $words['delete'] = 'l&ouml;schen'; $words['edit'] = 'editieren';
 		$words['read'] = 'lesen'; $words['write'] = 'schreiben'; $words['exec'] = 'ausf&uuml;hren'; $words['change'] = 'wechseln'; $words['upload'] = 'hochladen'; $words['configure'] = 'konfigurieren';
+		$words['filecontent'] = 'Dateiinhalte: ';
 		$words['yes'] = 'ja'; $words['no'] = 'nein';
 		$words['back'] = 'zur&uuml;ck'; $words['setperms'] = 'Rechte setzen';
 		$words['readingerror'] = 'Fehler beim Lesen von 1';
@@ -739,6 +736,7 @@ function getwords ($language) {
 		$words['owner'] = 'Vlastn&#xED;k'; $words['group'] = 'Skupina'; $words['other'] = 'Ostatn&#xED;';
 		$words['create'] = 'vytvo&#x0159;it'; $words['copy'] = 'kop&#xED;rovat'; $words['copyto'] = 'kop&#xED;rovat do'; $words['move'] = 'p&#x0159;esunout'; $words['moveto'] = 'p&#x0159;esunout do'; $words['delete'] = 'odstranit'; $words['edit'] = '&#xFA;pravy';
 		$words['read'] = '&#x010D;ten&#xED;'; $words['write'] = 'z&#xE1;pis'; $words['exec'] = 'spu&#x0161;t&#x011B;n&#xED;'; $words['change'] = 'zm&#x011B;nit'; $words['upload'] = 'nahr&#xE1;t'; $words['configure'] = 'nastaven&#xED;';
+		$words['filecontent'] = 'Obsah souboru: ';
 		$words['yes'] = 'ano'; $words['no'] = 'ne';
 		$words['back'] = 'zp&#xE1;tky'; $words['setperms'] = 'nastav pr&#xE1;va';
 		$words['readingerror'] = 'Chyba p&#x0159;i &#x010D;ten&#xED; 1';
@@ -762,21 +760,22 @@ function getwords ($language) {
 		$words['samefiles'] = '1 a 2 jsou identick&#xE9;l.';
 		break;
 	case 'it':
-		$words['dir'] = 'Папка'; $words['file'] = 'Файл';
+		$words['dir'] = 'Directory'; $words['file'] = 'File';
 		$words['filename'] = 'Nome file'; $words['size'] = 'Dimensioni'; $words['permission'] = 'Permessi'; $words['functions'] = 'Funzioni';
 		$words['owner'] = 'Proprietario'; $words['group'] = 'Gruppo'; $words['other'] = 'Altro';
 		$words['create'] = 'crea'; $words['copy'] = 'copia'; $words['copyto'] = 'copia su'; $words['move'] = 'muovi'; $words['moveto'] = 'muove su'; $words['delete'] = 'delete'; $words['edit'] = 'edit';
-		$words['read'] = 'leggi'; $words['write'] = 'scrivi'; $words['exec'] = 'esegui'; $words['change'] = 'modifica'; $words['upload'] = 'загрузить'; $words['configure'] = 'configura';
+		$words['read'] = 'leggi'; $words['write'] = 'scrivi'; $words['exec'] = 'esegui'; $words['change'] = 'modifica'; $words['upload'] = 'upload'; $words['configure'] = 'configura';
+		$words['filecontent'] = 'Contenuto del file: ';
 		$words['yes'] = 'si'; $words['no'] = 'no';
 		$words['back'] = 'back'; $words['setperms'] = 'imposta permessi';
 		$words['readingerror'] = 'Errore durante la lettura di 1';
 		$words['permsset'] = 'I permessi di 1 sono stati impostati a 2.'; $words['permsnotset'] = 'I permessi di 1 non possono essere impostati.';
-		$words['uploaded'] = '1 и stato uploadato su 2.'; $words['notuploaded'] = 'Errore durante l\'upload di 1 su 2.';
-		$words['moved'] = '1 и stato spostato su 2.'; $words['notmoved'] = '1 non puт essere spostato su 2.';
-		$words['copied'] = '1 и stato copiato su 2.'; $words['notcopied'] = '1 non puт essere copiato su 2.';
-		$words['created'] = '1 и stato creato.'; $words['notcreated'] = 'impossibile creare 1.';
-		$words['deleted'] = '1 и stato eliminato.'; $words['notdeleted'] = 'Impossibile eliminare 1.'; $words['suredelete'] = 'Confermi eliminazione di 1?';
-		$words['saved'] = '1 и stato salvato.'; $words['notsaved'] = 'Impossibile salvare 1.';
+		$words['uploaded'] = '1 � stato uploadato su 2.'; $words['notuploaded'] = 'Errore durante l\'upload di 1 su 2.';
+		$words['moved'] = '1 � stato spostato su 2.'; $words['notmoved'] = '1 non pu� essere spostato su 2.';
+		$words['copied'] = '1 � stato copiato su 2.'; $words['notcopied'] = '1 non pu� essere copiato su 2.';
+		$words['created'] = '1 � stato creato.'; $words['notcreated'] = 'impossibile creare 1.';
+		$words['deleted'] = '1 � stato eliminato.'; $words['notdeleted'] = 'Impossibile eliminare 1.'; $words['suredelete'] = 'Confermi eliminazione di 1?';
+		$words['saved'] = '1 � stato salvato.'; $words['notsaved'] = 'Impossibile salvare 1.';
 		$words['reset'] = 'reimposta'; $words['clear'] = 'pulisci'; $words['save'] = 'salva';
 		$words['cantbeshown'] = "Impossibile visualizzare 1."; $words['sourceof'] = 'sorgente di 1';
 		$words['notopened'] = "Impossibile aprire 1";
@@ -785,38 +784,68 @@ function getwords ($language) {
 		$words['treeon'] = 'Abilita vista ad albero'; $words['treeoff'] = 'Disabilita vista ad albero';
 		$words['symlink'] = 'Link simbolico'; $words['createsymlink'] = 'crea symlink'; $words['target'] = 'Target';
 		$words['reltarget'] = 'Percorso relativo al target';
-		$words['alreadyexists'] = 'Questo file esiste giа.';
+		$words['alreadyexists'] = 'Questo file esiste gi�.';
 		$words['overwrite'] = 'Sovrascrivi 1?';
 		$words['samefiles'] = '1 e 2 sono identici.';
 		break;
-	case 'en':
-	default:
-		$words['dir'] = 'Папка'; $words['file'] = 'Файл';
-		$words['filename'] = 'Имя'; $words['size'] = 'Размер'; $words['permission'] = 'Права'; $words['functions'] = 'Операции';
+	case 'ru':
+		$words['dir'] = 'Каталог'; $words['file'] = 'Файл';
+		$words['filename'] = 'Имя'; $words['size'] = 'Размер'; $words['permission'] = 'Права доступа'; $words['functions'] = 'Операции';
 		$words['owner'] = 'Владелец'; $words['group'] = 'Группа'; $words['other'] = 'Другие';
-		$words['create'] = 'создать'; $words['copy'] = 'copy'; $words['copyto'] = 'copy to'; $words['move'] = 'move'; $words['moveto'] = 'move to'; $words['delete'] = 'delete'; $words['edit'] = 'edit';
-		$words['read'] = 'читать'; $words['write'] = 'писать'; $words['exec'] = 'исполнять'; $words['change'] = 'изменить'; $words['upload'] = 'загрузить'; $words['configure'] = 'configure';
+		$words['create'] = 'создать'; $words['copy'] = 'копировать'; $words['copyto'] = 'копировать в'; $words['move'] = 'переместить'; $words['moveto'] = 'переместить в'; $words['delete'] = 'удалить'; $words['edit'] = 'редактировать';
+		$words['read'] = 'чтение'; $words['write'] = 'запись'; $words['exec'] = 'выполнение'; $words['change'] = 'изменить'; $words['upload'] = 'загрузить'; $words['configure'] = 'настроить';
+		$words['filecontent'] = 'Содержимое файла: ';
 		$words['yes'] = 'да'; $words['no'] = 'нет';
-		$words['back'] = 'back'; $words['setperms'] = 'назначить права';
-		$words['readingerror'] = 'Error during read of 1';
-		$words['permsset'] = 'The permission of 1 were set to 2.'; $words['permsnotset'] = 'The permission of 1 could not be set.';
-		$words['uploaded'] = '1 has been uploaded to 2.'; $words['notuploaded'] = 'Error during upload of 1 to 2.';
-		$words['moved'] = '1 перемещён 2.'; $words['notmoved'] = '1 не перемещён в 2.';
-		$words['copied'] = '1 скопирован в 2.'; $words['notcopied'] = '1 не скопирован в 2.';
-		$words['created'] = '1 создан.'; $words['notcreated'] = '1 не создан.';
-		$words['deleted'] = '1 удалён.'; $words['notdeleted'] = '1 не удалён.'; $words['suredelete'] = 'Удалить 1?';
+		$words['back'] = 'назад'; $words['setperms'] = 'установить права доступа';
+		$words['readingerror'] = 'Ошибка во время чтения 1';
+		$words['permsset'] = 'Права доступа 1 были установлены для 2.'; $words['permsnotset'] = 'Права доступа 1 не были установлены.';
+		$words['uploaded'] = '1 был загружен в 2.'; $words['notuploaded'] = 'Ошибка во время загрузки 1 в 2.';
+		$words['moved'] = '1 был перемещён в 2.'; $words['notmoved'] = '1 не перемещён в 2.';
+		$words['copied'] = '1 был скопирован в 2.'; $words['notcopied'] = '1 не скопирован в 2.';
+		$words['created'] = '1 был создан.'; $words['notcreated'] = '1 не создан.';
+		$words['deleted'] = '1 был удалён.'; $words['notdeleted'] = '1 не удалён.'; $words['suredelete'] = 'Удалить 1?';
 		$words['saved'] = '1 был сохранён.'; $words['notsaved'] = '1 не сохранён.';
 		$words['reset'] = 'отменить'; $words['clear'] = 'очистить'; $words['save'] = 'сохранить';
-		$words['cantbeshown'] = "1 can't be shown."; $words['sourceof'] = 'source of 1';
-		$words['notopened'] = "Невозможно открыть 1";
-		$words['addauth'] = 'add basic-authentification';
-		$words['username'] = 'Username'; $words['password'] = 'Password'; $words['add'] = 'add';
-		$words['treeon'] = 'Enable treeview'; $words['treeoff'] = 'Disable treeview';
-		$words['symlink'] = 'Симлинк'; $words['createsymlink'] = 'ссылка'; $words['target'] = 'Цель';
-		$words['reltarget'] = 'Relative path to target';
+		$words['cantbeshown'] = '1 не возможно показать.'; $words['sourceof'] = 'источник 1';
+		$words['notopened'] = 'Невозможно открыть 1';
+		$words['addauth'] = 'добавить базовую проверку подлинности';
+		$words['username'] = 'Имя пользователя'; $words['password'] = 'Пароль'; $words['add'] = 'добавить';
+		$words['treeon'] = 'Включить просмотр в виде дерева'; $words['treeoff'] = 'Выключить просмотр в виде дерева';
+		$words['symlink'] = 'Симлинк'; $words['createsymlink'] = 'создать символическую ссылку'; $words['target'] = 'Цель';
+		$words['reltarget'] = 'Относительный путь к цели';
 		$words['alreadyexists'] = 'Такой файл уже существует.';
 		$words['overwrite'] = 'Перезаписать 1?';
 		$words['samefiles'] = '1 и 2 идентичны.';
+		break;
+	case 'en':
+	default:
+		$words['dir'] = 'Directory'; $words['file'] = 'File';
+		$words['filename'] = 'Filename'; $words['size'] = 'Size'; $words['permission'] = 'Permission'; $words['functions'] = 'Functions';
+		$words['owner'] = 'Owner'; $words['group'] = 'Group'; $words['other'] = 'Other';
+		$words['create'] = 'create'; $words['copy'] = 'copy'; $words['copyto'] = 'copy to'; $words['move'] = 'move'; $words['moveto'] = 'move to'; $words['delete'] = 'delete'; $words['edit'] = 'edit';
+		$words['read'] = 'read'; $words['write'] = 'write'; $words['exec'] = 'execute'; $words['change'] = 'change'; $words['upload'] = 'upload'; $words['configure'] = 'configure';
+		$words['filecontent'] = 'File Contents: ';
+		$words['yes'] = 'yes'; $words['no'] = 'no';
+		$words['back'] = 'back'; $words['setperms'] = 'set permission';
+		$words['readingerror'] = 'Error during read of 1';
+		$words['permsset'] = 'The permission of 1 were set to 2.'; $words['permsnotset'] = 'The permission of 1 could not be set.';
+		$words['uploaded'] = '1 has been uploaded to 2.'; $words['notuploaded'] = 'Error during upload of 1 to 2.';
+		$words['moved'] = '1 has been moved to 2.'; $words['notmoved'] = '1 could not be moved to 2.';
+		$words['copied'] = '1 has been copied to 2.'; $words['notcopied'] = '1 could not be copied to 2.';
+		$words['created'] = '1 has been created.'; $words['notcreated'] = '1 could not be created.';
+		$words['deleted'] = '1 has been deleted.'; $words['notdeleted'] = '1 could not be deleted.'; $words['suredelete'] = 'Really delete 1?';
+		$words['saved'] = '1 has been saved.'; $words['notsaved'] = '1 could not be saved.';
+		$words['reset'] = 'reset'; $words['clear'] = 'clear'; $words['save'] = 'save';
+		$words['cantbeshown'] = "1 can't be shown."; $words['sourceof'] = 'source of 1';
+		$words['notopened'] = "1 couldn't be opened";
+		$words['addauth'] = 'add basic-authentification';
+		$words['username'] = 'Username'; $words['password'] = 'Password'; $words['add'] = 'add';
+		$words['treeon'] = 'Enable treeview'; $words['treeoff'] = 'Disable treeview';
+		$words['symlink'] = 'Symbolic link'; $words['createsymlink'] = 'create link'; $words['target'] = 'Target';
+		$words['reltarget'] = 'Relative path to target';
+		$words['alreadyexists'] = 'This file already exists.';
+		$words['overwrite'] = 'Overwrite 1?';
+		$words['samefiles'] = '1 and 2 are identical.';
 	}
 	return $words;
 }
@@ -866,8 +895,8 @@ function treeview () {
 	for ($d = $_SESSION['dir']; strlen($d = dirname($d)) != 1; tree_plus($_SESSION['tree'], $_SESSION['hassubdirs'], $d));
 ?>
 <?php
-$title='SSH client on Zyxel Keenetic';
-$header='Менеджер файлов';
+$title='Web-based file manager';
+$header='Web-based file manager';
 include('header.php');
 $serveradr=$_SERVER["SERVER_ADDR"];
 ?>
@@ -883,8 +912,8 @@ include('footer.php');
 
 function frameset () {
 	global $self;
-$title='SSH client on Zyxel Keenetic';
-$header='Менеджер файлов';
+$title='Web-based file manager';
+$header='Web-based file manager';
 include('header.php');
 $serveradr=$_SERVER["SERVER_ADDR"];
 ?>
@@ -910,9 +939,6 @@ function tree_calculatenumcols ($tree, $path, $col) {
 
 function tree_showtree ($tree, $hassubdirs, $path, $col, $numcols) {
 	global $self, $treeroot;
-
-
-
 	static $islast = array(0 => TRUE);
 	echo("<tr class='odd'>	\n");
 	for ($i = 0; $i < $col; $i++) {
@@ -995,8 +1021,8 @@ function tree_getsubdirs ($path) {
 }
 
 function show ($file) {
-	$descript='Содержимое файла '.$file;
 	global $words;
+	$descript=$words['filecontent'].$file;
 	if (@is_readable($file) && @is_file($file)) {
 		//header('Content-Disposition: filename=' . basename($file));
 		//header('Content-Type: ' . getmimetype($file));
@@ -1024,7 +1050,6 @@ function show_highlight ($file) {
 		for ($i = 1; $i <= $size; $i++) printf("%05d<br>\n", $i);
 		echo("</code>\n</td>\n<td nowrap>\n");
 		$shown = @highlight_file($file);
-		//echo"test";
 		echo("\n");
 		echo("</td>\n</tr>\n</table>\n");
 		echo("</body>\n");
@@ -1038,8 +1063,8 @@ function getmimetype ($file) {
 	/* $mime = 'application/octet-stream'; */
 	$mime = 'text/plain';
 	$ext = substr($file, strrpos($file, '.') + 1);
-	if (@is_readable('/etc/mime.types')) {
-		$f = fopen('/etc/mime.types', 'r');
+	if (@is_readable('/opt/etc/mime.types')) {
+		$f = fopen('/opt/etc/mime.types', 'r');
 		while (!feof($f)) {
 			$line = fgets($f, 4096);
 			$found = FALSE;
@@ -1212,7 +1237,7 @@ function outputdirlisting ($dir, $files, $inaframe, $sort, $reverse) {
 	$p = '&' . 'SID';
 	if ($GLOBALS['showsize']) $cspan = ' colspan="2"'; else $cspan = '';
 	foreach ($files as $file) {
-		if ($class == '') {$class = 'even'; }
+		if (!isset($class)) {$class = 'even'; }
 		echo("	<tr class='".$class."'>\n");
 		if ($file['is_link']) {
 			echo("		<td class='value' align='center' width='20px'><img src='img/linkd.png'></td>\n");
@@ -1275,17 +1300,17 @@ function outputdirlisting ($dir, $files, $inaframe, $sort, $reverse) {
 		$group = ($file['groupname'] == NULL) ? $file['group'] : $file['groupname'];
 		echo('		<td class="value">' . $owner . "</td>\n");
 		echo('		<td class="value">' . $group . "</td>\n");
-		$f = "<a href='$self?symlinktarget=" . urlencode($dir . $file['filename']). "$p' title='создать сылку'><img src='img/linkf.png'></img></a> | ";;
+		$f = "<a href='$self?symlinktarget=" . urlencode($dir . $file['filename']). "$p' title='{$words['createsymlink']}'><img src='img/linkf.png'></img></a> | ";;
 		if ($file['filename'] != '.' && $file['filename'] != '..') {
 			if ($file['is_readable'] && $file['is_file']) {
-				$f .= "<a href='$self?cpy=" . urlencode($file['fullfilename']). "$p' title='копировать'><img src='img/t-copy.png'></img></a> | ";
+				$f .= "<a href='$self?cpy=" . urlencode($file['fullfilename']). "$p' title='{$words['copy']}'><img src='img/t-copy.png'></img></a> | ";
 			}
 			if ($uid == $file['owner']) {
-				$f .= "<a href='$self?move=" . urlencode($file['fullfilename']) . "$p' title='переместить'><img src='img/t-cut.png'></img></a> | ";
-				$f .= "<a href='$self?delete=" . urlencode($dir . $file['filename']). "$p' title='удалить'><img src='img/t-delete.png'></img></a> | ";
+				$f .= "<a href='$self?move=" . urlencode($file['fullfilename']) . "$p' title='{$words['move']}'><img src='img/t-cut.png'></img></a> | ";
+				$f .= "<a href='$self?delete=" . urlencode($dir . $file['filename']). "$p' title='{$words['delete']}'><img src='img/t-delete.png'></img></a> | ";
 			}
 			if ($file['is_writable'] && $file['is_file']) {
-				$f .= "<a href='$self?edit=" . urlencode($file['fullfilename']) . "$p' title='редактировать'><img src='img/t-edit.png'></a> | ";
+				$f .= "<a href='$self?edit=" . urlencode($file['fullfilename']) . "$p' title='{$words['edit']}'><img src='img/t-edit.png'></a> | ";
 			}
 		}
 		if ($file['is_dir'] && @is_file($file['fullfilename'] . '.htaccess') && @is_writable($file['fullfilename'] . '.htaccess')) {
@@ -1381,8 +1406,8 @@ function buildphrase ($repl, $str) {
 function html_header ($action) {
 	global $self;
 	global $error, $notice, $updatetreeview;
-$title='SSH client on Zyxel Keenetic';
-$header='Менеджер файлов';
+$title='Web-based file manager';
+$header='Web-based file manager';
 include('header.php');
 $serveradr=$_SERVER["SERVER_ADDR"];
 ?>

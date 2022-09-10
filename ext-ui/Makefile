@@ -8,16 +8,16 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ext-ui
-PKG_VERSION:=0.5
-PKG_RELEASE:=4
+PKG_VERSION:=0.6
+PKG_RELEASE:=1
 
 include $(INCLUDE_DIR)/package.mk
 
 define Package/ext-ui
   SECTION:=keendev
   CATEGORY:=keendev
-  TITLE:=Easy installation script for extended web UI (php v7.x)
-  DEPENDS:=+pciids +php7-cli +php7-cgi +php7-mod-json +php7-mod-session +vnstat
+  TITLE:=Easy installation script for extended web UI (php v8.x)
+  DEPENDS:=+pciids +php8-cli +php8-cgi +php8-mod-session +vnstat
   DEPENDS+=+shellinabox +uhttpd_kn +usbids
   ifneq (,$(filter aarch64 mips mipsel,$(ARCH)))
 	PKGARCH:=$(BOARD)_kn
@@ -25,13 +25,13 @@ define Package/ext-ui
 endef
 
 define Package/ext-ui/description
-  PHP (v7.x) version extended web user interface (ext-UI) for Keenetic routers.
+  PHP (v8.x) version extended web user interface (ext-UI) for Keenetic routers.
 endef
 
 define Package/ext-ui/conffiles
 /opt/share/www/ext-ui/index.html
 /opt/share/www/ext-ui/addons/info/config.inc.php
-/opt/share/www/ext-ui/addons/vnstat/config.php
+/opt/share/www/ext-ui/addons/vnstat/includes/config.php
 endef
 
 Build/Prepare:=:
@@ -97,11 +97,11 @@ fi
 
 # vnstat
 if [ -f "/opt/etc/init.d/S32vnstat" ]; then
-  sed -i -e 's,-u -i ppp0,-u,;s,"-d","-d --noadd",' /opt/etc/init.d/S32vnstat
+  sed -i 's,-u -i ppp0,-u,;s,"-d","-d --noadd",' /opt/etc/init.d/S32vnstat
 fi
 
 if [ -f "/opt/etc/vnstat.conf" ]; then
-  sed -i -e 's,eth0,br0,' /opt/etc/vnstat.conf
+  sed -i 's,eth0,br0,' /opt/etc/vnstat.conf
 fi
 
 for iface in $$(ls -1 /sys/class/net | sort -r)
@@ -112,8 +112,8 @@ for iface in $$(ls -1 /sys/class/net | sort -r)
       [ -z "$$wish_to_add" ] && wish_to_add=n
 	if [ "$$wish_to_add" = "y" ]; then
 	  vnstat --create -i "$$iface" >/dev/null 2>&1
-	    if ! grep -q "array(.*$$iface" /opt/share/www/ext-ui/addons/vnstat/config.php; then
-	      sed -i -e "s|('br0'|('br0','$$iface'|" /opt/share/www/ext-ui/addons/vnstat/config.php
+	    if ! grep -q 'list = \[.*$$iface' /opt/share/www/ext-ui/addons/vnstat/includes/config.php; then
+	      sed -i "s|list = \[\"br0\"|list = \[\"br0\", \"$$iface\"|" /opt/share/www/ext-ui/addons/vnstat/includes/config.php
 	    fi
 	fi
     else
@@ -122,11 +122,38 @@ for iface in $$(ls -1 /sys/class/net | sort -r)
 done
 
 # name to ip
-sed -i -e "s#my.keenetic.net#$$(wget -qO - localhost:79/rci/show/interface/Bridge0/address | sed 's,",,g')#g" /opt/share/www/ext-ui/index.html
+if hostname -i >/dev/null 2>&1; then
+  HOSTIP="$$(hostname -i)"
+else
+  HOSTIP="$$(wget -qO - localhost:79/rci/show/interface/Bridge0/address | sed 's,",,g')"
+fi
 
+sed -i "s#my.keenetic.net#$$HOSTIP#g" /opt/share/www/ext-ui/index.html
+
+# set lang
+while true; do
+  read -r -p "Do you wish to change language? (en|ru): " lang
+    case $$lang in
+      en )
+        for f in filemgr opkg php services; do
+          sed -i "s,language = '.*',language = 'en'," /opt/share/www/ext-ui/addons/$$f.php
+        done; break
+      ;;
+      ru )
+        for f in filemgr opkg php services; do
+          sed -i "s,language = '.*',language = 'ru'," /opt/share/www/ext-ui/addons/$$f.php
+        done; break
+      ;;
+      *)
+        echo "Please answer \"en\" or \"ru\"."
+      ;;
+    esac
+done
+
+# start ui
 echo -e "\n Done!\vPay your attention! The web-interfase login name is \"root\"!\n\n\t \
 	Extended web UI will be available at following URL:\n\n\t\t \
-	http://$$(wget -qO - localhost:79/rci/show/interface/Bridge0/address | sed 's,",,g'):88/ext-ui/\n\n"
+	http://$$HOSTIP:88/ext-ui/\n\n"
 echo -n "Do you wish to start extended web UI? [y]: "
 
 read -r wish_to_start
@@ -138,4 +165,4 @@ if [ "$$wish_to_start" = "y" ]; then
 fi
 endef
 
-#$(eval $(call BuildPackage,ext-ui))
+$(eval $(call BuildPackage,ext-ui))
