@@ -1,7 +1,7 @@
 --- a/src/core.c
 +++ b/src/core.c
-@@ -21,6 +21,9 @@
- #include <ndm/string.h>
+@@ -24,6 +24,9 @@
+ #include <ndm/visibility.h>
  #include <ndm/ip_sockaddr.h>
  
 +#define NDM_CORE_PORT_									41230
@@ -9,8 +9,8 @@
 +#define NDM_CORE_ADDRESS_								"127.0.0.1"
  #define NDM_CORE_SOCKET_								"/var/run/ndm.core.socket"
  #define NDM_CORE_EVENT_SOCKET_							"/var/run/ndm.event.socket"
- 
-@@ -701,6 +704,30 @@ struct ndm_core_event_connection_t *ndm_
+ #define NDM_CORE_FEEDBACK_SOCKET_						"/var/run/ndm.feedback.socket"
+@@ -818,6 +821,30 @@ struct ndm_core_event_connection_t *ndm_
  		}
  
  		if (!connected) {
@@ -41,7 +41,7 @@
  			close(connection->fd);
  			free(connection);
  			connection = NULL;
-@@ -1096,6 +1123,30 @@ struct ndm_core_t *ndm_core_open(
+@@ -1217,6 +1244,30 @@ struct ndm_core_t *ndm_core_open(
  						/* failed to parse a defined core address or connect */
  						close(core->fd);
  						core->fd = -1;
