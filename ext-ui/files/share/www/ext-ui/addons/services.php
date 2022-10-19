@@ -6,6 +6,8 @@ include('header.php');
 $dir = "/opt/etc/init.d/";
 $backdir  = "cache/ibackup/";
 
+error_reporting(E_NOTICE);
+
 /* Select your language:
  * 'en' - English
  * 'ru' - Russian
