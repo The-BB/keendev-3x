@@ -8,10 +8,10 @@
 +const dhcpcdConf = "opt/etc/dhcpcd.conf"
  
  func canBindPrivilegedPorts() (can bool, err error) {
- 	cnbs, err := unix.PrctlRetInt(
+ 	res, err := unix.PrctlRetInt(
 --- a/src/github.com/AdguardTeam/AdGuardHome/internal/aghnet/net_linux_test.go
 +++ b/src/github.com/AdguardTeam/AdGuardHome/internal/aghnet/net_linux_test.go
-@@ -16,7 +16,7 @@ func TestHasStaticIP(t *testing.T) {
+@@ -15,7 +15,7 @@ func TestHasStaticIP(t *testing.T) {
  	const ifaceName = "wlan0"
  
  	const (
