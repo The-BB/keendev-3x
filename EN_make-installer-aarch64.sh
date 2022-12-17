@@ -33,7 +33,7 @@ cp -fr $BUILD_DIR/busybox-default/busybox-*/ipkg-aarch64-3.10/busybox/opt $ROOT_
 
 # Adding libpcre&grep
 cp -fr $BUILD_DIR/grep-*/ipkg-aarch64-3.10/grep/opt $ROOT_DIR
-cp -r $BUILD_DIR/pcre-*/ipkg-aarch64-3.10/libpcre/opt $ROOT_DIR
+cp -r $BUILD_DIR/pcre2-*/ipkg-aarch64-3.10/libpcre2/opt $ROOT_DIR
 ln -sf ../libexec/grep-gnu $ROOT_DIR/opt/bin/grep
 
 # Adding dummie SSH keys to avoid dropbear post-install timeout
