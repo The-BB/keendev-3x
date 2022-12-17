@@ -33,7 +33,7 @@ cp -fr $BUILD_DIR/busybox-default/busybox-*/ipkg-mipsel-3.4/busybox/opt $ROOT_DI
 
 # Adding libpcre&grep
 cp -fr $BUILD_DIR/grep-*/ipkg-mipsel-3.4/grep/opt $ROOT_DIR
-cp -r $BUILD_DIR/pcre-*/ipkg-mipsel-3.4/libpcre/opt $ROOT_DIR
+cp -r $BUILD_DIR/pcre2-*/ipkg-mipsel-3.4/libpcre2/opt $ROOT_DIR
 ln -sf ../libexec/grep-gnu $ROOT_DIR/opt/bin/grep
 
 # Adding dummie SSH keys to avoid dropbear post-install timeout
