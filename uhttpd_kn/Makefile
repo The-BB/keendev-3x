@@ -12,15 +12,14 @@ PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL=$(PROJECT_GIT)/project/uhttpd.git
-PKG_SOURCE_DATE:=2022-08-12
-PKG_SOURCE_VERSION:=e3395cd90bed9b7b9fc319e79528fedcc0d947fe
-PKG_MIRROR_HASH:=2d1ab032a17bd109f12d145af53d523a4e345d4aadcf242f7dea4f4effefeb17
+PKG_SOURCE_DATE:=2023-01-28
+PKG_SOURCE_VERSION:=47561aa13574068403d48f13ea310f8511057b2b
+PKG_MIRROR_HASH:=ded94722b6404c583d0b164addab94491caf4fc057c2964f9c11c97f53589e06
 PKG_MAINTAINER:=Felix Fietkau <nbd@nbd.name>
 PKG_LICENSE:=ISC
 
 PKG_ASLR_PIE_REGULAR:=1
 PKG_BUILD_DEPENDS = ustream-ssl
-#PKG_CONFIG_DEPENDS:= CONFIG_uhttpd_lua CONFIG_uhttpd_ucode
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/cmake.mk
@@ -42,18 +41,6 @@ define Package/uhttpd_kn/description
  uHTTPd is a tiny single threaded HTTP server with TLS, CGI and Lua
  support. It is intended as a drop-in replacement for the Busybox
  HTTP daemon.
-endef
-
-define Package/uhttpd/config
-  config uhttpd_lua
-    depends on PACKAGE_uhttpd-mod-lua
-    bool "Enable Integrated Lua interpreter"
-	default n
-
-  config uhttpd_ucode
-    depends on PACKAGE_uhttpd-mod-ucode
-    bool "Enable Integrated ucode interpreter"
-	default n
 endef
 
 define Package/uhttpd_kn/conffiles
@@ -99,21 +86,16 @@ ifneq ($(CONFIG_USE_GLIBC),)
   TARGET_CFLAGS += -D_DEFAULT_SOURCE
 endif
 
-TARGET_LDFLAGS += -lcrypt
-
 CMAKE_OPTIONS += \
-	-DTLS_SUPPORT=ON \
 	-DLUA_SUPPORT=OFF \
 	-DUBUS_SUPPORT=OFF \
 	-DUCODE_SUPPORT=OFF
 
 define Package/uhttpd_kn/install
-	$(INSTALL_DIR) $(1)/opt/etc/init.d
+	$(INSTALL_DIR) $(1)/opt/etc/init.d $(1)/opt/sbin
 	$(INSTALL_BIN) ./files/S80uhttpd $(1)/opt/etc/init.d
-	$(INSTALL_DIR) $(1)/opt/etc
 	$(INSTALL_CONF) ./files/uhttpd.conf $(1)/opt/etc
 #	$(VERSION_SED_SCRIPT) $(1)/etc/config/uhttpd
-	$(INSTALL_DIR) $(1)/opt/sbin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/uhttpd $(1)/opt/sbin/uhttpd
 endef
 
