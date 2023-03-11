@@ -72,7 +72,7 @@ stop() {
 }
 
 check() {
-    echo -e -n "$ansi_white Checking $DESC... "
+    echo -e -n "$ansi_white Checking $DESC... $ansi_std"
     if [ -n "`pidof $PROC`" ]; then
         echo -e "            $ansi_green alive. $ansi_std";
         return 0
