@@ -140,7 +140,7 @@ fi
 
 /opt/etc/init.d/S51dropbear start
 
-wget -qO - --post-data='[{"opkg":{"initrc":{"path":"/opt/etc/init.d/rc.unslung"}}},{"system":{"configuration":{"save":true}}}]' localhost:79/rci >/dev/null 2>&1
+wget -qO - --post-data='[{"opkg":{"initrc":{"path":"/opt/etc/init.d/rc.unslung"}}},{"system":{"configuration":{"save":true}}}]' localhost:79/rci/ >/dev/null 2>&1
 
 if grep -q "222" /opt/etc/config/dropbear.conf; then
 	echo 'Log on to start an SSH session using login - root, password - keenetic, port - 222.'
