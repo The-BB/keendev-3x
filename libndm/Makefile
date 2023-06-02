@@ -5,12 +5,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libndm
-PKG_VERSION:=1.1.17
+PKG_VERSION:=1.1.18
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/keenetic/libndm/tar.gz/refs/tags/$(PKG_VERSION)?
-PKG_HASH:=9e2e3d2a179c4bea6ff8b0b15230473ab432a8d0c170677b11c2b23ddfed856d
+PKG_HASH:=49567a7516b3534e5c0d496fed85f1cbe5853c0a022be6ea104a4dd3964be737
 
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILE:=COPYING
