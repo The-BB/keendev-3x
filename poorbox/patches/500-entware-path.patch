@@ -1,6 +1,6 @@
 --- a/shell/ash.c
 +++ b/shell/ash.c
-@@ -14714,7 +14714,7 @@ int ash_main(int argc UNUSED_PARAM, char
+@@ -14713,7 +14713,7 @@ int ash_main(int argc UNUSED_PARAM, char
  		const char *hp;
  
  		state = 1;
