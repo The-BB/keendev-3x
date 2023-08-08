@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2011-2021 Entware
+# Copyright (C) 2011-2023 Entware
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=opt-ndmsv2
 PKG_VERSION:=1.0
-PKG_RELEASE:=16
+PKG_RELEASE:=17
 
 PKG_FLAGS:=essential
 
@@ -61,8 +61,8 @@ define Package/opt-ndmsv2/install
 	    $(1)/opt/var/{lock,log,run} \
 	    $(1)/opt/etc/ndm/{button,fs,neighbour,netfilter,schedule,sms,time,usb,user,wan}.d \
 	    $(1)/opt/etc/ndm/openvpn-{client-{connect,disconnect},down,ipchange,learn-address,route-up,tls-verify,up}.d \
-	    $(1)/opt/etc/ndm/{ifcreated,ifdestroyed,ifipchanged,ifstatechanged}.d \
-	    $(1)/opt/etc/ndm/{pptp,sstp,l2tp_ipsec,vip}{_vpn_up,_vpn_down}.d
+	    $(1)/opt/etc/ndm/if{created,destroyed,{ip{,6},layer,state}changed}.d \
+	    $(1)/opt/etc/ndm/{pptp,sstp,l2tp_ipsec,vip}_vpn_{up,down}.d
 	$(INSTALL_BIN) files/reboot.sh $(1)/opt/sbin
 endef
 
