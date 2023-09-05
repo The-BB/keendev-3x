@@ -18,7 +18,7 @@ define Package/music-center
   CATEGORY:=keendev
   DEPENDS:=+alsa-utils +mpd-mini +mpg123 +ympd
   TITLE:=configs and scripts files for music-center
-  ifneq (,$(filter mips mipsel,$(ARCH)))
+  ifneq (,$(filter aarch64 mips mipsel,$(ARCH)))
 	PKGARCH:=$(BOARD)_kn
   endif
 endef
