@@ -1,16 +1,16 @@
 #
-# Copyright (C) 2011-2021 NDM Systems, Inc. http://www.ndmsystems.com/
+# Copyright (C) 2011-2023 NDM Systems, Inc. http://www.ndmsystems.com/
 #
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libndm
-PKG_VERSION:=1.1.19
+PKG_VERSION:=1.1.23
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/keenetic/libndm/tar.gz/refs/tags/$(PKG_VERSION)?
-PKG_HASH:=84d0b315a9c45592c0474e10d4caa22aa304e6922fe6f8ab9ff2f6137708631c
+PKG_HASH:=9575d6ad94baa852595b65860020edc682af19ead3ef1fda5bca7e54804f4cbb
 
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILE:=COPYING
@@ -21,7 +21,7 @@ define Package/libndm
   SECTION:=libs
   CATEGORY:=keendev
   TITLE:=NDM base C library
-  URL:=https://github.com/ndmsystems/libndm
+  URL:=https://github.com/keenetic/libndm
   ifneq (,$(filter aarch64 mips mipsel,$(ARCH)))
 	PKGARCH:=$(BOARD)_kn
   endif
