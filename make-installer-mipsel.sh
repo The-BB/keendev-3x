@@ -30,6 +30,9 @@ cp -fr $BUILD_DIR/busybox-default/busybox-*/ipkg-mipsel-3.4/busybox/opt $ROOT_DI
 [ -L "$ROOT_DIR/opt/bin/egrep" ] && rm -f "$ROOT_DIR/opt/bin/egrep"
 [ -L "$ROOT_DIR/opt/bin/fgrep" ] && rm -f "$ROOT_DIR/opt/bin/fgrep"
 [ -L "$ROOT_DIR/opt/bin/grep" ] && rm -f "$ROOT_DIR/opt/bin/grep"
+# findutils
+[ -L "$ROOT_DIR/opt/bin/find" ] && rm -f "$ROOT_DIR/opt/bin/find"
+[ -L "$ROOT_DIR/opt/bin/xargs" ] && rm -f "$ROOT_DIR/opt/bin/xargs"
 
 # Adding libpcre&grep
 cp -fr $BUILD_DIR/grep-*/ipkg-mipsel-3.4/grep/opt $ROOT_DIR
