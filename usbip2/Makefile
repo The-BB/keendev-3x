@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=usbip2
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 PKG_LICENSE:=GPL-2.0-only
 
 # Since kernel 2.6.39.1 userspace tools are inside the kernel tree
@@ -30,7 +30,7 @@ include $(INCLUDE_DIR)/nls.mk
 define Package/usbip2/Common
   TITLE:=USB-over-IP
   URL:=http://usbip.sourceforge.net/
-  DEPENDS:=@USB_SUPPORT +libsysfs +glib2 @!LINUX_2_6_36
+  DEPENDS:=@USB_SUPPORT +glib2
   CONFLICTS:=usbip
 endef
 
@@ -43,7 +43,7 @@ endef
 define Package/usbip2
   $(call Package/usbip2/Default)
   TITLE+= (common)
-  DEPENDS+= +libwrap +libudev +usbids
+  DEPENDS+=+libwrap +libudev +usbids
 endef
 
 define Package/usbip2-client
