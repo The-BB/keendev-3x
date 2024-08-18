@@ -7,23 +7,7 @@ fi
 
 logger -t installer '[1/5] Начало установки системы пакетов "Entware"...'
 
-# checking "opkg dns-override"
-if [ "$(echo $(wget -qO - localhost:79/rci/opkg/dns-override))" = "true" ]; then
-	logger -t installer 'Info: Активирована настройка "opkg dns-override"...'
-	logger -t installer 'Critical error: Продолжение установки невозможно!'
-	logger -t installer 'Выход из установки.'
-	exit 1
-fi
-
-# checking "opkg chroot"
-if [ -n "$(echo $(wget -qO - localhost:79/rci/opkg/chroot) | grep 'true')" ]; then
-	logger -t installer 'Info: Активирована настройка "opkg chroot"...'
-	logger -t installer 'Critical error: Продолжение установки невозможно!'
-	logger -t installer 'Выход из установки.'
-	exit 1
-  else
-	check_fs_opt="$(mount | grep 'on /opt ' | cut -d' ' -f5)"
-fi
+check_fs_opt="$(mount | grep 'on /opt ' | cut -d' ' -f5)"
 
 case "$check_fs_opt" in
     ext*)
@@ -47,29 +31,6 @@ case "$check_fs_opt" in
 	exit 1
     ;;
 esac
-
-# checking network
-logger -t installer 'Info: "ping google.com"...'
-if ! ping -c 3 dns.google.com >/dev/null 2>&1
-  then
-	logger -t installer 'Critical error: Ресурс недоступен. Проверьте настройки сети.'
-	logger -t installer 'Выход из установки.'
-	exit 1
-  else
-	logger -t installer 'Info: "ping google.com" ..... OK'
-	sleep 1
-fi
-
-logger -t installer 'Info: "ping bin.entware.net"...'
-if ! ping -c 3 bin.entware.net >/dev/null 2>&1
-  then
-	logger -t installer 'Critical error: Ресурс недоступен. Повторите попытку позже.'
-	logger -t installer 'Выход из установки.'
-	exit 1
-  else
-	logger -t installer 'Info: "ping bin.entware.net" ..... OK'
-	sleep 1
-fi
 
 # Только для opkg. Остальные каталоги будут созданы пакетом opt-ndmsv2
 logger -t installer 'Info: Создание каталогов...'
