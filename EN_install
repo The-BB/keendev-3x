@@ -7,21 +7,7 @@ fi
 
 echo '[1/5] Starting "Entware" deployment...'
 
-# checking "opkg dns-override"
-if [ "$(echo $(wget -qO - localhost:79/rci/opkg/dns-override))" = "true" ]; then
-	echo 'Critical error: The "opkg dns-override" setting is activated. Aborting...'
-	echo 'Exit.'
-	exit 1
-fi
-
-# checking "opkg chroot"
-if [ -n "$(echo $(wget -qO - localhost:79/rci/opkg/chroot) | grep 'true')" ]; then
-	echo 'Critical error: The "opkg chroot" setting is activated. Aborting...'
-	echo 'Exit.'
-	exit 1
-  else
-	check_fs_opt="$(mount | grep 'on /opt ' | cut -d' ' -f5)"
-fi
+check_fs_opt="$(mount | grep 'on /opt ' | cut -d' ' -f5)"
 
 case "$check_fs_opt" in
     ext*)
@@ -45,29 +31,6 @@ case "$check_fs_opt" in
 	exit 1
     ;;
 esac
-
-# checking network
-echo 'Info: "ping google.com"...'
-if ! ping -c 3 dns.google.com >/dev/null 2>&1
-  then
-	echo 'Critical error: The resource is not available. Check your network settings.'
-	echo 'Exit.'
-	exit 1
-  else
-	echo 'Info: "ping google.com" ..... OK'
-	sleep 1
-fi
-
-echo 'Info: "ping bin.entware.net"...'
-if ! ping -c 3 bin.entware.net >/dev/null 2>&1
-  then
-	echo 'Critical error: The resource is not available. Please try again later.'
-	echo 'Exit.'
-	exit 1
-  else
-	echo 'Info: "ping bin.entware.net" ..... OK'
-	sleep 1
-fi
 
 # This is for opkg only. The other folders will be created from opt-ndmsv2 package
 for folder in lib/opkg tmp var/lock; do
