@@ -1,26 +1,25 @@
+# SPDX-License-Identifier: GPL-2.0-only
 #
-# Copyright (C) 2019-2023 Entware
-#
-# This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
-#
-# 
+# Copyright (C) 2019-2025 Entware
+
 # Этот вариант busysbox с минимумом апплетов для систем, где busybox вообще нет.
-# 1. Можно понизить версию
-# 2. Для изменения конфигурации следует выполнить make package/poorbox/configure
-#    Зайти в папку poorbox, выполнить make menuconfig. Обновленный .config положить в src
-#
+# 0. Можно понизить версию.
+# 1. Для изменения конфигурации следует выполнить make package/poorbox/configure.
+# 2. Зайти в папку poorbox, выполнить make menuconfig.
+# 3. Изменить интересующие пункты в меню. Сохранить настройки.
+# 4. Обновленный .config положить в src.
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=poorbox
-PKG_VERSION:=1.36.1
+PKG_REAL_NAME:=busybox
+PKG_VERSION:=1.37.0
 PKG_RELEASE:=1
 
-PKG_SOURCE:=busybox-$(PKG_VERSION).tar.bz2
+PKG_SOURCE:=$(PKG_REAL_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=https://www.busybox.net/downloads \
-		http://sources.buildroot.net
-PKG_HASH:=b8cc24c9574d809e7279c3be349795c5d5ceb6fdf19ca709f80cde50e47de314
+		https://sources.buildroot.net/$(PKG_REAL_NAME)
+PKG_HASH:=3311dff32e746499f4df0d5df04d7eb396382d7e108bb9250e7b519b837043a4
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 
@@ -61,6 +60,7 @@ MAKE_FLAGS += \
 	LDLIBS="$(LDLIBS)" \
 	LD="$(TARGET_CC)" \
 	SKIP_STRIP=y
+
 ifneq ($(findstring c,$(OPENWRT_VERBOSE)),)
   MAKE_FLAGS += V=1
 endif
@@ -72,15 +72,29 @@ define Build/Compile
 	)
 endef
 
+BB_APPS:= \
+	[ \
+	ash \
+	basename \
+	cat cp cut \
+	echo egrep \
+	fgrep \
+	grep gunzip gzip \
+	head \
+	ln lock logger ls \
+	pgrep printf \
+	readlink rm \
+	sed sh sleep \
+	tar \
+	wget
+
 define Package/poorbox/install
 	$(INSTALL_DIR) $(1)/opt/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/busybox $(1)/opt/usr/bin
-	$(LN) busybox $(1)/opt/usr/bin/ash
-	$(LN) busybox $(1)/opt/usr/bin/gunzip
-	$(LN) busybox $(1)/opt/usr/bin/gzip
-	$(LN) busybox $(1)/opt/usr/bin/sh
-	$(LN) busybox $(1)/opt/usr/bin/tar
-	$(LN) busybox $(1)/opt/usr/bin/wget
+
+	for bb_apps in $(BB_APPS); do \
+		$(LN) busybox $(1)/opt/usr/bin/"$$$$bb_apps"; \
+	done
 endef
 
 $(eval $(call BuildPackage,poorbox))
