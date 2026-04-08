@@ -1,3 +1,20 @@
+--- a/listen.c
++++ b/listen.c
+@@ -142,10 +142,10 @@ int uh_socket_bind(const char *host, con
+ 		.ai_flags = AI_PASSIVE,
+ 	};
+ 
+-	if ((status = getaddrinfo(host, port, &hints, &addrs)) != 0) {
+-		fprintf(stderr, "getaddrinfo(): %s\n", gai_strerror(status));
+-		return 0;
+-	}
++	if ((status = getaddrinfo(host, port, &hints, &addrs)) != 0) {
++//		fprintf(stderr, "getaddrinfo(): %s\n", gai_strerror(status));
++		return 0;
++	}
+ 
+ 	/* try to bind a new socket to each found address */
+ 	for (p = addrs; p; p = p->ai_next) {
 --- a/main.c
 +++ b/main.c
 @@ -61,7 +61,7 @@ static void uh_config_parse(void)
