@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-2.0-only
 #
-# Copyright (C) 2019-2025 Entware
+# Copyright (C) 2019-2026 Entware
 
 # Этот вариант busysbox с минимумом апплетов для систем, где busybox вообще нет.
 # 0. Можно понизить версию.
@@ -14,7 +14,7 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=poorbox
 PKG_REAL_NAME:=busybox
 PKG_VERSION:=1.37.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_REAL_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=https://www.busybox.net/downloads \
