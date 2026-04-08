@@ -74,7 +74,7 @@ chmod 777 /opt/tmp
 # keygen
 logger -t installer '[3/5] Генерация SSH-ключей...'
 
-for key in rsa ecdsa ed25519; do
+for key in rsa ed25519; do
   rm /opt/etc/dropbear/dropbear_${key}_host_key
 	logger -t installer "Info: Генерируется ключ \"$key\"..."
   if ! dropbearkey -t $key -f /opt/etc/dropbear/dropbear_${key}_host_key >/dev/null 2>&1
