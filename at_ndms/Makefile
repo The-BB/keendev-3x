@@ -38,7 +38,7 @@ define Package/at/description
  (Special version for Keenetic routers)
 endef
 
-export SENDMAIL=/bin/true
+export SENDMAIL=/opt/bin/true
 EXTRA_CFLAGS:=-DNEED_YYWRAP -I$(PKG_BUILD_DIR) \
 	$(TARGET_LDFLAGS)
 
