@@ -1,0 +1,50 @@
+--- a/at.c
++++ b/at.c
+@@ -389,7 +389,7 @@ writefile(time_t runtimer, char queue)
+ 	    perr("Cannot open input file %.500s", atinput);
+     }
+ 
+-    fprintf(fp, "#!/bin/sh\n# atrun uid=%d gid=%d\n# mail %s %d\n",
++    fprintf(fp, "#!/opt/bin/sh\n# atrun uid=%d gid=%d\n# mail %s %d\n",
+ 	    real_uid, real_gid, mailname, send_mail);
+ 
+     /* Write out the umask at the time of invocation
+@@ -969,7 +969,7 @@ main(int argc, char **argv)
+ 	   It also alows a warning diagnostic to be printed.  Because of the
+ 	   possible variance, we always output the diagnostic. */
+ 
+-	fprintf(stderr, "warning: commands will be executed using /bin/sh\n");
++	fprintf(stderr, "warning: commands will be executed using /opt/bin/sh\n");
+ 
+ 	writefile(timer, queue);
+ 	break;
+--- a/atd.c
++++ b/atd.c
+@@ -397,7 +397,7 @@ run_file(const char *filename, uid_t uid
+      * NFS and works with local file systems.  It's not clear where
+      * the bug is located.  -Joey
+      */
+-    sprintf(fmt, "#!/bin/sh\n# atrun uid=%%d gid=%%d\n# mail %%%ds %%d",
++    sprintf(fmt, "#!/opt/bin/sh\n# atrun uid=%%d gid=%%d\n# mail %%%ds %%d",
+ 	mailsize );
+ 
+     if (fscanf(stream, fmt,
+@@ -514,8 +514,8 @@ run_file(const char *filename, uid_t uid
+ 
+ 	    chdir("/");
+ 
+-	    if (execle("/bin/sh", "sh", (char *) NULL, nenvp) != 0)
+-		perr("Exec failed for /bin/sh");
++	    if (execle("/opt/bin/sh", "sh", (char *) NULL, nenvp) != 0)
++		perr("Exec failed for /opt/bin/sh");
+ 
+ 	PRIV_END
+     }
+--- a/batch.in
++++ b/batch.in
+@@ -1,4 +1,4 @@
+-#! /bin/sh -e
++#!/opt/bin/sh -e
+ if [ "$#" -gt 0 ]; then
+ 	echo batch accepts no parameters
+ 	exit 1
